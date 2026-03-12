@@ -1,4 +1,4 @@
-
+{% load static %}
 <html lang="es">
     <head>
         <meta charset="utf-8">
@@ -7,6 +7,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </head>
     <body>
         
@@ -21,11 +22,21 @@
             <li><a href="#">Pedidos</a></li>
             <li><a href="#">Contacto</a></li>
         </ul>
+        <div class="nav-user">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="nav-cart">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
     </nav>
-    
-    <main>
-    
-    </main>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Tu comida favorita a <span>domicilio en Garzón</span></h1>
+            <p>Los mejores restaurantes de comida rápida entregados a tu puerta en minutos</p>
+            <a href="#" class="btn-primary">Pedir Ahora</a>
+        </div>
+  
         <script src="" async defer></script>
     </body>
 </html>
