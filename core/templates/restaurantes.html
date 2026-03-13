@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>GastroMovil</title>
+        <title>Restaurantes - GastroWeb</title>
         <link rel="stylesheet" href="{% static 'css/styles.css' %}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </head>
@@ -17,8 +17,8 @@
             <span>Gastro <strong>Web</strong></span>
         </div>
         <ul class="nav-links">
-            <li><a href="#" class="active">Inicio</a></li>
-            <li><a href="{% url 'restaurantes' %}">Restaurantes</a></li>
+            <li><a href="{% url 'index' %}">Inicio</a></li>
+            <li><a href="{% url 'restaurantes' %}" class="active">Restaurantes</a></li>
             <li><a href="#">Pedidos</a></li>
             <li><a href="#">Contactenos</a></li>
         </ul>
@@ -31,26 +31,40 @@
         </div>
     </nav>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-content">
-            <p class="hero-tag"><span></span> MENÚ DE APERTURA</p>
-            <h1>Para <span>abrir</span><br>el apetito.</h1>
-            <p class="hero-desc">Selección de entradas artesanales preparadas con ingredientes frescos del Huila. El comienzo perfecto de tu experiencia gastronómica.</p>
-            <a href="#restaurantes" class="btn-primary">
-                Ver restaurantes
-            </a>
-        </div>
+    <!-- RESTAURANTES -->
+    <section class="restaurantes" id="restaurantes">
+        <p class="rest-tag"><span></span> Nuestros restaurantes</p>
+        <h2>Elige tu antojo <span>favorito</span></h2>
+        <div class="restaurantes-grid">
 
-        <!-- BOTON IA FLOTANTE -->
-        <div class="ia-btn" onclick="toggleIA()">
-            <i class="fas fa-robot"></i>
+            <div class="card-restaurante">
+                <div class="card-img-wrapper">
+                    <img src="{% static 'img/Beer.jpeg' %}" alt="Beer Club">
+                    <button class="btn-corazon"><i class="fas fa-heart"></i></button>
+                </div>
+                <div class="card-info">
+                    <h3>Beer Club</h3>
+                    <p>Restaurante - Bar</p>
+                    <a href="#" class="btn-menu">Ir al menú</a>
+                </div>
+            </div>
+
+            <div class="card-restaurante">
+                <div class="card-img-wrapper">
+                    <img src="{% static 'img/Taquera.jpeg' %}" alt="Taqueria donde Juancho">
+                    <button class="btn-corazon"><i class="fas fa-heart"></i></button>
+                </div>
+                <div class="card-info">
+                    <h3>Taqueria</h3>
+                    <p>Donde Juancho</p>
+                    <a href="#" class="btn-menu">Ir al menú</a>
+                </div>
+            </div>
+
         </div>
     </section>
 
-   
-
-    <!-- FOOTER -->
+      <!-- FOOTER -->
     <footer>
         <div class="footer-grid">
             <div class="footer-brand">
@@ -89,11 +103,16 @@
         </div>
     </footer>
 
+    <!-- BOTON IA -->
+    <div class="ia-btn" onclick="toggleIA()">
+        <i class="fas fa-robot"></i>
+    </div>
+
     <!-- CHAT IA -->
     <div class="ia-chat" id="iaChat">
         <div class="ia-header">
             <span><i class="fas fa-robot"></i> Asistente GastroMovil</span>
-            <button onclick="toggleIA()"><i class="fas fa-times"></i></button>
+            <button onclick="toggleIA()"><i class="fas fa-xmark"></i></button>
         </div>
         <div class="ia-messages" id="iaMessages">
             <div class="ia-msg">¡Hola! ¿En qué puedo ayudarte hoy? 🍔</div>

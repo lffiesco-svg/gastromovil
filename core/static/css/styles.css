@@ -1,0 +1,811 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #1a0f0a;
+    color: #fff;
+}
+
+/* ===== NAVBAR ===== */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background-color: #231208;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-logo img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.nav-logo span {
+    font-size: 22px;
+    color: white;
+    font-weight: 700;
+}
+
+.nav-logo strong {
+    color: #FF8C00;
+
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+    margin-left: auto;
+    margin-right: 38px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    transition: color 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-links a.active {
+    color:#FF8C00
+}
+
+.nav-links a:hover {
+    color: #FFD60A;
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-user, .nav-cart {
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s;
+}
+
+.nav-user:hover, .nav-cart:hover {
+    color: #FFD60A;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #FF8C00;
+    color: #1a0f0a;
+    font-size: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* ===== HERO ===== */
+.hero {
+    background-color: #1a0f0a;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 80px 60px;
+    position: relative;
+}
+
+.hero-content {
+    max-width: 550px;
+}
+
+.hero-tag {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color:#FF8C00;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+.hero-tag span {
+    display: inline-block;
+    width: 35px;
+    height: 2px;
+    background: #FF8C00;
+}
+
+.hero-content h1 {
+    font-size: 75px;
+    color: white;
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 25px;
+}
+
+.hero-content h1 span {
+    color: #FF8C00;
+}
+
+.hero-desc {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 45px;
+    max-width: 380px;
+    line-height: 1.8;
+}
+
+.btn-primary {
+    background: #FF8C00;
+    color: #1a0f0a;
+    padding: 16px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary:hover {
+    background: #e6c000;
+    transform: translateY(-3px);
+}
+
+/* ===== BOTON IA FLOTANTE ===== */
+.ia-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #FF8C00;
+    color: #1a0f0a;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 5px 25px rgba(255,214,10,0.5);
+    transition: all 0.3s;
+}
+
+.ia-btn:hover {
+    transform: scale(1.1);
+}
+
+/* ===== RESTAURANTES ===== */
+.restaurantes {
+    padding: 80px 60px;
+    background: #f8f8f8;
+    text-align: center;
+}
+
+.restaurantes h2 {
+    font-size: 38px;
+    color: #1E1E1E;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.restaurantes h2 span {
+    color: #FF6B00;
+}
+
+.subtitulo {
+    color: #999;
+    font-size: 16px;
+    margin-bottom: 50px;
+}
+
+.restaurantes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.card-restaurante {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+    transition: all 0.3s;
+    text-align: left;
+}
+
+.card-restaurante:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.card-img-wrapper {
+    position: relative;
+}
+
+.card-restaurante img {
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    background: linear-gradient(135deg, #FFD60A, #FF6B00);
+    padding: 20px;
+}
+
+.btn-corazon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+}
+
+.btn-corazon i {
+    color: #E63946;
+    font-size: 20px;
+}
+
+.btn-corazon:hover {
+    transform: scale(1.1);
+}
+
+.card-info {
+    padding: 25px;
+}
+
+.card-info h3 {
+    font-size: 22px;
+    color: #1E1E1E;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.card-info p {
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.card-meta {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #555;
+    font-weight: 600;
+}
+
+.card-meta i {
+    color: #FF6B00;
+    margin-right: 4px;
+}
+
+.btn-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #FF6B00, #E63946);
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+    transition: all 0.3s;
+}
+
+.btn-menu:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255,107,0,0.4);
+}
+
+/* ===== FOOTER ===== */
+footer {
+    background: #1a0f0a;
+    color: white;
+    padding: 60px 60px 25px;
+    border-top: 2px solid #FF8C00;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.footer-logo img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.footer-logo span {
+    font-size: 20px;
+    color: white;
+    font-weight: 700;
+}
+
+.footer-logo strong {
+    color: #FF8C00;
+}
+
+.footer-brand p {
+    color: #888;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    max-width: 250px;
+}
+
+.footer-social {
+    display: flex;
+    gap: 12px;
+}
+
+.footer-social a {
+    color: white;
+    background: #2d2d2d;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.footer-social a:hover {
+    background: #FF8C00;
+    color: #1a0f0a;
+    transform: translateY(-3px);
+}
+
+.footer-links h4,
+.footer-info h4,
+.footer-contact h4 {
+    color: #FF8C00;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-links ul,
+.footer-info ul {
+    list-style: none;
+}
+
+.footer-links ul li,
+.footer-info ul li {
+    margin-bottom: 12px;
+}
+
+.footer-links a,
+.footer-info a {
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-links a:hover,
+.footer-info a:hover {
+    color: #FF8C00;
+    padding-left: 5px;
+}
+
+.footer-links i,
+.footer-info i {
+    color: #FF8C00;
+    font-size: 11px;
+}
+
+.footer-contact p {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-contact i {
+    color: #FF8C00;
+    width: 16px;
+}
+
+.footer-bottom {
+    border-top: 1px solid #3d2010;
+    padding-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 13px;
+}
+
+.footer-bottom i.fa-heart {
+    color: #E63946;
+}
+
+/* ===== CHAT IA ===== */
+.ia-chat {
+    position: fixed;
+    bottom: 105px;
+    right: 30px;
+    width: 330px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+    z-index: 998;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.ia-chat.active {
+    display: flex;
+}
+
+.ia-header {
+    background: #FF8C00;
+    color: #1a0f0a;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.ia-header button {
+    background: rgba(0,0,0,0.1);
+    border: none;
+    color: #1a0f0a;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ia-header button:hover {
+    background: rgba(0,0,0,0.2);
+}
+
+.ia-messages {
+    padding: 20px;
+    height: 260px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #fafafa;
+}
+
+.ia-msg {
+    background: white;
+    padding: 12px 16px;
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    max-width: 85%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    line-height: 1.5;
+}
+
+.ia-msg.user {
+    background: #FF8C00;
+    color: #1a0f0a;
+    align-self: flex-end;
+    border-radius: 16px;
+    border-bottom-right-radius: 4px;
+}
+
+.ia-input {
+    display: flex;
+    padding: 15px;
+    gap: 10px;
+    border-top: 1px solid #eee;
+    background: white;
+}
+
+.ia-input input {
+    flex: 1;
+    padding: 10px 16px;
+    border: 2px solid #f0f0f0;
+    border-radius: 50px;
+    outline: none;
+    font-size: 14px;
+    transition: border 0.3s;
+}
+
+.ia-input input:focus {
+    border-color: #FF8C00;
+}
+
+.ia-input button {
+    background: #FF8C00;
+    color: #1a0f0a;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ia-input button:hover {
+    transform: scale(1.1);
+}
+/* ===== RESTAURANTES ===== */
+.restaurantes {
+    padding: 70px 60px;
+    background: #1a0f0a;
+}
+
+.rest-tag {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #FF8C00;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.rest-tag span {
+    display: inline-block;
+    width: 35px;
+    height: 2px;
+    background: #FF8C00;
+}
+
+.restaurantes h2 {
+    font-size: 55px;
+    color: white;
+    font-weight: 900;
+    margin-bottom: 50px;
+    line-height: 1.1;
+}
+
+.restaurantes h2 span {
+    color: #FF8C00;
+}
+
+.restaurantes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 750px;
+}
+
+.card-restaurante {
+    background: #2a1a0e;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 2px solid #3d2510;
+    transition: all 0.3s;
+}
+
+.card-restaurante:hover {
+    border-color: #FF8C00;
+    transform: translateY(-5px);
+}
+
+.card-img-wrapper {
+    position: relative;
+}
+
+.card-restaurante img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.btn-corazon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.5);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-corazon i {
+    color: #FF8C00;
+    font-size: 18px;
+}
+
+.btn-corazon:hover {
+    background: rgba(0,0,0,0.8);
+    transform: scale(1.1);
+}
+
+.card-info {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-info h3 {
+    font-size: 20px;
+    color: white;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.card-info p {
+    color: #FF8C00;
+    font-size: 14px;
+    margin-bottom: 18px;
+    font-weight: 600;
+}
+
+.btn-menu {
+    display: block;
+    background: #1a0f0a;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1px solid #3d2510;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.btn-menu:hover {
+    background: #FF8C00;
+    border-color: #FF8C00;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    background: #f0ebe5;
+    color: #333;
+    padding: 40px 60px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1.5fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.footer-logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.footer-logo span {
+    font-size: 16px;
+    color: #333;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.footer-brand p {
+    color: #888;
+    font-size: 13px;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+    color: #FF8C00;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-links ul {
+    list-style: none;
+}
+
+.footer-links ul li {
+    margin-bottom: 8px;
+}
+
+.footer-links a {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #FF8C00;
+}
+
+.footer-contact p {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-contact i {
+    color: #FF8C00;
+}
