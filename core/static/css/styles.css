@@ -236,12 +236,11 @@ nav {
 }
 
 .card-restaurante {
-    background: white;
+    background: #2d2d2d;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+    border: 2px solid #3d3d3d;
     transition: all 0.3s;
-    text-align: left;
 }
 
 .card-restaurante:hover {
@@ -319,18 +318,17 @@ nav {
 }
 
 .btn-menu {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #FF6B00, #E63946);
+    display: block;
+    background: #1a1a1a;
     color: white;
-    padding: 14px;
-    border-radius: 12px;
+    padding: 12px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 14px;
+    border: 1px solid #444;
     transition: all 0.3s;
+    text-align: center;
 }
 
 .btn-menu:hover {
@@ -642,7 +640,7 @@ footer {
 }
 
 .card-restaurante {
-    background: #2a1a0e;
+    background: #2d2d2d;
     border-radius: 20px;
     overflow: hidden;
     border: 2px solid #3d2510;
@@ -656,69 +654,53 @@ footer {
 
 .card-img-wrapper {
     position: relative;
+    background: #3d3d3d;
+    border-radius: 15px;
+    margin: 15px;
+    overflow: hidden;
 }
+    
+
 
 .card-restaurante img {
     width: 100%;
     height: 200px;
-    object-fit: cover;
+    object-fit: contain;
+    background: #3d3d3d;
+    padding: 10px;
 }
 
-.btn-corazon {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: rgba(0,0,0,0.5);
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s;
-}
 
-.btn-corazon i {
-    color: #FF8C00;
-    font-size: 18px;
-}
-
-.btn-corazon:hover {
-    background: rgba(0,0,0,0.8);
-    transform: scale(1.1);
-}
 
 .card-info {
-    padding: 20px;
+    padding: 10px 15px 15px;        
     text-align: center;
 }
 
 .card-info h3 {
-    font-size: 20px;
+    font-size: 18px;
     color: white;
     font-weight: 800;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .card-info p {
     color: #FF8C00;
-    font-size: 14px;
-    margin-bottom: 18px;
+    font-size: 13px;
+    margin-bottom: 15px;
     font-weight: 600;
 }
 
 .btn-menu {
     display: block;
-    background: #1a0f0a;
+    background: #1a1a1a;
     color: white;
     padding: 12px;
     border-radius: 8px;
     text-decoration: none;
     font-weight: bold;
     font-size: 14px;
-    border: 1px solid #3d2510;
+    border: 1px solid #444;
     transition: all 0.3s;
     text-align: center;
 }

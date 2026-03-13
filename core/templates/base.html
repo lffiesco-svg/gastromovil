@@ -1,0 +1,87 @@
+{% load static %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}GastroWeb{% endblock %}</title>
+        {% tailwind_css %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    </head>
+    <body class="bg-[#1a0f0a] text-white">
+
+    <!-- NAVBAR -->
+    <nav class="bg-[#231208] sticky top-0 z-50 px-16 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="{% static 'img/Logo.jpeg' %}" alt="GastroMovil" class="w-11 h-11 rounded-full object-cover">
+            <span class="text-white font-bold text-xl">Gastro <strong class="text-[#FF8C00]">Web</strong></span>
+        </div>
+        <ul class="flex gap-10 list-none ml-auto mr-10">
+            <li><a href="{% url 'index' %}" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Inicio</a></li>
+            <li><a href="{% url 'restaurantes' %}" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Restaurantes</a></li>
+            <li><a href="#" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Pedidos</a></li>
+            <li><a href="#" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Contactenos</a></li>
+        </ul>
+        <div class="flex items-center gap-5">
+            <i class="fas fa-circle-user text-white text-2xl cursor-pointer hover:text-[#FF8C00] transition-colors"></i>
+            <i class="fas fa-basket-shopping text-white text-2xl cursor-pointer hover:text-[#FF8C00] transition-colors"></i>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    {% block content %}{% endblock %}
+
+    <!-- FOOTER -->
+    <footer class="bg-[#f0ebe5] text-gray-700 px-16 py-10">
+        <div class="grid grid-cols-3 gap-10">
+            <div>
+                <div class="flex items-center gap-3 mb-3">
+                    <img src="{% static 'img/Logo.jpeg' %}" alt="GastroWeb" class="w-10 h-10 rounded-full object-cover">
+                    <span class="font-black text-gray-800 tracking-widest">GASTROWEB</span>
+                </div>
+                <p class="text-gray-500 text-sm">Entregando delicias a domicilios</p>
+            </div>
+            <div>
+                <h4 class="text-[#FF8C00] font-bold uppercase tracking-wider text-sm mb-4">Enlaces Rapidos</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-500 hover:text-[#FF8C00] text-sm transition-colors">Inicio</a></li>
+                    <li><a href="#" class="text-gray-500 hover:text-[#FF8C00] text-sm transition-colors">Pedidos</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-[#FF8C00] font-bold uppercase tracking-wider text-sm mb-4">Contactenos</h4>
+                <p class="text-gray-500 text-sm mb-2"><i class="fas fa-map-marker-alt text-[#FF8C00] mr-2"></i> Garzon, Huila</p>
+                <p class="text-gray-500 text-sm mb-2"><i class="fas fa-phone text-[#FF8C00] mr-2"></i> 3212334567</p>
+                <p class="text-gray-500 text-sm"><i class="fas fa-envelope text-[#FF8C00] mr-2"></i> info@gastroweb.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- BOTON IA -->
+    <div onclick="toggleIA()" class="fixed bottom-8 right-8 bg-[#FF8C00] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg hover:scale-110 transition-transform z-50">
+        <i class="fas fa-robot"></i>
+    </div>
+
+    <!-- CHAT IA -->
+    <div id="iaChat" class="fixed bottom-28 right-8 w-80 bg-white rounded-2xl shadow-2xl z-50 hidden flex-col overflow-hidden">
+        <div class="bg-[#FF8C00] text-white px-5 py-4 flex justify-between items-center font-bold">
+            <span><i class="fas fa-robot mr-2"></i> Asistente GastroWeb</span>
+            <button onclick="toggleIA()" class="bg-black/10 hover:bg-black/20 w-7 h-7 rounded-full flex items-center justify-center">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+        <div id="iaMessages" class="p-5 h-64 overflow-y-auto flex flex-col gap-3 bg-gray-50">
+            <div class="bg-white p-3 rounded-2xl rounded-bl-sm text-sm text-gray-700 shadow-sm max-w-xs">¡Hola! ¿En qué puedo ayudarte hoy? 🍔</div>
+        </div>
+        <div class="flex p-4 gap-3 border-t border-gray-100 bg-white">
+            <input id="iaInput" type="text" placeholder="Escribe tu pregunta..." class="flex-1 px-4 py-2 border-2 border-gray-100 rounded-full text-sm outline-none focus:border-[#FF8C00]">
+            <button onclick="sendIA()" class="bg-[#FF8C00] text-white w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    </body>
+</html>
