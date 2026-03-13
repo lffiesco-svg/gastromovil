@@ -23,40 +23,66 @@
             <li><a href="#" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Pedidos</a></li>
             <li><a href="#" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Contactenos</a></li>
         </ul>
-        <div class="flex items-center gap-5">
-            <i class="fas fa-circle-user text-white text-2xl cursor-pointer hover:text-[#FF8C00] transition-colors"></i>
-            <i class="fas fa-basket-shopping text-white text-2xl cursor-pointer hover:text-[#FF8C00] transition-colors"></i>
+        <div class="flex items-center gap-4">
+    <a href="#" class="flex flex-col items-center gap-1 group">
+        <div class="bg-[#2d1a0e] group-hover:bg-[#FF8C00] w-12 h-12 rounded-xl flex items-center justify-center transition-colors">
+            <i class="fas fa-circle-user text-white text-2xl"></i>
         </div>
+        <span class="text-gray-400 group-hover:text-[#FF8C00] text-xs transition-colors">Perfil</span>
+    </a>
+    <a href="#" class="flex flex-col items-center gap-1 group relative">
+        <div class="flex items-center gap-5">
+    <i class="fas fa-circle-user text-white text-4xl cursor-pointer hover:text-[#FF8C00] transition-colors"></i>
+    <div class="relative cursor-pointer">
+        <i class="fas fa-cart-shopping text-white text-2xl hover:text-[#FF8C00] transition-colors"></i>
+        <span class="absolute -top-2 -right-2 bg-[#FF8C00] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+    </div>
+</div>
+        <span class="text-gray-400 group-hover:text-[#FF8C00] text-xs transition-colors">Carrito</span>
+    </a>
+</div>
     </nav>
 
     <!-- CONTENIDO -->
     {% block content %}{% endblock %}
 
     <!-- FOOTER -->
-    <footer class="bg-[#f0ebe5] text-gray-700 px-16 py-10">
-        <div class="grid grid-cols-3 gap-10">
-            <div>
-                <div class="flex items-center gap-3 mb-3">
-                    <img src="{% static 'img/Logo.jpeg' %}" alt="GastroWeb" class="w-10 h-10 rounded-full object-cover">
-                    <span class="font-black text-gray-800 tracking-widest">GASTROWEB</span>
-                </div>
-                <p class="text-gray-500 text-sm">Entregando delicias a domicilios</p>
+  
+<footer class="bg-[#f0ebe5] text-gray-700 px-16 pt-12 pb-6">
+    <div class="grid grid-cols-3 gap-10 mb-10">
+        <div>
+            <div class="flex items-center gap-3 mb-4">
+                <img src="{% static 'img/Logo.jpeg' %}" alt="GastroMovil" class="w-10 h-10 rounded-full object-cover">
+                <span class="font-bold text-xl">Gastro<strong class="text-[#FF8C00]">Web</strong></span>
             </div>
-            <div>
-                <h4 class="text-[#FF8C00] font-bold uppercase tracking-wider text-sm mb-4">Enlaces Rapidos</h4>
-                <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-500 hover:text-[#FF8C00] text-sm transition-colors">Inicio</a></li>
-                    <li><a href="#" class="text-gray-500 hover:text-[#FF8C00] text-sm transition-colors">Pedidos</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-[#FF8C00] font-bold uppercase tracking-wider text-sm mb-4">Contactenos</h4>
-                <p class="text-gray-500 text-sm mb-2"><i class="fas fa-map-marker-alt text-[#FF8C00] mr-2"></i> Garzon, Huila</p>
-                <p class="text-gray-500 text-sm mb-2"><i class="fas fa-phone text-[#FF8C00] mr-2"></i> 3212334567</p>
-                <p class="text-gray-500 text-sm"><i class="fas fa-envelope text-[#FF8C00] mr-2"></i> info@gastroweb.com</p>
-            </div>
+            <p class="text-gray-600 text-sm leading-relaxed">Entregando delicia a domicilio en Garzón desde 2024</p>
         </div>
-    </footer>
+        <div>
+            <h4 class="text-[#FF8C00] font-bold uppercase tracking-wider text-sm mb-4">Enlaces Rápidos</h4>
+            <ul class="space-y-3">
+                <li><a href="#" class="text-gray-600 hover:text-[#FF8C00] text-sm transition-colors"><i class="fas fa-chevron-right text-xs mr-2"></i>Inicio</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-[#FF8C00] text-sm transition-colors"><i class="fas fa-chevron-right text-xs mr-2"></i>Restaurantes</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-[#FF8C00] text-sm transition-colors"><i class="fas fa-chevron-right text-xs mr-2"></i>Pedidos</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-[#FF8C00] text-sm transition-colors"><i class="fas fa-chevron-right text-xs mr-2"></i>Contacto</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="text-[#FF8C00] font-bold uppercase tracking-wider text-sm mb-4">Contáctenos</h4>
+            <p class="text-gray-600 text-sm mb-3"><i class="fas fa-map-marker-alt text-[#FF8C00] mr-2"></i> Garzón, Colombia</p>
+            <p class="text-gray-600 text-sm mb-3"><i class="fas fa-phone text-[#FF8C00] mr-2"></i> +57 320 846 0726</p>
+            <p class="text-gray-600 text-sm"><i class="fas fa-envelope text-[#FF8C00] mr-2"></i> gastromovil3063679@gmail.com</p>
+        </div>
+    </div>
+    <div class="border-t border-gray-300 pt-6 flex justify-between items-center">
+        <p class="text-gray-500 text-sm"><i class="fas fa-copyright mr-1"></i> 2024 GastroMovil. Todos los derechos reservados.</p>
+        <div class="flex gap-3">
+            <a href="#" class="bg-gray-300 hover:bg-[#FF8C00] text-white w-9 h-9 rounded-lg flex items-center justify-center transition-colors"><i class="fab fa-facebook-f text-sm"></i></a>
+            <a href="#" class="bg-gray-300 hover:bg-[#FF8C00] text-white w-9 h-9 rounded-lg flex items-center justify-center transition-colors"><i class="fab fa-instagram text-sm"></i></a>
+            <a href="#" class="bg-gray-300 hover:bg-[#FF8C00] text-white w-9 h-9 rounded-lg flex items-center justify-center transition-colors"><i class="fab fa-twitter text-sm"></i></a>
+            <a href="#" class="bg-gray-300 hover:bg-[#FF8C00] text-white w-9 h-9 rounded-lg flex items-center justify-center transition-colors"><i class="fab fa-whatsapp text-sm"></i></a>
+        </div>
+    </div>
+</footer>
 
     <!-- BOTON IA -->
     <div onclick="toggleIA()" class="fixed bottom-8 right-8 bg-[#FF8C00] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg hover:scale-110 transition-transform z-50">
