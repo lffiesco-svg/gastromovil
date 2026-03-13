@@ -1,3 +1,6 @@
+import pymysql
+pymysql .version_info = (2, 2, 1, "final", 0)
+pymysql.install_as_MySQLdb()
 
 from pathlib import Path
 import os
@@ -28,9 +31,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'rest_framework',
+    'usuarios',
+    'restaurantes',
+    'repartidores',
+    'pedidos'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,8 +74,12 @@ WSGI_APPLICATION = 'gastromovil.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'gastromovil',
+        'USER': 'root',
+        'PASSWORD': 'rootroot',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -89,6 +102,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES' : (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
@@ -108,3 +126,5 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static')]
+
+AUTH_USER_MODEL = 'usuarios.Usuario'
