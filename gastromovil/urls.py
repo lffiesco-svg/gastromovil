@@ -8,4 +8,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('restaurantes/', views.restaurantes, name='restaurantes'),
     path('__reload__/', include('django_browser_reload.urls')),
+    path('menu/beer/', views.menu_beer, name='menu_beer'),
 ]
