@@ -14,29 +14,33 @@
 
         <div class="bg-[#2d2d2d] rounded-2xl overflow-hidden border-2 border-[#3d3d3d] hover:border-[#FF8C00] hover:-translate-y-2 transition-all w-92">
             <div class="relative">
-                <img src="{% static 'img/Beer.jpeg' %}" alt="Beer Club" class="w-full h-84 object-cover">
+                <img src="{% static 'img/Beer.jpeg' %}" alt="Beer Club" class="w-full h-84 object-contain bg-[#1a1a1a]">
                 <button class="absolute top-3 right-3 bg-black/50 w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
                     <i class="fas fa-heart text-[#FF8C00] text-sm"></i>
                 </button>
             </div>
-            <div class="p-4 text-center">
-                <h3 class="text-white font-black text-lg mb-1">Beer Club</h3>
-                <p class="text-[#FF8C00] text-xs font-semibold mb-4">Restaurante - Bar</p>
-                <a href="{% url 'menu_beer' %}" class="block bg-[#1a1a1a] text-white py-2 rounded-lg font-bold text-xs border border-[#444] hover:bg-[#FF8C00] hover:border-[#FF8C00] transition-colors">Ir al menú</a>
+            <div class="px-4 py-3 text-center">
+                <h3 class="text-white font-black text-2xl mb-1">Beer Club</h3>
+                <p class="text-[#FF8C00] text-sm font-semibold mb-3">Restaurante - Bar</p>
+                <button onclick="window.location='{% url 'menu_beer' %}'" class="w-full bg-[#FF8C00] text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-[#e67e00] transition-colors cursor-pointer">
+                    Ir al menú
+                </button>
             </div>
         </div>
 
         <div class="bg-[#2d2d2d] rounded-2xl overflow-hidden border-2 border-[#3d3d3d] hover:border-[#FF8C00] hover:-translate-y-2 transition-all w-92">
             <div class="relative">
-                <img src="{% static 'img/Taquera.jpeg' %}" alt="Taqueria donde Juancho" class="w-full h-84 object-cover">
+                <img src="{% static 'img/Taquera.jpeg' %}" alt="Taqueria donde Juancho" class="w-full h-84 object-contain bg-[#1a1a1a]">
                 <button class="absolute top-3 right-3 bg-black/50 w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
                     <i class="fas fa-heart text-[#FF8C00] text-sm"></i>
                 </button>
             </div>
-            <div class="p-4 text-center">
-                <h3 class="text-white font-black text-lg mb-1">Taqueria</h3>
-                <p class="text-[#FF8C00] text-xs font-semibold mb-4">Donde Juancho</p>
-                <a href="#" class="block bg-[#1a1a1a] text-white py-2 rounded-lg font-bold text-xs border border-[#444] hover:bg-[#FF8C00] hover:border-[#FF8C00] transition-colors">Ir al menú</a>
+            <div class="px-4 py-3 text-center">
+                <h3 class="text-white font-black text-2xl mb-1">Taqueria</h3>
+                <p class="text-[#FF8C00] text-sm font-semibold mb-3">Donde Juancho</p>
+                <button class="w-full bg-[#FF8C00] text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-[#e67e00] transition-colors cursor-pointer">
+                    Ir al menú
+                </button>
             </div>
         </div>
 
