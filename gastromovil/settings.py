@@ -128,3 +128,6 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static')]
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
+LOGIN_URL = '/usuarios/login'
+LOGIN_REDIRECT_URL = '/usuarios/perfil/'
+LOGOUT_REDIRECT_URL = '/usuarios/login/'
