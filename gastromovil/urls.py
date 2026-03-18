@@ -21,4 +21,7 @@ urlpatterns = [
     path('menu/taqueria/picadas-mexicanas/', views.picadas_mexicanas, name='picadas_mexicanas'),
     path('menu/taqueria/burritos/', views.burritos, name='burritos'),
     path('menu/taqueria/maruchas/', views.maruchas, name='maruchas'),
+    path('login/', views.login_view, name='login'),
+    path('register/', views.register_view, name='register'),
+    path('perfil/', views.perfil, name='perfil'),
 ]

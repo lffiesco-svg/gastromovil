@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Inicio - GastroWeb{% endblock %}
 {% block content %}
-<section class="min-h-screen bg-[#1a0f0a] flex items-start pl-50 pr-24 pt-42 pb-20 gap-16">
+<section class="bg-[#1a0f0a] flex flex-col md:flex-row items-start pl-6 md:pl-50 pr-6 md:pr-24 pt-24 pb-20 gap-8 md:gap-16">
     <!-- LADO IZQUIERDO -->
     <div class="flex-1 flex flex-col justify-center">
         <p class="flex items-center gap-3 text-[#FF8C00] text-base font-bold tracking-widest uppercase mb-6">
@@ -14,9 +14,9 @@
         </h1>
         <p class="text-gray-500 text-sm leading-relaxed mb-10 max-w-sm">
             Seleccion de entradas artesanales
-preparadas con ingredientes frescos del
-Huila. El comienzo perfecto de tu
- experiencia gastronomica.
+            preparadas con ingredientes frescos del
+            Huila. El comienzo perfecto de tu
+            experiencia gastronomica.
         </p>
         <a href="{% url 'restaurantes' %}" class="bg-[#FF8C00] text-white px-8 py-4 rounded-lg font-bold text-sm hover:bg-[#e67e00] transition-colors inline-block w-fit">
             Ver restaurantes

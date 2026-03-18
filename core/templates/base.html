@@ -12,31 +12,60 @@
     <body class="bg-[#1a0f0a] text-white">
 
     <!-- NAVBAR -->
-    <nav class="bg-[#231208] sticky top-0 z-50 px-16 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <img src="{% static 'img/Logo.jpeg' %}" alt="GastroMovil" class="w-11 h-11 rounded-full object-cover">
-            <span class="text-white font-bold text-xl">Gastro <strong class="text-[#FF8C00]">Web</strong></span>
-        </div>
-        <ul class="flex gap-10 list-none ml-auto mr-10">
-            <li><a href="{% url 'index' %}" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Inicio</a></li>
-            <li><a href="{% url 'restaurantes' %}" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Restaurantes</a></li>
-            <li><a href="#" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Pedidos</a></li>
-            <li><a href="#" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Contactenos</a></li>
-        </ul>
-        <div class="flex items-center gap-5">
-            <i class="fas fa-circle-user text-white text-4xl cursor-pointer hover:text-[#FF8C00] transition-colors"></i>
-            <div class="relative cursor-pointer  mt-4">
-                <i class="fas fa-cart-shopping text-white text-xl hover:text-[#FF8C00] transition-colors"></i>
-                
-        </div>
-    </nav>
+ <!-- NAVBAR -->
+<nav class="bg-[#231208] sticky top-0 z-50 px-6 md:px-16 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+        <img src="{% static 'img/Logo.jpeg' %}" alt="GastroMovil" class="w-11 h-11 rounded-full object-cover">
+        <span class="text-white font-bold text-xl">Gastro <strong class="text-[#FF8C00]">Web</strong></span>
+    </div>
 
+    <!-- MENU DESKTOP -->
+    <ul class="hidden md:flex gap-10 list-none ml-auto mr-10">
+        <li><a href="{% url 'index' %}" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Inicio</a></li>
+        <li><a href="{% url 'restaurantes' %}" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Restaurantes</a></li>
+        <li><a href="#" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Pedidos</a></li>
+        <li><a href="#" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors">Contactenos</a></li>
+    </ul>
+
+    <!-- ICONOS DESKTOP -->
+   <!-- ICONOS DESKTOP -->
+<div class="hidden md:flex items-center gap-5">
+    <a href="{% url 'login' %}">
+        <i class="fas fa-circle-user text-white text-4xl cursor-pointer hover:text-[#FF8C00] transition-colors"></i>
+    </a>
+    <div class="relative cursor-pointer mt-4">
+        <i class="fas fa-cart-shopping text-white text-lg hover:text-[#FF8C00] transition-colors"></i>
+    </div>
+</div>
+
+    <!-- BOTON HAMBURGUESA MOVIL -->
+    <button id="menuBtn" class="md:hidden text-white text-2xl" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+</nav>
+
+<!-- MENU MOVIL -->
+<div id="menuMovil" class="hidden bg-[#231208] px-6 py-4 flex-col gap-4 md:hidden">
+    <a href="{% url 'index' %}" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors block py-2 border-b border-[#3d2010]">Inicio</a>
+    <a href="{% url 'restaurantes' %}" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors block py-2 border-b border-[#3d2010]">Restaurantes</a>
+    <a href="#" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors block py-2 border-b border-[#3d2010]">Pedidos</a>
+    <a href="#" class="text-white hover:text-[#FF8C00] font-bold uppercase tracking-wider text-sm transition-colors block py-2 border-b border-[#3d2010]">Contactenos</a>
+    <div class="flex items-center gap-5 py-2">
+        <a href="{% url 'login' %}">
+    <i class="fas fa-circle-user text-white text-4xl cursor-pointer hover:text-[#FF8C00] transition-colors"></i>
+</a>
+        <div class="relative cursor-pointer">
+            <i class="fas fa-cart-shopping text-white text-xl hover:text-[#FF8C00] transition-colors"></i>
+            <span class="absolute -top-2 -right-2 bg-[#FF8C00] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+        </div>
+    </div>
+</div>
     <!-- CONTENIDO -->
     {% block content %}{% endblock %}
 
     <!-- FOOTER -->
-    <footer class="bg-[#f0ebe5] text-gray-700 px-16 pt-12 pb-6">
-        <div class="grid grid-cols-3 gap-10 mb-10">
+    <footer class="bg-[#f0ebe5] text-gray-700 px-6 md:px-16 pt-12 pb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
             <div>
                 <div class="flex items-center gap-3 mb-4">
                     <img src="{% static 'img/Logo.jpeg' %}" alt="GastroMovil" class="w-10 h-10 rounded-full object-cover">
@@ -60,7 +89,7 @@
                 <p class="text-gray-600 text-sm"><i class="fas fa-envelope text-[#FF8C00] mr-2"></i> gastromovil3063679@gmail.com</p>
             </div>
         </div>
-        <div class="border-t border-gray-300 pt-6 flex justify-between items-center">
+        <div class="border-t border-gray-300 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="text-gray-500 text-sm"><i class="fas fa-copyright mr-1"></i> 2024 GastroMovil. Todos los derechos reservados.</p>
           <div class="flex gap-3">
     <a href="#" class="bg-gray-800 hover:bg-[#1877F2] text-white w-9 h-9 rounded-lg flex items-center justify-center transition-colors"><i class="fab fa-facebook-f text-sm"></i></a>
