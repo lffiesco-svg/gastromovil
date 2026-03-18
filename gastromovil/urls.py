@@ -1,12 +1,20 @@
-
 from django.contrib import admin
 from django.urls import path, include
 from core import views
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('restaurantes/', views.restaurantes, name='restaurantes'),
+    path('usuarios/', include('usuarios.urls')),
+    path('restaurantes/', include('restaurantes.urls')),
+    path('repartidores/', include('repartidores.urls')),
+    path('pedidos/', include('pedidos.urls')),
+    path('api/login/', TokenObtainPairView.as_view(), name='login'),
+    path('api/refresh/', TokenRefreshView.as_view(), name='refresh'),
     path('__reload__/', include('django_browser_reload.urls')),
     path('menu/beer/', views.menu_beer, name='menu_beer'),
     path('menu/taqueria/', views.menu_taqueria, name='menu_taqueria'),
@@ -25,3 +33,5 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('perfil/', views.perfil, name='perfil'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
