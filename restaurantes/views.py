@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render, redirect, get_list_or_404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Restaurante, Categoria, Producto
@@ -19,7 +19,7 @@ def detalle_restaurante(request, pk):
     })
 
 @login_required
-def crear_restaurante(request)
+def crear_restaurante(request):
     if request.user.rol != 'restaurante':
         messages.error(request, 'No tienes permiso para crear restaurantes')
         return redirect('lista_restaurantes')
@@ -43,14 +43,14 @@ def editar_restaurante(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Restaurante actualizado')
-            return redirect(detalle_restaurante, pk=pk)
+            return redirect('detalle_restaurante', pk=pk)
         else:
             form = RestauranteForm(instance=restaurante)
             return render(request, 'restaurantes/form.html', {'form': form, 'accion':'Editar Restaurante'})
         
 
 @login_required
-def eeliminar_restaurante(request, pk):
+def eliminar_restaurante(request, pk):
     restaurante = get_object_or_404(Restaurante, pk=pk, propietario=request.user)
     if request.method == 'POST':
         restaurante.delete()
@@ -77,15 +77,15 @@ def crear_categoria(request, restaurante_pk):
 @login_required
 def editar_categoria(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk, restaurante__propietario=request.user)
-    if request.method == 'POST'
-    form = CategoriaForm(request.POST, instance=categoria)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Categoria actualizada')
-        return redirect('detalle_restaurante', pk=categoria.restaurante.pk)
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST, instance=categoria)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Categoria actualizada')
+            return redirect('detalle_restaurante', pk=categoria.restaurante.pk)
     else:
-        form = CategoriaForm(instance= categoria)
-        return render (request, 'restaurantes/form.html', {'form': form, 'accion': 'Editar categoria'})
+        form = CategoriaForm(instance=categoria)
+    return render(request, 'restaurantes/form.html', {'form': form, 'accion': 'Editar categoria'})
 
 @login_required
 def eliminar_categoria(request, pk):
@@ -97,34 +97,46 @@ def eliminar_categoria(request, pk):
         return redirect('detalle_restaurante', pk=restaurante_pk)
     return render(request,'restaurantes/confirmar_eliminar.html', {'objeto': categoria})
 
-#   PRODUCTOS
+# PRODUCTOS
 @login_required
 def crear_producto(request, categoria_pk):
     categoria = get_object_or_404(Categoria, pk=categoria_pk, restaurante__propietario=request.user)
+    
     if request.method == 'POST':
         form = ProductoForm(request.POST, request.FILES)
         if form.is_valid():
             producto = form.save(commit=False)
             producto.categoria = categoria
             producto.save()
-            messages.success(request, 'producto creado')
+            messages.success(request, 'Producto creado')
             return redirect('detalle_restaurante', pk=categoria.restaurante.pk)
-        else:
-            form = ProductoForm()
-            return render (request, 'restaurantes/form.html', {'form': form, 'accion':'Crear producto'})
-        
+    else:
+        form = ProductoForm()  
+    
+    
+    return render(request, 'restaurantes/form.html', {
+        'form': form,
+        'accion': 'Crear producto'
+    })
+
 @login_required
 def editar_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk, categoria__restaurante__propietario=request.user)
+    
     if request.method == 'POST':
         form = ProductoForm(request.POST, request.FILES, instance=producto)
         if form.is_valid():
             form.save()
             messages.success(request, 'Producto actualizado')
             return redirect('detalle_restaurante', pk=producto.categoria.restaurante.pk)
-        else:
-            form=ProductoForm(instance=producto)
-            return render (request, 'restaurantes/form.html', {'form': form, 'accion': 'Editar producto'})
+    else:
+        form = ProductoForm(instance=producto)  
+    
+    
+    return render(request, 'restaurantes/form.html', {
+        'form': form,
+        'accion': 'Editar producto'
+    })
 
 @login_required
 def eliminar_producto(request, pk):

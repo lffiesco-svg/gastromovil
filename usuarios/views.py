@@ -81,6 +81,15 @@ def direccion_editar(request, pk):
             else:
                 form= DireccionForm(instance=direccion)
                 return render(request, 'usuarios/direccion_confirmar_eliminar.html', {'direccion': direccion})
+            
+@login_required
+def direccion_eliminar(request, pk):
+    direccion = get_object_or_404(Direccion, pk=pk, usuario=request.user)
+    if request.method == 'POST':
+        direccion.delete()
+        messages.success(request, 'Dirección eliminada')
+        return redirect('lista_direcciones') 
+    return render(request, 'usuarios/confirmar_eliminar.html', {'objeto': direccion})
 
 #CALIFICACIONES
 @login_required

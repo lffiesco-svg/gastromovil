@@ -1,3 +1,110 @@
 from django.contrib import admin
+from .models import Restaurante, Categoria, Producto
 
-# Register your models here.
+
+class CategoriaInline(admin.TabularInline):
+    model = Categoria
+    extra = 0
+    fields = ['nombre']
+    show_change_link = True  # Permite entrar al detalle de cada categoría
+
+
+class ProductoInline(admin.TabularInline):
+    model = Producto
+    extra = 0
+    fields = ['nombre', 'precio', 'disponible', 'imagen']
+    readonly_fields = ['imagen']
+
+
+@admin.register(Restaurante)
+class RestauranteAdmin(admin.ModelAdmin):
+    inlines = [CategoriaInline]
+
+    list_display = ['id', 'nombre', 'propietario', 'telefono', 'activo', 'tiene_imagen']
+    list_filter = ['activo']
+    search_fields = ['nombre', 'direccion', 'propietario__username', 'propietario__email']
+    readonly_fields = ['imagen']
+    ordering = ['-activo', 'nombre']
+
+    fieldsets = (
+        ('Información general', {
+            'fields': ('propietario', 'nombre', 'direccion', 'telefono')
+        }),
+        ('Estado', {
+            'fields': ('activo',)
+        }),
+        ('Imagen', {
+            'fields': ('imagen',)
+        }),
+    )
+
+    actions = ['activar_restaurante', 'desactivar_restaurante']
+
+    @admin.display(description='Tiene imagen', boolean=True)
+    def tiene_imagen(self, obj):
+        return bool(obj.imagen)
+
+    @admin.action(description='Activar restaurantes')
+    def activar_restaurante(self, request, queryset):
+        actualizados = queryset.update(activo=True)
+        self.message_user(request, f'{actualizados} restaurante(s) activados')
+
+    @admin.action(description='Desactivar restaurantes')
+    def desactivar_restaurante(self, request, queryset):
+        actualizados = queryset.update(activo=False)
+        self.message_user(request, f'{actualizados} restaurante(s) desactivados')
+
+
+@admin.register(Categoria)
+class CategoriaAdmin(admin.ModelAdmin):
+    inlines = [ProductoInline]
+
+    list_display = ['id', 'nombre', 'restaurante', 'total_productos']
+    list_filter = ['restaurante']
+    search_fields = ['nombre', 'restaurante__nombre']
+    ordering = ['restaurante', 'nombre']
+
+    @admin.display(description='Total productos')
+    def total_productos(self, obj):
+        return obj.productos.count()
+
+
+@admin.register(Producto)
+class ProductoAdmin(admin.ModelAdmin):
+    list_display = ['id', 'nombre', 'get_restaurante', 'categoria', 'precio', 'disponible', 'tiene_imagen']
+    list_filter = ['disponible', 'categoria__restaurante']
+    search_fields = ['nombre', 'descripcion', 'categoria__nombre', 'categoria__restaurante__nombre']
+    readonly_fields = ['imagen']
+    ordering = ['categoria', 'nombre']
+
+    fieldsets = (
+        ('Información del producto', {
+            'fields': ('categoria', 'nombre', 'descripcion')
+        }),
+        ('Precio y disponibilidad', {
+            'fields': ('precio', 'disponible')
+        }),
+        ('Imagen', {
+            'fields': ('imagen',)
+        }),
+    )
+
+    actions = ['marcar_disponible', 'marcar_no_disponible']
+
+    @admin.display(description='Restaurante')
+    def get_restaurante(self, obj):
+        return obj.categoria.restaurante.nombre
+
+    @admin.display(description='Tiene imagen', boolean=True)
+    def tiene_imagen(self, obj):
+        return bool(obj.imagen)
+
+    @admin.action(description='Marcar como disponible')
+    def marcar_disponible(self, request, queryset):
+        actualizados = queryset.update(disponible=True)
+        self.message_user(request, f'{actualizados} producto(s) marcados como disponibles')
+
+    @admin.action(description='Marcar como no disponible')
+    def marcar_no_disponible(self, request, queryset):
+        actualizados = queryset.update(disponible=False)
+        self.message_user(request, f'{actualizados} producto(s) marcados como no disponibles')
