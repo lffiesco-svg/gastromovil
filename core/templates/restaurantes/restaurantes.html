@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Restaurantes - GastroWeb{% endblock %}
+{% block content %}
+
+<section class="bg-[#1a0f0a] px-16 py-16 min-h-screen">
+    <p class="flex items-center gap-3 text-[#FF8C00] text-base font-bold tracking-widest uppercase mb-4">
+        <span class="inline-block w-9 h-0.5 bg-[#FF8C00]"></span>
+        Nuestros restaurantes
+    </p>
+    <h2 class="text-5xl font-black text-white mb-12">Elige tu antojo <span class="text-[#FF8C00]">favorito</span></h2>
+
+    <div class="flex flex-col md:flex-row justify-end gap-8 pr-0 md:pr-10">
+
+        <div class="bg-[#2d2d2d] rounded-2xl overflow-hidden border-2 border-[#3d3d3d] hover:border-[#FF8C00] hover:-translate-y-2 transition-all w-92">
+            <div class="relative">
+                <img src="{% static 'img/Beer.jpeg' %}" alt="Beer Club" class="w-full h-84 object-contain bg-[#1a1a1a]">
+              
+            </div>
+            <div class="px-4 py-3 text-center">
+                <h3 class="text-white font-black text-2xl mb-1">Beer Club</h3>
+                <p class="text-[#FF8C00] text-sm font-semibold mb-3">Restaurante - Bar</p>
+                <button onclick="window.location='{% url 'menu_beer' %}'" class="w-full bg-[#FF8C00] text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-[#e67e00] transition-colors cursor-pointer">
+                    Ir al menú
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-[#2d2d2d] rounded-2xl overflow-hidden border-2 border-[#3d3d3d] hover:border-[#FF8C00] hover:-translate-y-2 transition-all w-92">
+            <div class="relative">
+                <img src="{% static 'img/Taquera.jpeg' %}" alt="Taqueria donde Juancho" class="w-full h-84 object-contain bg-[#1a1a1a]">
+               
+            </div>
+            <div class="px-4 py-3 text-center">
+                <h3 class="text-white font-black text-2xl mb-1">Taqueria</h3>
+                <p class="text-[#FF8C00] text-sm font-semibold mb-3">Donde Juancho</p>
+                <button onclick="window.location='{% url 'menu_taqueria' %}'" class="w-full bg-[#FF8C00] text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-[#e67e00] transition-colors cursor-pointer">
+    Ir al menú
+</button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

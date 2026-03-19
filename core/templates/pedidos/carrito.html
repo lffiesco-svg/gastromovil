@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Carrito - GastroWeb{% endblock %}
+{% block content %}
+
+<section class="min-h-screen bg-gray-100 px-6 md:px-16 py-12">
+    <h2 class="text-3xl font-black text-gray-900 mb-8 flex items-center gap-3">
+        <i class="fas fa-cart-shopping text-[#FF8C00]"></i> Mi Carrito
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        <!-- CARRITO VACIO -->
+        <div class="bg-white rounded-2xl p-12 shadow-sm flex flex-col items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 text-gray-200 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+            <h3 class="font-black text-gray-400 text-2xl mb-2">Tu carrito está vacío</h3>
+            <p class="text-gray-400 text-sm mb-6">Agrega productos para comenzar tu pedido</p>
+            <a href="{% url 'restaurantes' %}" class="bg-[#FF8C00] text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-[#e67e00] transition-colors">
+                <i class="fas fa-utensils mr-2"></i> Ver Restaurantes
+            </a>
+        </div>
+
+        <!-- RESUMEN Y ENTREGA -->
+        <div class="flex flex-col gap-6">
+
+            <!-- DIRECCION DE ENTREGA -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+                <h3 class="font-black text-gray-900 text-lg mb-4 flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt text-[#FF8C00]"></i> Dirección de Entrega
+                </h3>
+                <div class="flex flex-col gap-4">
+                    <div>
+                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Dirección</label>
+                        <input type="text" placeholder="Ej: Calle 5 # 10-20, Garzón" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#FF8C00] transition-colors placeholder-gray-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Barrio</label>
+                        <input type="text" placeholder="Ej: Centro" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#FF8C00] transition-colors placeholder-gray-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Indicaciones adicionales</label>
+                        <textarea placeholder="Ej: Casa azul, portón negro..." class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#FF8C00] transition-colors placeholder-gray-400 h-24 resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESUMEN -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+                <h3 class="font-black text-gray-900 text-lg mb-6 flex items-center gap-2">
+                    <i class="fas fa-receipt text-[#FF8C00]"></i> Resumen
+                </h3>
+                <div class="flex flex-col gap-3 mb-6">
+                    <div class="flex justify-between text-sm text-gray-400">
+                        <span>Subtotal</span>
+                        <span>$0</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-400">
+                        <span>Domicilio</span>
+                        <span>$0</span>
+                    </div>
+                    <div class="border-t border-gray-200 pt-3 flex justify-between font-black text-gray-900 text-lg">
+                        <span>Total</span>
+                        <span class="text-[#FF8C00]">$0</span>
+                    </div>
+                </div>
+                <div class="bg-gray-100 rounded-xl p-4 mb-6 flex items-center gap-3">
+                    <i class="fas fa-clock text-[#FF8C00] text-xl"></i>
+                    <div>
+                        <p class="text-gray-400 text-xs">Tiempo estimado</p>
+                        <p class="font-black text-gray-900">-- min</p>
+                    </div>
+                </div>
+                <button class="w-full bg-[#FF8C00] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#e67e00] transition-colors">
+                    <i class="fas fa-lock mr-2"></i> Pagar Ahora
+                </button>
+                <a href="{% url 'restaurantes' %}" class="w-full block text-center text-gray-400 hover:text-[#FF8C00] text-sm font-bold mt-4 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Seguir comprando
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}
