@@ -57,3 +57,6 @@ def burritos(request):
 
 def maruchas(request):
     return render(request, 'categorias/maruchas.html')
+
+def carrito(request):
+    return render(request, 'pedidos/carrito.html')
