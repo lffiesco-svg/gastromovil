@@ -16,6 +16,7 @@ urlpatterns = [
     path('api/login/', TokenObtainPairView.as_view(), name='login'),
     path('api/refresh/', TokenRefreshView.as_view(), name='refresh'),
     path('__reload__/', include('django_browser_reload.urls')),
+    path('api/', include('chatbot.urls')),
     path('menu/beer/', views.menu_beer, name='menu_beer'),
     path('menu/taqueria/', views.menu_taqueria, name='menu_taqueria'),
     path('menu/beer/burgers/', views.burgers, name='burgers'),
