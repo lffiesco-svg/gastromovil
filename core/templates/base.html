@@ -117,13 +117,13 @@
             <div class="bg-white p-3 rounded-2xl rounded-bl-sm text-sm text-gray-700 shadow-sm max-w-xs">¡Hola! ¿En qué puedo ayudarte hoy? 🍔</div>
         </div>
         <div class="flex p-4 gap-3 border-t border-gray-100 bg-white">
-            <input id="iaInput" type="text" placeholder="Escribe tu pregunta..." class="flex-1 px-4 py-2 border-2 border-gray-100 rounded-full text-sm outline-none focus:border-[#FF8C00]">
+            <input id="iaInput" type="text" placeholder="Escribe tu pregunta..." class="flex-1 px-4 py-2 border-2 border-gray-100 text-black rounded-full text-sm outline-none focus:border-[#FF8C00]">
             <button onclick="sendIA()" class="bg-[#FF8C00] text-white w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
     </div>
 
-    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/main.js' %}?v=2"></script>
     </body>
 </html>

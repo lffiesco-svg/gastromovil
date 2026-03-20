@@ -7,11 +7,10 @@ from .prompts import SYSTEM_PROMPT
 load_dotenv()
 
 llm = ChatGroq(
-    model="llama3-70b-8192",
+    model="llama-3.3-70b-versatile",
     temperature=0.5,
     groq_api_key=os.getenv("GROQ_API_KEY")
 )
-
 
 def construir_contexto_productos(productos, categoria=None, restaurante=None):
     """Filtra y formatea los productos para el prompt."""
@@ -26,9 +25,9 @@ def construir_contexto_productos(productos, categoria=None, restaurante=None):
         return "No hay productos disponibles con ese filtro."
 
     return "\n".join(
-        [f"- {p['nombre']} | ${p['precio']} | Categoría: {p['categoria__nombre'] or 'Sin categoría'} | Restaurante: {p['restaurante__nombre']}"
-         for p in filtrados]
-    )
+    [f"- {p['nombre']} | ${p['precio']} | Categoría: {p['categoria__nombre'] or 'Sin categoría'} | Restaurante: {p['categoria__restaurante__nombre'] or 'Sin restaurante'}"
+     for p in filtrados]
+)
 
 
 def responder_chat(mensaje_usuario, productos, historial=None, categoria=None, restaurante=None):
