@@ -34,6 +34,9 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('perfil/', views.perfil, name='perfil'),
     path('carrito/', views.carrito, name='carrito'),
+    path('contacto/', views.contacto, name='contacto'), 
+    path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contrasena'),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

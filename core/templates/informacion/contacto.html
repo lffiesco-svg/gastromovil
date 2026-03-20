@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Contacto - GastroWeb{% endblock %}
+{% block content %}
+
+<section class="min-h-screen bg-gray-100 px-6 md:px-16 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+
+        <!-- FORMULARIO -->
+        <div class="bg-white rounded-2xl shadow-md p-8">
+            <h2 class="font-black text-2xl text-gray-900 mb-6">Envíanos un mensaje</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+                <div>
+                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Nombre completo <span class="text-red-500">*</span></label>
+                    <input type="text" placeholder="Tu nombre completo" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#FF8C00] transition-colors placeholder-gray-400">
+                </div>
+
+                <div>
+                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Correo electrónico <span class="text-red-500">*</span></label>
+                    <input type="email" placeholder="tu@email.com" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#FF8C00] transition-colors placeholder-gray-400">
+                </div>
+
+                <div>
+                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Teléfono</label>
+                    <input type="tel" placeholder="+57 300 123 4567" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#FF8C00] transition-colors placeholder-gray-400">
+                </div>
+
+                <div>
+                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Tipo de consulta <span class="text-red-500">*</span></label>
+                    <select class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#FF8C00] transition-colors cursor-pointer">
+                        <option value="">Selecciona un tema</option>
+                        <option value="pedido">Problema con pedido</option>
+                        <option value="domicilio">Domicilio</option>
+                        <option value="restaurante">Restaurante</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+
+                <div class="col-span-full">
+                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Mensaje <span class="text-red-500">*</span></label>
+                    <textarea placeholder="Describe tu consulta en detalle..." class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#FF8C00] transition-colors placeholder-gray-400 h-32 resize-none"></textarea>
+                </div>
+
+                <div class="col-span-full flex items-start gap-3">
+                    <input type="checkbox" class="mt-1 w-4 h-4 accent-[#FF8C00] cursor-pointer">
+                    <p class="text-gray-500 text-sm">He leído y acepto la <a href="#" class="text-[#FF8C00] hover:underline font-bold">política de privacidad</a> y el tratamiento de mis datos personales</p>
+                </div>
+
+                <div class="col-span-full">
+                    <button class="w-full bg-[#FF8C00] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#e67e00] transition-colors">
+                        <i class="fas fa-paper-plane mr-2"></i> Enviar mensaje
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="flex flex-col gap-6">
+
+            <!-- INFORMACION DE CONTACTO -->
+            <div class="bg-white rounded-2xl shadow-md p-8 flex flex-col gap-6">
+                <h2 class="font-black text-2xl text-gray-900">Información de contacto</h2>
+
+                <div class="flex items-start gap-4">
+                    <div class="p-3 bg-orange-100 rounded-xl">
+                        <i class="fas fa-map-marker-alt text-[#FF8C00] text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900 text-lg mb-1">Ubicación</p>
+                        <p class="text-gray-500 text-sm">Garzón, Huila, Colombia</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="p-3 bg-green-100 rounded-xl">
+                        <i class="fas fa-phone text-green-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900 text-lg mb-1">Teléfonos</p>
+                        <p class="text-gray-500 text-sm">+57 320 846 0726</p>
+                        <p class="text-gray-500 text-sm">WhatsApp: +57 320 846 0726</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="p-3 bg-purple-100 rounded-xl">
+                        <i class="fas fa-envelope text-purple-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900 text-lg mb-1">Correos</p>
+                        <p class="text-gray-500 text-sm">gastromovil3063679@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="p-3 bg-orange-100 rounded-xl">
+                        <i class="fas fa-clock text-[#FF8C00] text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900 text-lg mb-1">Horarios</p>
+                        <p class="text-gray-500 text-sm">Lunes a viernes: 8:00 AM - 8:00 PM</p>
+                        <p class="text-gray-500 text-sm">Sábados: 9:00 AM - 6:00 PM</p>
+                        <p class="text-gray-500 text-sm">Domingos: 10:00 AM - 4:00 PM</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REDES SOCIALES -->
+            <div class="bg-white rounded-2xl shadow-md p-8">
+                <h2 class="font-black text-xl text-gray-900 mb-6">Síguenos en redes sociales</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="#" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all">
+                        <i class="fab fa-facebook-f text-blue-600 text-xl"></i>
+                        <div>
+                            <p class="font-bold text-gray-800 text-sm">Facebook</p>
+                            <p class="text-gray-400 text-xs">@gastroweb</p>
+                        </div>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-pink-400 hover:bg-pink-50 transition-all">
+                        <i class="fab fa-instagram text-pink-600 text-xl"></i>
+                        <div>
+                            <p class="font-bold text-gray-800 text-sm">Instagram</p>
+                            <p class="text-gray-400 text-xs">@gastroweb</p>
+                        </div>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-sky-400 hover:bg-sky-50 transition-all">
+                        <i class="fab fa-twitter text-sky-500 text-xl"></i>
+                        <div>
+                            <p class="font-bold text-gray-800 text-sm">Twitter/X</p>
+                            <p class="text-gray-400 text-xs">@gastroweb</p>
+                        </div>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all">
+                        <i class="fab fa-whatsapp text-green-500 text-xl"></i>
+                        <div>
+                            <p class="font-bold text-gray-800 text-sm">WhatsApp</p>
+                            <p class="text-gray-400 text-xs">Chat directo</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- POR QUE ELEGIRNOS -->
+            <div class="bg-orange-50 rounded-2xl shadow-md p-8">
+                <h2 class="font-black text-xl text-gray-900 mb-6">¿Por qué elegirnos?</h2>
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-check text-[#FF8C00]"></i>
+                        <p class="text-gray-600 text-sm">Atención personalizada y rápida</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-check text-[#FF8C00]"></i>
+                        <p class="text-gray-600 text-sm">Domicilio rápido en 25-35 minutos</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-check text-[#FF8C00]"></i>
+                        <p class="text-gray-600 text-sm">Los mejores restaurantes de Garzón</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-check text-[#FF8C00]"></i>
+                        <p class="text-gray-600 text-sm">Pago seguro y múltiples métodos</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}
