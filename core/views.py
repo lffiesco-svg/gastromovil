@@ -60,3 +60,9 @@ def maruchas(request):
 
 def carrito(request):
     return render(request, 'pedidos/carrito.html')
+
+def contacto(request):
+    return render(request, 'informacion/contacto.html')
+
+def recuperar_contrasena(request):
+    return render(request, 'auth/recuperar_contrasena.html')
