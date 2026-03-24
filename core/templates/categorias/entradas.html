@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Entradas - Beer Club{% endblock %}
+{% block content %}
+<section class="bg-white min-h-screen px-16 py-12">
+    <div class="flex items-center gap-3 mb-8">
+        <a href="{% url 'menu_beer' %}" class="text-[#FF8C00] hover:text-[#e67e00] transition-colors">
+            <i class="fas fa-arrow-left text-2xl"></i>
+        </a>
+        <h2 class="text-4xl font-black text-gray-900">Entradas</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+        <!-- productos aqui -->
+    </div>
+</section>
+{% endblock %}
