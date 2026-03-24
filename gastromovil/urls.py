@@ -37,6 +37,7 @@ urlpatterns = [
     path('contacto/', views.contacto, name='contacto'), 
     path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contrasena'),
     path('mispedidos/', views.historial, name='historial'),
+    path('verificar/', views.verificar_codigo, name='verificar_codigo'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -69,3 +69,6 @@ def recuperar_contrasena(request):
 
 def historial(request):
     return render(request, 'pedidos/historial.html')
+
+def verificar_codigo(request):
+    return render(request, 'auth/verificar_codigo.html')
