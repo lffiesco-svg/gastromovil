@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import JSONParser
 
 from .serializers import MensajeChatSerializer
 from .ai.chatbot import responder_chat
@@ -8,6 +9,7 @@ from restaurantes.models import Producto
 
 
 class ChatView(APIView):
+    parser_classes = [JSONParser]  # Forzar parser JSON
 
     def post(self, request):
         serializer = MensajeChatSerializer(data=request.data)
