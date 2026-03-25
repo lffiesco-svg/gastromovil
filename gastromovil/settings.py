@@ -17,6 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -113,3 +114,65 @@ LOGOUT_REDIRECT_URL = '/usuarios/login/'
 
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = ['127.0.0.1']
+
+JAZZMIN_SETTINGS = {
+    "site_title": "GastroWeb Admin",
+    "site_header": "GastroWeb",
+    "site_brand": "GastroWeb",
+    "welcome_sign": "Bienvenido al Panel Administrativo",
+    "copyright": "GastroWeb 2026",
+    "search_model": ["restaurantes.Restaurante", "restaurantes.Producto"],
+    "topmenu_links": [
+        {"name": "Inicio", "url": "/", "new_window": False},
+    ],
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "restaurantes.restaurante": "fas fa-utensils",
+        "restaurantes.categoria": "fas fa-list",
+        "restaurantes.producto": "fas fa-hamburger",
+        "pedidos.pedido": "fas fa-shopping-bag",
+        "usuarios.usuario": "fas fa-user-circle",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "related_modal_active": False,
+    "custom_css": None,
+    "custom_js": None,
+    "use_google_fonts_cdn": True,
+    "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-danger",
+    "accent": "accent-danger",
+    "navbar": "navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-danger",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "darkly",
+    "dark_mode_theme": "darkly",
+    "button_classes": {
+        "primary": "btn-danger",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
+    },
+}
