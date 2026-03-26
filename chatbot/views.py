@@ -9,7 +9,7 @@ from restaurantes.models import Producto
 
 
 class ChatView(APIView):
-    parser_classes = [JSONParser]  # Forzar parser JSON
+    parser_classes = [JSONParser]
 
     def post(self, request):
         serializer = MensajeChatSerializer(data=request.data)
@@ -19,13 +19,17 @@ class ChatView(APIView):
 
         data = serializer.validated_data
 
+        # Query directa — Producto ya tiene FK a Restaurante y Categoria
         productos = list(Producto.objects.filter(disponible=True).values(
-            'nombre',
-            'precio',
-            'categoria__nombre',
-            'categoria__restaurante__nombre',
-        ))
-
+    'id',
+    'nombre',
+    'descripcion',
+    'precio',
+    'categoria__id',
+    'categoria__nombre',
+    'categoria__restaurante__id',       # ← así se llega al restaurante
+    'categoria__restaurante__nombre',
+))
         respuesta = responder_chat(
             mensaje_usuario=data['mensaje'],
             productos=productos,
