@@ -19,13 +19,17 @@ class ChatView(APIView):
 
         data = serializer.validated_data
 
+        # Query directa — Producto ya tiene FK a Restaurante y Categoria
         productos = list(Producto.objects.filter(disponible=True).values(
+            'id',
             'nombre',
+            'descripcion',
             'precio',
+            'categoria__id',
             'categoria__nombre',
+            'categoria__restaurante__id',
             'categoria__restaurante__nombre',
         ))
-
         respuesta = responder_chat(
             mensaje_usuario=data['mensaje'],
             productos=productos,

@@ -80,16 +80,14 @@ function sendIA() {
         return res.json();
     })
     .then(data => {
-        // Remover indicador de escritura
         document.getElementById('typing-indicator')?.remove();
 
         const botMsg = document.createElement('div');
-        botMsg.className = 'bg-white p-3 rounded-2xl rounded-bl-sm text-sm text-gray-700 shadow-sm max-w-xs';
-        botMsg.textContent = data.respuesta;
+        botMsg.className = 'bg-white p-3 rounded-2xl rounded-bl-sm text-sm text-gray-700 shadow-sm max-w-[85%]';
+        botMsg.innerHTML = data.respuesta; // ← tu cambio
         messages.appendChild(botMsg);
         messages.scrollTop = messages.scrollHeight;
 
-        // Agregar respuesta del bot al historial
         chatHistorial.push({ role: 'assistant', content: data.respuesta });
     })
     .catch(err => {
