@@ -14,7 +14,6 @@ llm = ChatGroq(
     groq_api_key=os.getenv("GROQ_API_KEY")
 )
 
-
 def construir_contexto_productos(productos, categoria=None, restaurante=None):
     """Filtra y formatea los productos para el prompt."""
     filtrados = productos

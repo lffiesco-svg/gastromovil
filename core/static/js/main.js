@@ -80,16 +80,16 @@ function sendIA() {
         return res.json();
     })
     .then(data => {
-    document.getElementById('typing-indicator')?.remove();
+        document.getElementById('typing-indicator')?.remove();
 
-    const botMsg = document.createElement('div');
-    botMsg.className = 'bg-white p-3 rounded-2xl rounded-bl-sm text-sm text-gray-700 shadow-sm max-w-[85%]';
-    botMsg.innerHTML = data.respuesta; // ← único cambio
-    messages.appendChild(botMsg);
-    messages.scrollTop = messages.scrollHeight;
+        const botMsg = document.createElement('div');
+        botMsg.className = 'bg-white p-3 rounded-2xl rounded-bl-sm text-sm text-gray-700 shadow-sm max-w-[85%]';
+        botMsg.innerHTML = data.respuesta; // ← tu cambio
+        messages.appendChild(botMsg);
+        messages.scrollTop = messages.scrollHeight;
 
-    chatHistorial.push({ role: 'assistant', content: data.respuesta });
-})
+        chatHistorial.push({ role: 'assistant', content: data.respuesta });
+    })
     .catch(err => {
         // Remover indicador de escritura
         document.getElementById('typing-indicator')?.remove();
