@@ -16,6 +16,7 @@ llm = ChatGroq(
 
 
 def construir_contexto_productos(productos, categoria=None, restaurante=None):
+    """Filtra y formatea los productos para el prompt."""
     filtrados = productos
 
     if categoria:
