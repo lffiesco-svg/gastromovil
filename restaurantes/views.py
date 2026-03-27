@@ -6,23 +6,23 @@ from .forms import RestauranteForm, CategoriaForm, ProductoForm
 
 # Create your views here.
 #RESTAURANTES
-def lista_restaurantes(request):
+def lista_restaurante(request):
     restaurantes = Restaurante.objects.filter(activo=True)
-    return render(request, 'restaurantes/lista.html', {'restaurante': restaurantes})
+    return render(request, 'restaurante/lista.html', {'restaurante': restaurantes})
 
 def detalle_restaurante(request, pk):
     restaurante = get_object_or_404(Restaurante, pk=pk, activo=True)
     categorias = Categoria.objects.filter(restaurante=restaurante).prefetch_related('productos')
     return render(request, 'restaurante/detalle.html',{
         'restaurante': restaurante,
-        'caregorias' : categorias,
+        'categorias' : categorias,
     })
 
 @login_required
 def crear_restaurante(request):
     if request.user.rol != 'restaurante':
         messages.error(request, 'No tienes permiso para crear restaurantes')
-        return redirect('lista_restaurantes')
+        return redirect('lista_restaurante')
     if request.method == 'POST':
         form = RestauranteForm(request.POST, request.FILES)
         if form.is_valid():
@@ -55,7 +55,7 @@ def eliminar_restaurante(request, pk):
     if request.method == 'POST':
         restaurante.delete()
         messages.success(request, 'Restaurante eliminado')
-        return redirect('lista_restaurantes')
+        return redirect('lista_restaurante')
     return render(request, 'restaurantes/confirmar_eliminar.html', {'objeto': restaurante})
 
 #CATEGORIAS
