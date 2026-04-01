@@ -6,6 +6,8 @@ from .prompts import SYSTEM_PROMPT
 
 load_dotenv()
 
+FRONTEND_BASE_URL = os.getenv("FRONTEND_URL", "http://localhost:8000")
+
 llm = ChatGroq(
     model="llama-3.3-70b-versatile",
     temperature=0.5,
@@ -17,31 +19,43 @@ def construir_contexto_productos(productos, categoria=None, restaurante=None):
     filtrados = productos
 
     if categoria:
-        filtrados = [p for p in filtrados if p['categoria__nombre'] and p['categoria__nombre'].lower() == categoria.lower()]
+        filtrados = [
+            p for p in filtrados
+            if p['categoria__nombre'] and p['categoria__nombre'].lower() == categoria.lower()
+        ]
     if restaurante:
-        filtrados = [p for p in filtrados if p['restaurante__nombre'] and p['restaurante__nombre'].lower() == restaurante.lower()]
+        filtrados = [
+            p for p in filtrados
+            if p['categoria__restaurante__nombre'] and p['categoria__restaurante__nombre'].lower() == restaurante.lower()
+        ]
 
     if not filtrados:
         return "No hay productos disponibles con ese filtro."
 
-    return "\n".join(
-    [f"- {p['nombre']} | ${p['precio']} | Categoría: {p['categoria__nombre'] or 'Sin categoría'} | Restaurante: {p['categoria__restaurante__nombre'] or 'Sin restaurante'}"
-     for p in filtrados]
-)
+    lineas = []
+    for p in filtrados:
+        restaurante_id = p['categoria__restaurante__id']
+        producto_id = p['id']
+        url = f"{FRONTEND_BASE_URL}/restaurante/{restaurante_id}/producto/{producto_id}"
+        descripcion = f" | Descripcion: {p['descripcion']}" if p.get('descripcion') else ""
+        lineas.append(
+            f"- {p['nombre']} | ${p['precio']}"
+            f" | Categoria: {p['categoria__nombre'] or 'Sin categoria'}"
+            f" | Restaurante: {p['categoria__restaurante__nombre'] or 'Sin restaurante'}"
+            f"{descripcion}"
+            f" | URL: {url}"
+        )
+
+    return "\n".join(lineas)
 
 
 def responder_chat(mensaje_usuario, productos, historial=None, categoria=None, restaurante=None):
-    """
-    Responde al usuario con contexto de productos e historial.
-
-    historial: lista de dicts [{role: 'user'|'assistant', content: '...'}]
-    """
     contexto = construir_contexto_productos(productos, categoria, restaurante)
 
     prompt_usuario = f"""Productos disponibles:
 {contexto}
 
-Pregunta: {mensaje_usuario}"""
+Pregunta del usuario: {mensaje_usuario}"""
 
     mensajes = [SystemMessage(content=SYSTEM_PROMPT)]
 
@@ -59,5 +73,4 @@ Pregunta: {mensaje_usuario}"""
         return respuesta.content
     except Exception as e:
         print(f"[ERROR Groq]: {e}")
-        return "Error al procesar tu consulta. Intenta de nuevo más tarde."
-    
+        return "Error al procesar tu consulta. Intenta de nuevo mas tarde."
