@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your models here.
 class Usuario(AbstractUser) :
@@ -34,3 +36,17 @@ class Calificacion(models.Model):
 
     def __str__(self):
         return f"Calificacion {self.puntuacion}/5 - Pedido #{self.pedido.id}" 
+    
+class CodigoRecuperacion(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    codigo = models.CharField(max_length=6)
+    creado = models.DateTimeField(auto_now_add=True)
+    expiracion = models.DateTimeField()
+
+    def is_expired(self):
+        return timezone.now() > self.expiracion
+
+    def save(self, *args, **kwargs):
+        if not self.expiracion:
+            self.expiracion = timezone.now() + timedelta(minutes=10)
+        super().save(*args, **kwargs)
