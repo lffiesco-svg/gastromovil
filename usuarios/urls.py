@@ -8,6 +8,7 @@ urlpatterns = [
 
     #crear registro
     path('api/registro/', views.registro_api),
+    path('registro/', views.registro, name='registro_web'),
     #crear direccion
     path('api/direcciones/crear/', crear_direccion),
     #mostrar las direcciones existentes

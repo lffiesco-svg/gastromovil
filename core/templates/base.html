@@ -28,21 +28,41 @@
         </ul>
 
         <!-- ICONOS DESKTOP -->
-        <div class="hidden md:flex items-center gap-5">
-            <a href="{% url 'login' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
-                <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </svg>
+<div class="hidden md:flex items-center gap-5">
+    {% if user.is_authenticated %}
+    <div class="relative group">
+        <button onclick="toggleUserMenu()" class="w-10 h-10 rounded-full bg-gradient-to-r from-[#DC2626] to-[#FF4500] text-white font-black text-sm flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+            {{ user.username|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper }}
+        </button>
+        <div id="userMenu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+            <div class="px-4 py-3 border-b border-gray-100">
+                <p class="text-gray-900 font-black text-sm">{{ user.username }}</p>
+                <p class="text-gray-400 text-xs">{{ user.email }}</p>
+            </div>
+            <a href="/usuarios/perfil/" class="flex items-center px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-[#DC2626] transition-colors text-sm gap-2">
+                <i class="fas fa-user-circle"></i> Mi Perfil
             </a>
-            <a href="{% url 'carrito' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
-                <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="8" cy="21" r="1"/>
-                    <circle cx="19" cy="21" r="1"/>
-                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-                </svg>
+            <a href="/usuarios/logout/" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50 transition-colors text-sm gap-2">
+                <i class="fas fa-right-from-bracket"></i> Cerrar sesión
             </a>
         </div>
+    </div>
+    {% else %}
+    <a href="/login/" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
+        <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+        </svg>
+    </a>
+    {% endif %}
+    <a href="{% url 'carrito' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
+        <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="21" r="1"/>
+            <circle cx="19" cy="21" r="1"/>
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+        </svg>
+    </a>
+</div>
 
         <!-- BOTON HAMBURGUESA MOVIL -->
         <button id="menuBtn" class="md:hidden text-white text-2xl" onclick="toggleMenu()">

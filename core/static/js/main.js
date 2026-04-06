@@ -21,6 +21,18 @@ function toggleMenu() {
         menu.classList.remove('flex');
     }
 }
+function toggleUserMenu() {
+    const menu = document.getElementById('userMenu');
+    menu.classList.toggle('hidden');
+}
+
+document.addEventListener('click', function(e) {
+    const menu = document.getElementById('userMenu');
+    if (menu && !menu.contains(e.target) && !e.target.closest('button[onclick="toggleUserMenu()"]')) {
+        menu.classList.add('hidden');
+    }
+});
+
 
 // Obtener CSRF desde cookies
 function getCSRF() {

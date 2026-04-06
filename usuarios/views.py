@@ -25,24 +25,31 @@ def registro (request):
             user = form.save ()
             login(request, user)
             messages.success(request, 'Cuenta creada exitosamente.')
-            return redirect ('perfil')
+            return redirect ('login')
     else:
         form = UsuarioRegistroForm()
     return render (request, 'usuarios/registro.html', {'form' : form})
 
-@csrf_exempt      
+import json
+
+@csrf_exempt
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            password = data.get('password')
+        except:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+        
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            return redirect('perfil')
+            return redirect('index')
         else:
-            messages.error(request, 'Usuario o contraseña incorrecta')
-    return render(request, 'usuarios/login.html')
-    
+            return render(request, 'auth/login.html', {'error': 'Credenciales incorrectas'})
+    return render(request, 'auth/login.html')
 @login_required
 def logout_view(request):
     logout(request)
