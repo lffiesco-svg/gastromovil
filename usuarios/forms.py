@@ -2,13 +2,15 @@ from django import forms
 from .models import Usuario, Direccion
 
 class UsuarioRegistroForm(forms.ModelForm):
-    password1 = forms.CharField(label='contraseña', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='confirmar contraseña', widget=forms.PasswordInput)
+    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)
 
     class Meta:
         model = Usuario
-        fields = ['username', 'email', 'telefono', 'rol', 'password1', 'password2']
+        fields = ['email', 'telefono', 'password1', 'password2']
+    
 
+    
     def clean(self):
         cleaned_data = super().clean()
         p1 = cleaned_data.get('password1')
@@ -20,9 +22,11 @@ class UsuarioRegistroForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
+        user.rol = 'cliente'   
         if commit:
             user.save()
-        return user
+        return user  
+
 
 class DireccionForm(forms.ModelForm):
     class Meta:

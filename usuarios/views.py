@@ -35,21 +35,16 @@ import json
 @csrf_exempt
 def login_view(request):
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            username = data.get('username')
-            password = data.get('password')
-        except:
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-        
-        user = authenticate(request, username=username, password=password)
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(request, username=email, password=password)
         if user:
             login(request, user)
             return redirect('index')
         else:
-            return render(request, 'auth/login.html', {'error': 'Credenciales incorrectas'})
-    return render(request, 'auth/login.html')
+            messages.error(request, 'correo o contraseña incorrecta')
+    return render(request, 'usuarios/login.html')
+    
 @login_required
 def logout_view(request):
     logout(request)
