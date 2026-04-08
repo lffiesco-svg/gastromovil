@@ -1,31 +1,65 @@
-# Entorno virtual
+# ========================
+# ENTORNO VIRTUAL
+# ========================
 venv/
+env/
 .venv/
 
-# Python
+# ========================
+# PYTHON
+# ========================
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.pdb
+*.egg-info/
+dist/
+build/
+*.egg
 
-# Django
+# ========================
+# DJANGO
+# ========================
 db.sqlite3
 *.log
 media/
+staticfiles/        # carpeta generada por collectstatic
 
-# Variables de entorno y configuración sensible
+# ========================
+# VARIABLES DE ENTORNO Y CLAVES
+# ========================
 .env
 .env.local
 .env.production
+.env.staging
+*.env
+secrets.py
 
-# MySQL
+# ========================
+# BASE DE DATOS
+# ========================
 *.sql
 *.sql.gz
+*.sqlite3
 mysqldata/
 
-# Editor VS Code
+# ========================
+# EDITORES
+# ========================
 .vscode/
+.idea/
+*.swp
+*.swo
 
-# Sistema operativo
+# ========================
+# SISTEMA OPERATIVO
+# ========================
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# ========================
+# QODO / HERRAMIENTAS IA
+# ========================
+.qodo/

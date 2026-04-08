@@ -25,12 +25,14 @@ def registro (request):
             user = form.save ()
             login(request, user)
             messages.success(request, 'Cuenta creada exitosamente.')
-            return redirect ('perfil')
+            return redirect ('login')
     else:
         form = UsuarioRegistroForm()
     return render (request, 'usuarios/registro.html', {'form' : form})
 
-@csrf_exempt      
+import json
+
+@csrf_exempt
 def login_view(request):
     if request.method == 'POST':
         email = request.POST['email']
@@ -38,7 +40,7 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
         if user:
             login(request, user)
-            return redirect('perfil')
+            return redirect('index')
         else:
             messages.error(request, 'correo o contraseña incorrecta')
     return render(request, 'usuarios/login.html')
