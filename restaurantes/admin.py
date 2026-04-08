@@ -13,17 +13,15 @@ class ProductoInline(admin.TabularInline):
     model = Producto
     extra = 0
     fields = ['nombre', 'precio', 'disponible', 'imagen']
-    readonly_fields = ['imagen']
 
 
 @admin.register(Restaurante)
 class RestauranteAdmin(admin.ModelAdmin):
     inlines = [CategoriaInline]
 
-    list_display = ['id', 'nombre', 'propietario', 'telefono', 'activo', 'tiene_imagen']
+    list_display = ['id', 'nombre', 'telefono', 'activo', 'tiene_imagen']
     list_filter = ['activo']
     search_fields = ['nombre', 'direccion', 'propietario__username', 'propietario__email']
-    readonly_fields = ['imagen']
     ordering = ['-activo', 'nombre']
 
     fieldsets = (
@@ -74,7 +72,6 @@ class ProductoAdmin(admin.ModelAdmin):
     list_display = ['id', 'nombre', 'get_restaurante', 'categoria', 'precio', 'disponible', 'tiene_imagen']
     list_filter = ['disponible', 'categoria__restaurante']
     search_fields = ['nombre', 'descripcion', 'categoria__nombre', 'categoria__restaurante__nombre']
-    readonly_fields = ['imagen']
     ordering = ['categoria', 'nombre']
 
     fieldsets = (

@@ -11,7 +11,7 @@ class RepartidorAdmin(admin.ModelAdmin):
     list_display = ['id', 'get_nombre', 'get_email', 'estado', 'calificacion_promedio', 'activo']
     list_filter = ['estado', 'activo']
     search_fields = ['usuario__username', 'usuario__email', 'usuario__first_name', 'usuario__last_name']
-    readonly_fields = ['calificacion_promedio']
+    readonly_fields = ()
     ordering = ['-activo', 'usuario__first_name']
 
     fieldsets = (

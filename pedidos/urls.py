@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from pedidos.views import test_notificacion
 
 urlpatterns = [
     # Cliente
@@ -11,4 +12,6 @@ urlpatterns = [
     # Restaurante
     path('restaurante/', views.pedidos_restaurante, name='pedidos_restaurante'),
     path('<int:pk>/estado/', views.cambiar_estado_pedido, name='cambiar_estado_pedido'),
+
+    path('test-notificacion/', test_notificacion, name='test_notificacion'),
 ]

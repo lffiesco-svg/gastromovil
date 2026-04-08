@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'chatbot',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -67,7 +68,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'gastromovil.wsgi.application'
+ASGI_APPLICATION = 'gastromovil.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+} 
 
 DATABASES = {
     'default': {
@@ -110,6 +117,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static')]
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
+AUTHENTICATION_BACKENDS = [
+    'usuarios.backends.EmailBackend',  
+    'django.contrib.auth.backends.ModelBackend',
+]
 LOGIN_URL = '/usuarios/login'
 LOGIN_REDIRECT_URL = '/usuarios/perfil/'
 LOGOUT_REDIRECT_URL = '/usuarios/login/'

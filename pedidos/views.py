@@ -5,7 +5,10 @@ from django.db import transaction
 from .models import Pedido, DetallePedido
 from .forms import PedidoForm, DetallePedidoForm, CambiarEstadoForm
 from restaurantes.models import Producto
-
+# Vista temporal de prueba
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from django.http import JsonResponse
 
 @login_required
 def lista_pedidos(request):
@@ -35,7 +38,6 @@ def crear_pedido(request):
             pedido.cliente = request.user
             pedido.save()
 
-            # Procesar productos enviados desde el formulario
             productos_ids = request.POST.getlist('producto')
             cantidades = request.POST.getlist('cantidad')
             total = 0
@@ -55,12 +57,29 @@ def crear_pedido(request):
             pedido.total = total
             pedido.save()
 
+            # ── NOTIFICAR AL RESTAURANTE ──────────────────
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f'restaurante_{pedido.restaurante.id}',
+                {
+                    'type': 'notificacion_pedido',
+                    'data': {
+                        'tipo': 'nuevo_pedido',
+                        'mensaje': f'🍽️ ¡Nuevo pedido #{pedido.id}!',
+                        'pedido_id': pedido.id,
+                        'cliente': request.user.get_full_name() or request.user.username,
+                        'total': str(pedido.total),
+                        'notas': pedido.notas,
+                    }
+                }
+            )
+            # ─────────────────────────────────────────────
+
             messages.success(request, f'Pedido #{pedido.id} creado correctamente')
             return redirect('detalle_pedido', pk=pedido.pk)
     else:
         form = PedidoForm()
 
-    # Filtrar direcciones del usuario
     form.fields['direccion_entrega'].queryset = form.fields[
         'direccion_entrega'].queryset.filter(usuario=request.user)
 
@@ -84,8 +103,6 @@ def cancelar_pedido(request, pk):
     return render(request, 'pedidos/confirmar_cancelar.html', {'pedido': pedido})
 
 
-# ── Vistas para el restaurante/admin ──────────────────────────────────────────
-
 @login_required
 def pedidos_restaurante(request):
     pedidos = Pedido.objects.filter(
@@ -102,6 +119,48 @@ def cambiar_estado_pedido(request, pk):
         form = CambiarEstadoForm(request.POST, instance=pedido)
         if form.is_valid():
             form.save()
+
+            channel_layer = get_channel_layer()
+
+            # ── SI EL ESTADO ES "enviado" → NOTIFICAR AL REPARTIDOR ──
+            if pedido.estado == 'enviado':
+                # Buscar repartidor disponible
+                from repartidores.models import Repartidor
+                repartidor = Repartidor.objects.filter(
+                    estado='disponible', activo=True
+                ).first()
+
+                if repartidor:
+                    async_to_sync(channel_layer.group_send)(
+                        f'repartidor_{repartidor.id}',
+                        {
+                            'type': 'notificacion_pedido',
+                            'data': {
+                                'tipo': 'pedido_listo',
+                                'mensaje': f'🛵 ¡Pedido #{pedido.id} listo para recoger!',
+                                'pedido_id': pedido.id,
+                                'restaurante': pedido.restaurante.nombre,
+                                'direccion_restaurante': pedido.restaurante.direccion,
+                                'direccion_entrega': str(pedido.direccion_entrega),
+                            }
+                        }
+                    )
+
+            # ── NOTIFICAR AL CLIENTE DEL CAMBIO DE ESTADO ────────────
+            async_to_sync(channel_layer.group_send)(
+                f'cliente_{pedido.cliente.id}',
+                {
+                    'type': 'notificacion_pedido',
+                    'data': {
+                        'tipo': 'cambio_estado',
+                        'mensaje': f'📦 Tu pedido #{pedido.id} está: {pedido.get_estado_display()}',
+                        'pedido_id': pedido.id,
+                        'estado': pedido.estado,
+                    }
+                }
+            )
+            # ─────────────────────────────────────────────────────────
+
             messages.success(request, f'Estado actualizado a: {pedido.get_estado_display()}')
             return redirect('pedidos_restaurante')
     else:
@@ -111,3 +170,21 @@ def cambiar_estado_pedido(request, pk):
         'form': form,
         'pedido': pedido
     })
+
+def test_notificacion(request):
+    tipo = request.GET.get('tipo', 'restaurante')
+    sala = request.GET.get('sala', '1')
+    mensaje = request.GET.get('mensaje', 'Notificación de prueba')
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"{tipo}_{sala}",
+        {
+            "type": "notificacion_pedido",
+            "data": {
+                "mensaje": mensaje,
+                "pedido_id": 42,
+            }
+        }
+    )
+    return JsonResponse({"ok": True, "enviado_a": f"{tipo}_{sala}"})

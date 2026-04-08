@@ -85,3 +85,101 @@ def cambiar_estado(request, pk):
             messages.success(request, f'Estado cambiado a {nuevo_estado}')
         return redirect('detalle_repartidor', pk=pk)
     return render(request, 'repartidores/cambiar_estado.html', {'repartidor': repartidor})
+
+
+@login_required
+def mapa_repartidores(request):
+    return render(request, 'repartidores/mapa.html')
+
+
+# ── API REST ────────────────────────────────────────────────
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import RepartidorSerializer, UbicacionRepartidorSerializer
+
+@api_view(['GET'])
+def api_listar_repartidores(request):
+    repartidores = Repartidor.objects.all()
+    serializer = RepartidorSerializer(repartidores, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def api_crear_repartidor(request):
+    serializer = RepartidorSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'mensaje': 'Repartidor creado', 'data': serializer.data}, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def api_editar_repartidor(request, pk):
+    try:
+        repartidor = Repartidor.objects.get(pk=pk)
+    except Repartidor.DoesNotExist:
+        return Response({'error': 'Repartidor no encontrado'}, status=404)
+    serializer = RepartidorSerializer(repartidor, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'mensaje': 'Repartidor actualizado', 'data': serializer.data})
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+def api_eliminar_repartidor(request, pk):
+    try:
+        repartidor = Repartidor.objects.get(pk=pk)
+    except Repartidor.DoesNotExist:
+        return Response({'error': 'Repartidor no encontrado'}, status=404)
+    repartidor.delete()
+    return Response({'mensaje': 'Repartidor eliminado'}, status=204)
+
+@api_view(['POST'])
+def api_crear_ubicacion(request):
+    repartidor_id = request.data.get('repartidor')
+    lat = request.data.get('latitud')
+    lng = request.data.get('longitud')
+
+    try:
+        ubicacion, created = UbicacionRepartidor.objects.update_or_create(
+            repartidor_id=repartidor_id,
+            defaults={
+                'latitud': lat,
+                'longitud': lng
+            }
+        )
+        return Response({
+            'mensaje': 'Ubicación actualizada',
+            'latitud': ubicacion.latitud,
+            'longitud': ubicacion.longitud
+        })
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)
+
+@api_view(['GET'])
+def api_obtener_ubicacion(request, repartidor_id):
+    try:
+        ubicacion = UbicacionRepartidor.objects.get(repartidor_id=repartidor_id)
+        return Response({
+            "latitud": ubicacion.latitud,
+            "longitud": ubicacion.longitud
+        })
+    except UbicacionRepartidor.DoesNotExist:
+        return Response({'error': 'No existe ubicación'}, status=404)
+
+@api_view(['GET'])
+def api_todas_ubicaciones(request):
+    """
+    Devuelve la ubicación de todos los repartidores.
+    Usado por el mapa en tiempo real.
+    """
+    ubicaciones = UbicacionRepartidor.objects.select_related('repartidor').all()
+    data = [
+        {
+            "repartidor_id": u.repartidor.id,
+            "nombre": u.repartidor.get_full_name() or u.repartidor.username,
+            "latitud": float(u.latitud),
+            "longitud": float(u.longitud),
+        }
+        for u in ubicaciones
+    ]
+    return Response(data) 
