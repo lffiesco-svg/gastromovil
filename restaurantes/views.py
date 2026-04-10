@@ -1,149 +1,125 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 from .models import Restaurante, Categoria, Producto
-from .forms import RestauranteForm, CategoriaForm, ProductoForm
+from .serializers import RestauranteSerializer, CategoriaSerializer, ProductoSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-# Create your views here.
-#RESTAURANTES
-def lista_restaurantes(request):
-    restaurantes = Restaurante.objects.filter(activo=True)
-    return render(request, 'restaurantes/lista.html', {'restaurante': restaurantes})
+# ── RESTAURANTES ──────────────────────────────────────────
+@api_view(['GET'])
+def listar_restaurantes(request):
+    restaurantes = Restaurante.objects.all()
+    serializer = RestauranteSerializer(restaurantes, many=True)
+    return Response(serializer.data)
 
-def detalle_restaurante(request, pk):
-    restaurante = get_object_or_404(Restaurante, pk=pk, activo=True)
-    categorias = Categoria.objects.filter(restaurante=restaurante).prefetch_related('productos')
-    return render(request, 'restaurante/detalle.html',{
-        'restaurante': restaurante,
-        'caregorias' : categorias,
-    })
-
-@login_required
+@api_view(['POST'])
 def crear_restaurante(request):
-    if request.user.rol != 'restaurante':
-        messages.error(request, 'No tienes permiso para crear restaurantes')
-        return redirect('lista_restaurantes')
-    if request.method == 'POST':
-        form = RestauranteForm(request.POST, request.FILES)
-        if form.is_valid():
-            restaurante = form.save(commit=False)
-            restaurante.propietario = request.user
-            restaurante.save()
-            messages.success(request, 'Restaurante creado')
-            return redirect('detalle_restaurante', pk=restaurante.pk)
-        else:
-            form= RestauranteForm()
-            return render(request, 'restaurantes/form.html', {'form': form, 'accion': 'Crear restaurante'})
-        
-@login_required
+    serializer = RestauranteSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'mensaje': 'Restaurante creado', 'data': serializer.data}, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['GET'])
+def detalle_restaurante(request, pk):
+    try:
+        restaurante = Restaurante.objects.get(pk=pk)
+    except Restaurante.DoesNotExist:
+        return Response({'error': 'Restaurante no encontrado'}, status=404)
+    serializer = RestauranteSerializer(restaurante)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
 def editar_restaurante(request, pk):
-    restaurante = get_object_or_404(Restaurante, pk=pk, propietario=request.user)
-    if request.method == 'POST':
-        form = RestauranteForm(request.POST, request.FILES, instance=restaurante)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Restaurante actualizado')
-            return redirect('detalle_restaurante', pk=pk)
-        else:
-            form = RestauranteForm(instance=restaurante)
-            return render(request, 'restaurantes/form.html', {'form': form, 'accion':'Editar Restaurante'})
-        
+    try:
+        restaurante = Restaurante.objects.get(pk=pk)
+    except Restaurante.DoesNotExist:
+        return Response({'error': 'Restaurante no encontrado'}, status=404)
+    serializer = RestauranteSerializer(restaurante, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'mensaje': 'Restaurante actualizado', 'data': serializer.data})
+    return Response(serializer.errors, status=400)
 
-@login_required
+@api_view(['DELETE'])
 def eliminar_restaurante(request, pk):
-    restaurante = get_object_or_404(Restaurante, pk=pk, propietario=request.user)
-    if request.method == 'POST':
-        restaurante.delete()
-        messages.success(request, 'Restaurante eliminado')
-        return redirect('lista_restaurantes')
-    return render(request, 'restaurantes/confirmar_eliminar.html', {'objeto': restaurante})
+    try:
+        restaurante = Restaurante.objects.get(pk=pk)
+    except Restaurante.DoesNotExist:
+        return Response({'error': 'Restaurante no encontrado'}, status=404)
+    restaurante.delete()
+    return Response({'mensaje': 'Restaurante eliminado'}, status=204)
 
-#CATEGORIAS
-@login_required
-def crear_categoria(request, restaurante_pk):
-    restaurante = get_object_or_404(Restaurante, pk=restaurante_pk, propietario=request.user)
-    if request.method == 'POST':
-        form = CategoriaForm(request.POST)
-        if form.is_valid():
-            categoria = form.save(commit=False)
-            categoria.restaurante = restaurante
-            categoria.save()
-            messages.success(request, 'categoria creada')
-            return redirect('detalle_restaurante', pk=restaurante_pk)
-        else:
-            form=CategoriaForm()
-            return render(request, 'restaurantes/form.html', {'form': form, 'accion':'crear categoria'})
-        
-@login_required
+
+# ── CATEGORIAS ────────────────────────────────────────────
+@api_view(['GET'])
+def listar_categorias(request):
+    categorias = Categoria.objects.all()
+    serializer = CategoriaSerializer(categorias, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def crear_categoria(request):
+    serializer = CategoriaSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'mensaje': 'Categoría creada', 'data': serializer.data}, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
 def editar_categoria(request, pk):
-    categoria = get_object_or_404(Categoria, pk=pk, restaurante__propietario=request.user)
-    if request.method == 'POST':
-        form = CategoriaForm(request.POST, instance=categoria)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Categoria actualizada')
-            return redirect('detalle_restaurante', pk=categoria.restaurante.pk)
-    else:
-        form = CategoriaForm(instance=categoria)
-    return render(request, 'restaurantes/form.html', {'form': form, 'accion': 'Editar categoria'})
+    try:
+        categoria = Categoria.objects.get(pk=pk)
+    except Categoria.DoesNotExist:
+        return Response({'error': 'Categoría no encontrada'}, status=404)
+    serializer = CategoriaSerializer(categoria, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'mensaje': 'Categoría actualizada', 'data': serializer.data})
+    return Response(serializer.errors, status=400)
 
-@login_required
+@api_view(['DELETE'])
 def eliminar_categoria(request, pk):
-    categoria = get_object_or_404(Categoria, pk=pk, restaurante__propietario=request.user)
-    restaurante_pk = categoria.restaurante.pk
-    if request.method == 'POST':
-        categoria.delete()
-        messages.success(request, 'Categoria eliminada')
-        return redirect('detalle_restaurante', pk=restaurante_pk)
-    return render(request,'restaurantes/confirmar_eliminar.html', {'objeto': categoria})
+    try:
+        categoria = Categoria.objects.get(pk=pk)
+    except Categoria.DoesNotExist:
+        return Response({'error': 'Categoría no encontrada'}, status=404)
+    categoria.delete()
+    return Response({'mensaje': 'Categoría eliminada'}, status=204)
 
-# PRODUCTOS
-@login_required
-def crear_producto(request, categoria_pk):
-    categoria = get_object_or_404(Categoria, pk=categoria_pk, restaurante__propietario=request.user)
-    
-    if request.method == 'POST':
-        form = ProductoForm(request.POST, request.FILES)
-        if form.is_valid():
-            producto = form.save(commit=False)
-            producto.categoria = categoria
-            producto.save()
-            messages.success(request, 'Producto creado')
-            return redirect('detalle_restaurante', pk=categoria.restaurante.pk)
-    else:
-        form = ProductoForm()  
-    
-    
-    return render(request, 'restaurantes/form.html', {
-        'form': form,
-        'accion': 'Crear producto'
-    })
 
-@login_required
+# ── PRODUCTOS ─────────────────────────────────────────────
+@api_view(['GET'])
+def listar_productos(request):
+    productos = Producto.objects.all()
+    serializer = ProductoSerializer(productos, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def crear_producto(request):
+    serializer = ProductoSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'mensaje': 'Producto creado', 'data': serializer.data}, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
 def editar_producto(request, pk):
-    producto = get_object_or_404(Producto, pk=pk, categoria__restaurante__propietario=request.user)
-    
-    if request.method == 'POST':
-        form = ProductoForm(request.POST, request.FILES, instance=producto)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Producto actualizado')
-            return redirect('detalle_restaurante', pk=producto.categoria.restaurante.pk)
-    else:
-        form = ProductoForm(instance=producto)  
-    
-    
-    return render(request, 'restaurantes/form.html', {
-        'form': form,
-        'accion': 'Editar producto'
-    })
+    try:
+        producto = Producto.objects.get(pk=pk)
+    except Producto.DoesNotExist:
+        return Response({'error': 'Producto no encontrado'}, status=404)
+    serializer = ProductoSerializer(producto, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'mensaje': 'Producto actualizado', 'data': serializer.data})
+    return Response(serializer.errors, status=400)
 
-@login_required
+@api_view(['DELETE'])
 def eliminar_producto(request, pk):
-    producto = get_object_or_404(Producto, pk=pk, categoria__restaurante__propietario=request.user)
-    restaurante_pk = producto.categoria.restaurante.pk
-    if request.method == 'POST':
-        producto.delete()
-        messages.success(request, 'Producto eliminado')
-        return redirect('detalle_restaurante', pk=restaurante_pk)
-    return render(request, 'restaurantes/confirmar_eliminar.html', {'objeto': producto})
+    try:
+        producto = Producto.objects.get(pk=pk)
+    except Producto.DoesNotExist:
+        return Response({'error': 'Producto no encontrado'}, status=404)
+    producto.delete()
+    return Response({'mensaje': 'Producto eliminado'}, status=204)
