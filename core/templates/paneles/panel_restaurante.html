@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Panel Restaurante - GastroWeb{% endblock %}
+{% block content %}
+
+<section class="min-h-screen bg-gray-100 px-6 md:px-16 py-12">
+
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+            <p class="text-[#DC2626] text-xs font-bold tracking-widest uppercase mb-1">Panel Restaurante</p>
+            <h2 class="text-3xl font-black text-gray-900">Mi Restaurante</h2>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="bg-white px-4 py-2 rounded-xl shadow-sm flex items-center gap-2">
+                <div class="w-8 h-8 bg-[#DC2626] rounded-full flex items-center justify-center text-white font-black text-sm">
+                    {{ user.username|slice:":1"|upper }}
+                </div>
+                <div>
+                    <p class="text-gray-700 font-black text-sm">{{ user.username }}</p>
+                    <p class="text-gray-400 text-xs">Restaurante</p>
+                </div>
+            </div>
+            <a href="/usuarios/logout/" class="bg-gray-800 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-gray-900 transition-colors flex items-center gap-2">
+                <i class="fas fa-right-from-bracket"></i> Salir
+            </a>
+        </div>
+    </div>
+
+    <!-- ESTADISTICAS -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-[#DC2626] to-[#FF4500] rounded-2xl p-6 text-white shadow-lg shadow-red-900/20">
+            <div class="flex justify-between items-center mb-3">
+                <div class="bg-white/20 p-2.5 rounded-xl">
+                    <i class="fas fa-shopping-bag text-xl"></i>
+                </div>
+                <span class="text-4xl font-black">0</span>
+            </div>
+            <p class="font-black">Pedidos hoy</p>
+            <p class="text-white/70 text-xs mt-1">Nuevos pedidos</p>
+        </div>
+        <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl p-6 text-white shadow-lg shadow-yellow-900/20">
+            <div class="flex justify-between items-center mb-3">
+                <div class="bg-white/20 p-2.5 rounded-xl">
+                    <i class="fas fa-fire text-xl"></i>
+                </div>
+                <span class="text-4xl font-black">0</span>
+            </div>
+            <p class="font-black">En preparación</p>
+            <p class="text-white/70 text-xs mt-1">Cocinando ahora</p>
+        </div>
+        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg shadow-green-900/20">
+            <div class="flex justify-between items-center mb-3">
+                <div class="bg-white/20 p-2.5 rounded-xl">
+                    <i class="fas fa-check text-xl"></i>
+                </div>
+                <span class="text-4xl font-black">0</span>
+            </div>
+            <p class="font-black">Completados</p>
+            <p class="text-white/70 text-xs mt-1">Entregados hoy</p>
+        </div>
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-900/20">
+            <div class="flex justify-between items-center mb-3">
+                <div class="bg-white/20 p-2.5 rounded-xl">
+                    <i class="fas fa-dollar-sign text-xl"></i>
+                </div>
+                <span class="text-4xl font-black">$0</span>
+            </div>
+            <p class="font-black">Ventas hoy</p>
+            <p class="text-white/70 text-xs mt-1">Total del día</p>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div class="flex border-b border-gray-100 overflow-x-auto">
+            <button onclick="showTab('pedidos')" id="tab-pedidos" class="tab-btn flex-1 py-4 text-sm font-black transition-colors text-[#DC2626] border-b-2 border-[#DC2626] bg-red-50 whitespace-nowrap px-6">
+                <i class="fas fa-shopping-bag mr-2"></i>Pedidos
+            </button>
+            <button onclick="showTab('menu')" id="tab-menu" class="tab-btn flex-1 py-4 text-sm font-black transition-colors text-gray-500 hover:text-gray-700 whitespace-nowrap px-6">
+                <i class="fas fa-utensils mr-2"></i>Menú
+            </button>
+            <button onclick="showTab('productos')" id="tab-productos" class="tab-btn flex-1 py-4 text-sm font-black transition-colors text-gray-500 hover:text-gray-700 whitespace-nowrap px-6">
+                <i class="fas fa-plus mr-2"></i>Agregar Producto
+            </button>
+            <button onclick="showTab('info')" id="tab-info" class="tab-btn flex-1 py-4 text-sm font-black transition-colors text-gray-500 hover:text-gray-700 whitespace-nowrap px-6">
+                <i class="fas fa-store mr-2"></i>Mi Info
+            </button>
+        </div>
+
+        <!-- TAB PEDIDOS -->
+        <div id="content-pedidos" class="p-6">
+            <h3 class="font-black text-gray-900 text-xl mb-6">Pedidos Activos</h3>
+            <div class="flex flex-col gap-4">
+
+                <!-- PEDIDO NUEVO -->
+                <div class="border-2 border-[#DC2626] rounded-2xl overflow-hidden">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-5 gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-shopping-bag text-[#DC2626] text-2xl"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h3 class="font-black text-gray-900 text-lg">Pedido #001</h3>
+                                    <span class="bg-[#DC2626] text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                        <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                                        Nuevo
+                                    </span>
+                                </div>
+                                <p class="text-gray-500 text-sm">2 productos · Cliente: Juan</p>
+                                <p class="text-[#DC2626] font-black">$42.000</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-xl font-black text-sm hover:bg-green-600 transition-colors flex items-center gap-2">
+                                <i class="fas fa-check"></i> Aceptar
+                            </button>
+                            <button class="bg-red-100 text-red-600 px-4 py-2 rounded-xl font-black text-sm hover:bg-red-200 transition-colors flex items-center gap-2">
+                                <i class="fas fa-times"></i> Rechazar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-100 px-5 py-3 bg-gray-50">
+                        <p class="text-gray-500 text-sm flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-[#DC2626]"></i>
+                            Entregar en: Calle 5 # 10-20, Garzón
+                        </p>
+                    </div>
+                </div>
+
+                <!-- PEDIDO EN PREPARACION -->
+                <div class="border border-yellow-300 bg-yellow-50 rounded-2xl overflow-hidden">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-5 gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-fire text-yellow-500 text-2xl"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h3 class="font-black text-gray-900 text-lg">Pedido #002</h3>
+                                    <span class="bg-yellow-400 text-white text-xs font-bold px-3 py-1 rounded-full">Preparando</span>
+                                </div>
+                                <p class="text-gray-500 text-sm">3 productos · Cliente: María</p>
+                                <p class="text-yellow-600 font-black">$35.000</p>
+                            </div>
+                        </div>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-xl font-black text-sm hover:bg-blue-600 transition-colors flex items-center gap-2">
+                            <i class="fas fa-motorcycle"></i> Listo para enviar
+                        </button>
+                    </div>
+                    <div class="border-t border-yellow-200 px-5 py-3">
+                        <p class="text-gray-500 text-sm flex items-center gap-2">
+                            <i class="fas fa-clock text-yellow-500"></i>
+                            Tiempo estimado: 15 min
+                        </p>
+                    </div>
+                </div>
+
+                <div class="text-center py-8 text-gray-400">
+                    <p class="text-sm">No hay más pedidos activos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB MENU -->
+        <div id="content-menu" class="p-6 hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-black text-gray-900 text-xl">Mi Menú</h3>
+                <button onclick="showTab('productos')" class="bg-[#DC2626] text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-[#DC2626]/90 transition-colors flex items-center gap-2">
+                    <i class="fas fa-plus"></i> Agregar
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-left text-gray-400 text-xs uppercase tracking-wide border-b border-gray-100">
+                            <th class="pb-3 pl-2">Producto</th>
+                            <th class="pb-3">Categoría</th>
+                            <th class="pb-3">Precio</th>
+                            <th class="pb-3">Estado</th>
+                            <th class="pb-3 text-right pr-2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="py-4 pl-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                                        <i class="fas fa-hamburger text-gray-400"></i>
+                                    </div>
+                                    <p class="font-black text-gray-800">Burger Clásica</p>
+                                </div>
+                            </td>
+                            <td class="py-4 text-gray-500">Burgers</td>
+                            <td class="py-4 font-black text-gray-800">$18.000</td>
+                            <td class="py-4">
+                                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Disponible</span>
+                            </td>
+                            <td class="py-4 pr-2">
+                                <div class="flex items-center justify-end gap-2">
+                                    <button class="px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-bold">Editar</button>
+                                    <button class="px-3 py-1.5 bg-red-50 text-red-500 hover:bg-red-100 rounded-lg text-xs font-bold">Eliminar</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB AGREGAR PRODUCTO -->
+        <div id="content-productos" class="p-6 hidden">
+            <h3 class="font-black text-gray-900 text-xl mb-6">Agregar Producto</h3>
+            <div class="max-w-xl flex flex-col gap-5">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Nombre</label>
+                        <input type="text" placeholder="Ej: Burger Clásica" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Precio</label>
+                        <input type="number" placeholder="0" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Categoría</label>
+                    <select class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
+                        <option value="">Selecciona categoría</option>
+                        <option value="burgers">Burgers</option>
+                        <option value="entradas">Entradas</option>
+                        <option value="bebidas">Bebidas</option>
+                        <option value="especiales">Especiales</option>
+                        <option value="picadas">Picadas</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Descripción</label>
+                    <textarea placeholder="Describe el producto..." class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400 h-24 resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Imagen</label>
+                    <div onclick="document.getElementById('imgInput').click()" class="w-full h-40 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 hover:border-[#DC2626] hover:bg-red-50 cursor-pointer flex flex-col items-center justify-center gap-3 transition-all">
+                        <i class="fas fa-image text-gray-400 text-3xl"></i>
+                        <p class="text-sm font-bold text-gray-500">Haz clic para subir imagen</p>
+                        <p class="text-xs text-gray-400">PNG, JPG — máximo 5 MB</p>
+                    </div>
+                    <input type="file" id="imgInput" accept="image/*" class="hidden">
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="disponible" checked class="w-4 h-4 accent-[#DC2626] cursor-pointer">
+                    <label for="disponible" class="text-gray-700 text-sm font-bold cursor-pointer">Producto disponible</label>
+                </div>
+
+                <div class="flex gap-3">
+                    <button class="flex-1 bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
+                        <i class="fas fa-plus mr-2"></i> Crear Producto
+                    </button>
+                    <button onclick="showTab('menu')" class="px-6 py-4 border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl font-black text-sm transition-colors">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB INFO -->
+        <div id="content-info" class="p-6 hidden">
+            <h3 class="font-black text-gray-900 text-xl mb-6">Información del Restaurante</h3>
+            <div class="max-w-xl flex flex-col gap-5">
+
+                <div>
+                    <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Nombre del restaurante</label>
+                    <input type="text" placeholder="Nombre" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                </div>
+
+                <div>
+                    <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Dirección</label>
+                    <input type="text" placeholder="Dirección" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                </div>
+
+                <div>
+                    <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Teléfono</label>
+                    <input type="tel" placeholder="+57 300 000 0000" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="activo" checked class="w-4 h-4 accent-[#DC2626] cursor-pointer">
+                    <label for="activo" class="text-gray-700 text-sm font-bold cursor-pointer">Restaurante activo</label>
+                </div>
+
+                <button class="bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
+                    <i class="fas fa-save mr-2"></i> Guardar cambios
+                </button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+function showTab(tab) {
+    const tabs = ['pedidos', 'menu', 'productos', 'info'];
+    tabs.forEach(t => {
+        document.getElementById('content-' + t).classList.add('hidden');
+        const btn = document.getElementById('tab-' + t);
+        btn.classList.remove('text-[#DC2626]', 'border-b-2', 'border-[#DC2626]', 'bg-red-50');
+        btn.classList.add('text-gray-500');
+    });
+    document.getElementById('content-' + tab).classList.remove('hidden');
+    const activeBtn = document.getElementById('tab-' + tab);
+    activeBtn.classList.add('text-[#DC2626]', 'border-b-2', 'border-[#DC2626]', 'bg-red-50');
+    activeBtn.classList.remove('text-gray-500');
+}
+
+document.getElementById('imgInput').addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const dropzone = this.previousElementSibling;
+        dropzone.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain rounded-xl p-2">`;
+    };
+    reader.readAsDataURL(file);
+});
+</script>
+
+{% endblock %}

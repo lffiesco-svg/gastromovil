@@ -25,9 +25,15 @@ def registro(request):
             form.save()
             messages.success(request, '¡Cuenta creada exitosamente! Inicia sesión.')
             return render(request, 'auth/register.html', {'form': UsuarioRegistroForm(), 'redirect_login': True})
+            user = form.save ()
+            login(request, user)
+            messages.success(request, 'Cuenta creada exitosamente.')
+            return redirect ('login')
     else:
         form = UsuarioRegistroForm()
     return render(request, 'auth/register.html', {'form': form})
+
+import json
 
 @csrf_exempt
 def login_view(request):
@@ -68,6 +74,7 @@ def login_view(request):
             else:
                 return redirect('index')
 
+            return redirect('index')
         else:
             print("LOGIN FALLÓ")
             messages.error(request, "Correo o contraseña incorrectos")

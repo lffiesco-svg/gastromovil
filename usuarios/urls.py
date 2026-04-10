@@ -6,6 +6,8 @@ from .views import enviar_codigo, verificar_codigo, verificar_codigo_web, enviar
 urlpatterns = [
     # API para Postman
     path('api/registro/', views.registro_api),
+    path('registro/', views.registro, name='registro_web'),
+    #crear direccion
     path('api/direcciones/crear/', crear_direccion),
     path('api/direcciones/', listar_direcciones, name='direccion_listar'),
     path('api/direcciones/<int:id>/editar/', editar_direccion),
