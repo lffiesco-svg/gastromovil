@@ -8,6 +8,7 @@ from pedidos import views as pedidos_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
     path('', views.index, name='index'),
     path('restaurantes/', views.restaurantes, name='restaurantes'),
     path('usuarios/', include('usuarios.urls')),
@@ -33,10 +34,9 @@ urlpatterns = [
     path('menu/taqueria/maruchas/', views.maruchas, name='maruchas'),
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
-    path('perfil/', views.perfil, name='perfil'),
     path('carrito/', views.carrito, name='carrito'),
     path('contacto/', views.contacto, name='contacto'), 
-    path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contrasena'),
+    path('recuperar_contrasena/', views.recuperar_contrasena, name='enviar_codigo_web'),
     path('mispedidos/', views.historial, name='historial'),
     path('verificar/', views.verificar_codigo, name='verificar_codigo'),
 
@@ -44,3 +44,4 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

@@ -12,7 +12,7 @@ def register_view(request):
     return render(request, 'auth/register.html')
 
 def perfil(request):
-    return render(request, 'auth/perfil.html')
+    return render(request, 'usua/perfil.html')
 
 # RESTAURANTES
 def restaurantes(request):

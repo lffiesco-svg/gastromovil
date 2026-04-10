@@ -4,20 +4,28 @@ from django.utils import timezone
 from datetime import timedelta
 
 # Create your models here.
-class Usuario(AbstractUser) :
+class Usuario(AbstractUser):
     ROLES = [
-        ('cliente' , 'Cliente'),
-        ('repartidor' ,'Repartidor'),
-        ('restautante' , 'Restaurante'),
+        ('cliente', 'Cliente'),
+        ('repartidor', 'Repartidor'),
+        ('restaurante', 'Restaurante'),
     ]
 
-    telefono = models.CharField(max_length= 15, blank=True)
+    telefono = models.CharField(max_length=15, blank=True)
     rol = models.CharField(max_length=20, choices=ROLES, default='cliente')
+    email = models.EmailField(unique=True)
 
     def __str__(self):
         return f"{self.username} - {self.rol}"
-    
-class Direccion(models.Model) :
+
+    def save(self, *args, **kwargs):  # ← debe estar DENTRO de la clase
+        if self.rol == 'restaurante':
+            self.is_staff = True
+        elif not self.is_superuser:
+            self.is_staff = False
+        super().save(*args, **kwargs)
+
+class Direccion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='direcciones')
     calle = models.CharField(max_length=200)
     barrio = models.CharField(max_length=100)
@@ -50,3 +58,10 @@ class CodigoRecuperacion(models.Model):
         if not self.expiracion:
             self.expiracion = timezone.now() + timedelta(minutes=10)
         super().save(*args, **kwargs)
+
+def save(self, *args, **kwargs):
+    if self.rol == 'restautante':
+        self.is_staff = True
+    elif not self.is_superuser:
+        self.is_staff = False
+    super().save(*args, **kwargs)

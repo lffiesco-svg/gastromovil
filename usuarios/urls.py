@@ -1,41 +1,38 @@
 from django.urls import path
 from . import views
 from .views import crear_direccion, listar_direcciones, editar_direccion, eliminar_direccion, crear_calificacion
-from .views import enviar_codigo, verificar_codigo
+from .views import enviar_codigo, verificar_codigo, verificar_codigo_web, enviar_codigo_web, eliminar_cuenta
 
 urlpatterns = [
-    #para postman 
-
-    #crear registro
+    # API para Postman
     path('api/registro/', views.registro_api),
-    #crear direccion
     path('api/direcciones/crear/', crear_direccion),
-    #mostrar las direcciones existentes
-    path('direcciones/', listar_direcciones, name='direccion_listar'),
-    #editar direccion
-    path("direcciones/<int:id>/editar/", editar_direccion),
-    #eliminar direccion 
-    path('direcciones/<int:id>/eliminar/', eliminar_direccion), 
-    #crear calificacion
-    path('calificaciones/crear/', crear_calificacion),
-    #enviar codigo
-    path('password/enviar-codigo/', enviar_codigo),
-    #verificar codigo
-    path('password/verificar-codigo/', verificar_codigo),
-    
+    path('api/direcciones/', listar_direcciones, name='direccion_listar'),
+    path('api/direcciones/<int:id>/editar/', editar_direccion),
+    path('api/direcciones/<int:id>/eliminar/', eliminar_direccion),
+    path('api/calificaciones/crear/', crear_calificacion),
+    path('api/password/enviar-codigo/', enviar_codigo),
+    path('api/password/verificar-codigo/', verificar_codigo),
 
-
+    # Web
+    path('registro/', views.registro, name='registro'),  
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    path('eliminar-cuenta/', views.eliminar_cuenta, name='eliminar_cuenta'),
 
-    #perfil
+    # Perfil
     path('perfil/', views.perfil, name='perfil'),
 
-    #Direcciones
+
+    # Direcciones
     path('direcciones/nueva/', views.direccion_crear, name='direccion_crear'),
     path('direcciones/<int:pk>/editar/', views.direccion_editar, name='direccion_editar'),
+    path('direcciones/<int:pk>/eliminar/', views.direccion_eliminar, name='direccion_eliminar'),  
 
-    #calificaciones
+    # Calificaciones
     path('calificar/<int:pedido_id>/', views.calificacion_crear, name='calificacion_crear'),
+
+    path('recuperar/', views.enviar_codigo_web, name='enviar_codigo_web'),
+    path('verificar-codigo/', views.verificar_codigo_web, name='verificar_codigo_web'),
 
 ]

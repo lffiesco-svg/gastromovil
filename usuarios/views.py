@@ -18,29 +18,61 @@ from django.conf import settings
 # Create your views here.
 
 #Auth
-def registro (request):
+def registro(request):
     if request.method == 'POST':
         form = UsuarioRegistroForm(request.POST)
         if form.is_valid():
-            user = form.save ()
-            login(request, user)
-            messages.success(request, 'Cuenta creada exitosamente.')
-            return redirect ('perfil')
+            form.save()
+            messages.success(request, '¡Cuenta creada exitosamente! Inicia sesión.')
+            return render(request, 'auth/register.html', {'form': UsuarioRegistroForm(), 'redirect_login': True})
     else:
         form = UsuarioRegistroForm()
-    return render (request, 'usuarios/registro.html', {'form' : form})
+    return render(request, 'auth/register.html', {'form': form})
 
-@csrf_exempt      
+@csrf_exempt
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        user = authenticate(request, username=email, password=password)
-        if user:
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        print("EMAIL:", email)
+        print("PASSWORD:", password)
+
+        # 🔥 VALIDACIÓN BÁSICA
+        if not email or not password:
+            messages.error(request, "Todos los campos son obligatorios")
+            return redirect('login')
+
+        try:
+            usuario = Usuario.objects.get(email=email)
+        except Usuario.DoesNotExist:
+            print("USUARIO NO EXISTE")
+            messages.error(request, "Correo o contraseña incorrectos")
+            return redirect('login')
+
+        # 🔥 AUTENTICACIÓN
+        user = authenticate(request, username=usuario.username, password=password)
+        print("AUTH:", user)
+
+        if user is not None:
             login(request, user)
-            return redirect('perfil')
+            print("LOGIN EXITOSO")
+
+            # 🔥 REDIRECCIÓN SEGÚN ROL (USANDO TU MODELO REAL)
+            if user.is_superuser:
+                return redirect('/admin/')
+            elif user.rol == 'restautante':   # 👈 coincide con tu modelo
+                return redirect('home_restaurante')
+            elif user.rol == 'repartidor':
+                return redirect('home_repartidor')
+            else:
+                return redirect('index')
+
         else:
-            messages.error(request, 'correo o contraseña incorrecta')
+            print("LOGIN FALLÓ")
+            messages.error(request, "Correo o contraseña incorrectos")
+            return redirect('login')
+
     return render(request, 'usuarios/login.html')
     
 @login_required
@@ -51,12 +83,22 @@ def logout_view(request):
 #PERFIL
 @login_required
 def perfil(request):
+    if request.method == 'POST':
+        usuario = request.user
+        usuario.first_name = request.POST.get('first_name', usuario.first_name)
+        usuario.last_name = request.POST.get('last_name', usuario.last_name)
+        usuario.email = request.POST.get('email', usuario.email)
+        usuario.telefono = request.POST.get('telefono', usuario.telefono)
+        usuario.save()
+        messages.success(request, 'Perfil actualizado correctamente.')
+        return redirect('index')
+
     direcciones = Direccion.objects.filter(usuario=request.user)
     calificaciones = Calificacion.objects.filter(cliente=request.user)
-    return render(request, 'usuarios/perfil.html',{
-        'usuario' : request.user,
-        'direcciones' : direcciones,
-        'calificaciones':calificaciones,
+    return render(request, 'auth/perfil.html', {
+        'usuario': request.user,
+        'direcciones': direcciones,
+        'calificaciones': calificaciones,
     })
 
 @login_required
@@ -85,13 +127,15 @@ def direccion_editar(request, pk):
         if form.is_valid():
             d = form.save(commit=False)
             if d.es_principal:
-                Direccion.objects.filter(usuario=request.user, es_principal=True).exclude(pk=pk).update(es_principal=False)
-                d.save()
-                messages.success(request, 'Direccion actualizada')
-                return redirect ('perfil')
-            else:
-                    form = DireccionForm(instance=direccion)
-            return render(request, 'usuarios/direccion_form.html', {'form': form, 'accion': 'Editar'})
+                Direccion.objects.filter(
+                    usuario=request.user, es_principal=True
+                ).exclude(pk=pk).update(es_principal=False)
+            d.save()
+            messages.success(request, 'Dirección actualizada')
+            return redirect('perfil')
+    else:
+        form = DireccionForm(instance=direccion)
+    return render(request, 'usuarios/direccion_form.html', {'form': form, 'accion': 'Editar'})
 
             
 @login_required
@@ -328,3 +372,67 @@ def verificar_codigo(request):
         except Usuario.DoesNotExist:
             return JsonResponse({"error": "Usuario no existe"}, status=404)
         
+
+def enviar_codigo_web(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            usuario = Usuario.objects.get(email=email)
+            codigo = str(random.randint(100000, 999999))
+            CodigoRecuperacion.objects.create(usuario=usuario, codigo=codigo)
+
+            import ssl
+            ssl._create_default_https_context = ssl._create_unverified_context
+            send_mail(
+                'Código de recuperación',
+                f'Tu código es: {codigo}',
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+            messages.success(request, f'Código enviado a {email}')
+            return redirect('verificar_codigo_web')
+        except Usuario.DoesNotExist:
+            messages.error(request, 'No existe una cuenta con ese correo')
+    return render(request, 'auth/recuperar_contrasena2.html')
+
+def verificar_codigo_web(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        codigo = request.POST.get('codigo')
+        nueva_password = request.POST.get('password')
+
+        try:
+            usuario = Usuario.objects.get(email=email)
+            registro = CodigoRecuperacion.objects.filter(
+                usuario=usuario, codigo=codigo
+            ).last()
+
+            if not registro:
+                messages.error(request, 'Código inválido')
+                return redirect('verificar_codigo_web')
+
+            if registro.is_expired():
+                messages.error(request, 'El código ha expirado')
+                return redirect('verificar_codigo_web')
+
+            usuario.set_password(nueva_password)
+            usuario.save()
+            registro.delete()
+            messages.success(request, 'Contraseña actualizada correctamente')
+            return redirect('login')
+
+        except Usuario.DoesNotExist:
+            messages.error(request, 'Usuario no encontrado')
+
+    return render(request, 'auth/verificar_codigo.html')
+
+@login_required
+def eliminar_cuenta(request):
+    if request.method == 'POST':
+        request.user.delete()
+        logout(request)
+        messages.success(request, 'Cuenta eliminada correctamente.')
+        return redirect('index')
+    return redirect('perfil')
+

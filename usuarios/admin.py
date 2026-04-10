@@ -64,6 +64,20 @@ class UsuarioAdmin(UserAdmin):
         actualizados = queryset.update(rol='restautante')  # Respeta el typo del modelo
         self.message_user(request, f'{actualizados} usuario(s) cambiados a restaurante')
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        # Un restaurante solo se ve a sí mismo
+        return qs.filter(pk=request.user.pk)
+
+def has_add_permission(self, request):
+    # Solo superusuario puede crear usuarios desde el admin
+    return request.user.is_superuser
+
+def has_delete_permission(self, request, obj=None):
+    return request.user.is_superuser
+
 
 @admin.register(Direccion)
 class DireccionAdmin(admin.ModelAdmin):
@@ -83,31 +97,15 @@ class DireccionAdmin(admin.ModelAdmin):
             direccion.save()
         self.message_user(request, f'{queryset.count()} dirección(es) marcadas como principales')
 
+    def has_module_perms(self, request):  # oculta el módulo completo
+        return request.user.is_superuser
+
 
 @admin.register(Calificacion)
 class CalificacionAdmin(admin.ModelAdmin):
-    list_display = ['id', 'cliente', 'get_restaurante', 'puntuacion', 'fecha', 'tiene_comentario']
-    list_filter = ['puntuacion', 'fecha']
-    search_fields = ['cliente__username', 'pedido__id', 'comentario']
-    readonly_fields = ['fecha', 'pedido', 'cliente', 'puntuacion']
-    ordering = ['-fecha']
+    list_display = ['cliente', 'puntuacion', 'fecha']
+    list_filter = ['puntuacion']
+    search_fields = ['comentario', 'cliente__username'] 
 
-    fieldsets = (
-        ('Información', {
-            'fields': ('pedido', 'cliente', 'puntuacion')
-        }),
-        ('Comentario', {
-            'fields': ('comentario',)
-        }),
-        ('Fecha', {
-            'fields': ('fecha',)
-        }),
-    )
-
-    @admin.display(description='Restaurante')
-    def get_restaurante(self, obj):
-        return obj.pedido.restaurante.nombre
-
-    @admin.display(description='Tiene comentario', boolean=True)
-    def tiene_comentario(self, obj):
-        return bool(obj.comentario)
+def has_module_perms(self, request):
+        return request.user.is_superuser

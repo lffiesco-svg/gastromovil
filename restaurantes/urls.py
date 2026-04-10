@@ -9,6 +9,9 @@ urlpatterns = [
     path('api/restaurantes/<int:pk>/editar/', views.editar_restaurante),
     path('api/restaurantes/<int:pk>/eliminar/', views.eliminar_restaurante),
 
+    path('restaurante/<int:pk>/', views.pagina_restaurante, name='pagina_restaurante'),
+    path('restaurante/<int:pk>/calificar/', views.calificar_restaurante, name='calificar_restaurante'),
+
     # Categorias
     path('api/categorias/', views.listar_categorias),
     path('api/categorias/crear/', views.crear_categoria),
