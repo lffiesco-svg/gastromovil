@@ -37,12 +37,19 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'chatbot',
     'channels',
+    'django.contrib.sites',        # para entrar con google
+    'allauth',                     # para entrar con google
+    'allauth.account',             # para entrar con google
+    'allauth.socialaccount',       # para entrar con google
+    'allauth.socialaccount.providers.google',  # para entrar con google
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -120,7 +127,9 @@ AUTH_USER_MODEL = 'usuarios.Usuario'
 AUTHENTICATION_BACKENDS = [
     'usuarios.backends.EmailBackend',  
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
 LOGIN_URL = '/usuarios/login'
 LOGIN_REDIRECT_URL = '/usuarios/perfil/'
 LOGOUT_REDIRECT_URL = '/usuarios/login/'
@@ -179,7 +188,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
     "theme": "darkly",
-    "dark_mode_theme": "darkly",
+    "dark_mode_theme": "auto",
     "button_classes": {
         "primary": "btn-danger",
         "secondary": "btn-secondary",
@@ -202,3 +211,8 @@ EMAIL_HOST_PASSWORD = 'xunjlbxnmmqlyfub'
 import ssl
 EMAIL_SSL_CERTFILE = None
 EMAIL_SSL_KEYFILE = None
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]

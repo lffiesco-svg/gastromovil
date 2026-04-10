@@ -24,6 +24,7 @@ def register_view(request):
 
 @login_required(login_url='login')
 def perfil(request):
+    return render(request, 'usua/perfil.html')
     return render(request, 'auth/perfil.html', {'usuario': request.user})
 
 # RESTAURANTES
