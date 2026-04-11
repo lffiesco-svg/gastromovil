@@ -7,10 +7,8 @@ class UsuarioRegistroForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ['email', 'telefono', 'password1', 'password2']
-    
+        fields = ['first_name', 'last_name', 'email', 'telefono', 'password1', 'password2']
 
-    
     def clean(self):
         cleaned_data = super().clean()
         p1 = cleaned_data.get('password1')
@@ -19,13 +17,20 @@ class UsuarioRegistroForm(forms.ModelForm):
             raise forms.ValidationError('Las contraseñas no coinciden')
         return cleaned_data
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if Usuario.objects.filter(email=email).exists():
+            raise forms.ValidationError('Este correo ya está registrado.')
+        return email
+
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.username = self.cleaned_data['email']  # usa el email como username
         user.set_password(self.cleaned_data['password1'])
-        user.rol = 'cliente'   
+        user.rol = 'cliente'
         if commit:
             user.save()
-        return user  
+        return user
 
 
 class DireccionForm(forms.ModelForm):

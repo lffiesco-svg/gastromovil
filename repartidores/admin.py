@@ -1,31 +1,12 @@
-# ✅ Corrección - quitamos el inline de RepartidorAdmin
-# y registramos UbicacionRepartidor por separado
-
 from django.contrib import admin
 from .models import Repartidor, UbicacionRepartidor
 
 
 @admin.register(Repartidor)
 class RepartidorAdmin(admin.ModelAdmin):
-    # Sin inline de ubicación
-    list_display = ['id', 'get_nombre', 'get_email', 'estado', 'calificacion_promedio', 'activo']
-    list_filter = ['estado', 'activo']
-    search_fields = ['usuario__username', 'usuario__email', 'usuario__first_name', 'usuario__last_name']
-    readonly_fields = ()
-    ordering = ['-activo', 'usuario__first_name']
-
-    fieldsets = (
-        ('Información del usuario', {
-            'fields': ('usuario',)
-        }),
-        ('Estado y disponibilidad', {
-            'fields': ('estado', 'activo')
-        }),
-        ('Métricas', {
-            'fields': ('calificacion_promedio',)
-        }),
-    )
-
+    list_display = ['get_nombre', 'get_email', 'activo']
+    search_fields = ['usuario__username', 'usuario__first_name', 'usuario__last_name', 'usuario__email']
+    list_filter = ['activo']
     actions = ['marcar_disponible', 'marcar_inactivo', 'activar_repartidor', 'desactivar_repartidor']
 
     @admin.display(description='Nombre completo')
@@ -60,10 +41,10 @@ class RepartidorAdmin(admin.ModelAdmin):
 @admin.register(UbicacionRepartidor)
 class UbicacionRepartidorAdmin(admin.ModelAdmin):
     list_display = ['get_repartidor', 'latitud', 'longitud', 'actualizado']
-    search_fields = ['repartidor__username', 'repartidor__first_name', 'repartidor__last_name']
+    search_fields = ['repartidor__usuario__username', 'repartidor__usuario__first_name']
     readonly_fields = ['actualizado']
     ordering = ['-actualizado']
 
     @admin.display(description='Repartidor')
     def get_repartidor(self, obj):
-        return obj.repartidor.get_full_name() or obj.repartidor.username
+        return obj.repartidor.usuario.get_full_name() or obj.repartidor.usuario.username
