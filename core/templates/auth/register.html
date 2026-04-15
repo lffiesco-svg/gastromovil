@@ -75,13 +75,16 @@
                 <input type="email" name="email" placeholder="correo@ejemplo.com"
                     class="w-full bg-[#1a0a0a] text-white px-4 py-3 rounded-xl outline-none border border-[#4a2020] focus:border-[#DC2626] transition-colors placeholder-gray-600">
             </div>
-
             <!-- TELEFONO -->
             <div>
                 <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">
                     <i class="fas fa-phone mr-2 text-[#DC2626]"></i>Teléfono
                 </label>
                 <input type="tel" name="telefono" placeholder="+57 300 000 0000"
+                    maxlength="10"
+                    pattern="[0-9]{10}"
+                    title="El teléfono debe tener exactamente 10 dígitos"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                     class="w-full bg-[#1a0a0a] text-white px-4 py-3 rounded-xl outline-none border border-[#4a2020] focus:border-[#DC2626] transition-colors placeholder-gray-600">
             </div>
 

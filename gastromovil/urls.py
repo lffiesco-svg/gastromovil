@@ -5,6 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from pedidos import views as pedidos_views
+from usuarios import views as usuarios_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,9 +37,10 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('carrito/', views.carrito, name='carrito'),
     path('contacto/', views.contacto, name='contacto'), 
-    path('recuperar_contrasena/', views.recuperar_contrasena, name='enviar_codigo_web'),
+    path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contraseña'),
     path('mispedidos/', views.historial, name='historial'),
     path('verificar/', views.verificar_codigo, name='verificar_codigo'),
+    path('enviar-codigo/', usuarios_views.enviar_codigo_web, name='enviar_codigo_web'),
 
 
     path('test-notificacion/', pedidos_views.test_notificacion, name='test_notificacion'),
