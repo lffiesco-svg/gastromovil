@@ -76,7 +76,7 @@
 
             <!-- REENVIAR -->
             <div class="mt-6 text-center">
-                <a href="{% url 'recuperar_contrasena' %}" class="text-[#DC2626] hover:underline font-bold text-sm flex items-center justify-center gap-2">
+                <a href="{% url 'enviar_codigo_web' %}" class="text-[#DC2626] hover:underline font-bold text-sm flex items-center justify-center gap-2">
                     <i class="fas fa-arrow-left"></i>
                     Reenviar código
                 </a>
@@ -117,7 +117,7 @@ document.getElementById('otpContainer').addEventListener('paste', (e) => {
 });
 
 // SUBMIT
-document.getElementById('formVerificar').addEventListener('submit', (e) => {
+document.getElementById('formVerificar').addEventListener('submit', async (e) => {
     e.preventDefault();
     const codigo = [...otpInputs].map(i => i.value).join('');
     const newPassword = document.getElementById('newPassword').value;
@@ -143,9 +143,31 @@ document.getElementById('formVerificar').addEventListener('submit', (e) => {
         return;
     }
 
+    const email = "{{ request.session.email_recuperacion }}";
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('codigo', codigo);
+    formData.append('password', newPassword);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    const response = await fetch("{% url 'verificar_codigo_web' %}", {
+    method: 'POST',
+    body: formData
+});
+
+if (response.redirected) {
     mensaje.className = 'p-4 rounded-xl text-sm font-bold bg-green-50 text-green-700 border border-green-200';
     mensaje.textContent = '✅ Contraseña actualizada exitosamente';
     mensaje.classList.remove('hidden');
+    
+    setTimeout(() => {
+        window.location.href = response.url;
+    }, 2000); 
+} else {
+    mensaje.className = 'p-4 rounded-xl text-sm font-bold bg-red-50 text-red-700 border border-red-200';
+    mensaje.textContent = 'Código inválido o expirado';
+    mensaje.classList.remove('hidden');
+}
 });
 </script>
 
