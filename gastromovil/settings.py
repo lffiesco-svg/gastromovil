@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 from decouple import config
 load_dotenv()
 import ssl
+import certifi
 ssl._create_default_https_context = ssl._create_unverified_context
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -43,7 +45,22 @@ INSTALLED_APPS = [
     'allauth.socialaccount',       # para entrar con google
     'allauth.socialaccount.providers.google',  # para entrar con google
 ]
-SITE_ID = 1
+SITE_ID = 2
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+SOCIALACCOUNT_ADAPTER = 'gastromovil.adapters.CustomSocialAccountAdapter'
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+LOGIN_REDIRECT_URL = 'index'
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+UNIQUE_EMAIL = False
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -121,7 +138,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static'),
+                    os.path.join(BASE_DIR, 'theme/static'), ]
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 AUTHENTICATION_BACKENDS = [
@@ -131,8 +149,20 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = '/usuarios/login'
-LOGIN_REDIRECT_URL = '/usuarios/perfil/'
-LOGOUT_REDIRECT_URL = '/usuarios/login/'
+#LOGIN_REDIRECT_URL = '/usuarios/perfil/'
+#LOGOUT_REDIRECT_URL = '/usuarios/login/'
+LOGIN_REDIRECT_URL = 'index'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'index'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+            'prompt': 'select_account',
+    },
+    }
+}
 
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = ['127.0.0.1']
@@ -199,18 +229,16 @@ JAZZMIN_UI_TWEAKS = {
     },
 }
 
-
 EMAIL_BACKEND = 'gastromovil.email_backend.UnverifiedSSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'johanapalacio763@gmail.com'
-EMAIL_HOST_PASSWORD = 'xunjlbxnmmqlyfub'  
+EMAIL_HOST_PASSWORD = 'ecptlzagzepjejar'  
+DEFAULT_FROM_EMAIL = 'johanapalacio763@gmail.com'
 
-import ssl
-EMAIL_SSL_CERTFILE = None
-EMAIL_SSL_KEYFILE = None
+ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
 
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
