@@ -59,23 +59,17 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            if user.is_superuser:
-                return redirect('/admin/')
-            elif user.rol == 'restaurante':
-                return redirect('/admin/')
+            if user.rol == 'restaurante':          
+                return redirect('panel_restaurante')
             elif user.rol == 'repartidor':
-                return redirect('home_repartidor')
+                return redirect('panel_repartidor')
+            elif user.is_superuser:                
+                return redirect('/admin/')
             else:
                 return redirect('index')
-
-
-            return redirect('index')
-
         else:
             messages.error(request, "Correo o contrasena incorrectos")
             return redirect('login')
-
-    return render(request, 'usuarios/login.html')
 
 @never_cache
 def logout_view(request):
