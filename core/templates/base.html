@@ -30,26 +30,26 @@
         <!-- ICONOS DESKTOP -->
         <div class="hidden md:flex items-center gap-5">
             {% if user.is_authenticated %}
-                <div class="relative" id="userDropdown">
-                    <button onclick="toggleDropdown()" class="w-9 h-9 rounded-full bg-[#DC2626] flex items-center justify-center text-white font-black text-sm hover:scale-105 transition-transform">
-                        {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
-                    </button>
-                    <div id="dropdownMenu" class="hidden absolute right-0 mt-3 min-w-[280px] bg-[#2a1010] border border-[#4a2020] rounded-2xl shadow-xl z-50">
-                        <a href="{% url 'perfil' %}" class="flex w-full items-center gap-4 px-6 py-5 text-white hover:bg-[#DC2626]/20 text-lg font-semibold">
-                            <i class="fas fa-user-pen text-[#DC2626] text-xl"></i> Editar Perfil
-                        </a>
-                        <a href="{% url 'logout' %}" class="flex w-full items-center gap-4 px-6 py-5 text-white hover:bg-[#DC2626]/20 text-lg font-semibold border-t border-[#4a2020]">
-                            <i class="fas fa-right-from-bracket text-[#DC2626] text-xl"></i> Cerrar Sesión
-                        </a>
-                    </div>
+            <div class="relative" id="userDropdown">
+                <button onclick="toggleDropdown()" class="w-9 h-9 rounded-full bg-[#DC2626] flex items-center justify-center text-white font-black text-sm hover:scale-105 transition-transform">
+                    {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                </button>
+                <div id="dropdownMenu" class="hidden absolute right-0 mt-3 min-w-[280px] bg-[#2a1010] border border-[#4a2020] rounded-2xl shadow-xl z-50">
+                    <a href="{% url 'perfil' %}" class="flex w-full items-center gap-4 px-6 py-5 text-white hover:bg-[#DC2626]/20 text-lg font-semibold">
+                        <i class="fas fa-user-pen text-[#DC2626] text-xl"></i> Editar Perfil
+                    </a>
+                    <a href="{% url 'logout' %}" class="flex w-full items-center gap-4 px-6 py-5 text-white hover:bg-[#DC2626]/20 text-lg font-semibold border-t border-[#4a2020]">
+                        <i class="fas fa-right-from-bracket text-[#DC2626] text-xl"></i> Cerrar Sesión
+                    </a>
                 </div>
+            </div>
             {% else %}
-                <a href="{% url 'login' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
-                    <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                </a>
+            <a href="{% url 'login' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
+                <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </a>
             {% endif %}
             <a href="{% url 'carrito' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
                 <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -74,18 +74,18 @@
         <a href="{% url 'contacto' %}" class="text-white hover:text-[#DC2626] font-bold uppercase tracking-wider text-sm transition-colors block py-2 border-b border-[#4a2020]">Contactenos</a>
         <div class="flex items-center gap-5 py-2">
             {% if user.is_authenticated %}
-                <a href="{% url 'perfil' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
-                    <div class="w-9 h-9 rounded-full bg-[#DC2626] flex items-center justify-center text-white font-black text-sm">
-                        {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
-                    </div>
-                </a>
+            <a href="{% url 'perfil' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
+                <div class="w-9 h-9 rounded-full bg-[#DC2626] flex items-center justify-center text-white font-black text-sm">
+                    {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                </div>
+            </a>
             {% else %}
-                <a href="{% url 'login' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
-                    <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                </a>
+            <a href="{% url 'login' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
+                <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </a>
             {% endif %}
             <a href="{% url 'carrito' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
                 <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -199,16 +199,17 @@
 
     <script src="{% static 'js/main.js' %}"></script>
     <script>
-        function toggleDropdown() {
-            const menu = document.getElementById('dropdownMenu');
-            menu.classList.toggle('hidden');
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdownMenu');
+        menu.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown && !dropdown.contains(e.target)) {
+            document.getElementById('dropdownMenu').classList.add('hidden');
         }
-        document.addEventListener('click', function(e) {
-            const dropdown = document.getElementById('userDropdown');
-            if (dropdown && !dropdown.contains(e.target)) {
-                document.getElementById('dropdownMenu').classList.add('hidden');
-            }
-        });
+    });
     </script>
 
     </body>

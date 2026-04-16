@@ -17,7 +17,7 @@
 
         <!-- ENCABEZADO -->
         <div class="flex items-center gap-6 mb-8">
-            <div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-black text-3xl bg-gradient-to-r from-[#FF8C00] to-[#e67e00]">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-black text-3xl bg-linear-to-r from-[#FF8C00] to-[#e67e00]">
                 {{ usuario.first_name|first|upper }}{{ usuario.last_name|first|upper }}
             </div>
             <div>
@@ -62,11 +62,11 @@
             <!-- BOTONES -->
             <div class="mt-8 flex flex-col gap-3">
                 <button type="button" id="editarBtn" onclick="toggleEditar()"
-                    class="w-full bg-[#FF8C00] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#e67e00] transition-colors">
+                    class="w-full bg-[#FF8C00] text-white py-4 rounded-xl mb-3 font-black text-sm tracking-widest uppercase hover:bg-[#e67e00] transition-colors">
                     <i class="fas fa-user-pen mr-2"></i> Editar Perfil
                 </button>
                 <button type="submit" id="guardarBtn"
-                    class="w-full bg-green-500 text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-green-600 transition-colors hidden">
+                    class="w-full bg-green-500 text-white mb-3 py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-green-600 transition-colors hidden">
                     <i class="fas fa-floppy-disk mr-2"></i> Guardar Cambios
                 </button>
             </div>
@@ -135,5 +135,14 @@
         </div>
     </div>
 </div>
+{% for message in messages %}
+    {% if message.tags == 'success' %}
+    <script>
+        setTimeout(function() {
+            window.location.href = "{% url 'index' %}";
+        }, 2500);
+    </script>
+    {% endif %}
+{% endfor %}
 <script src="{% static 'js/perfil.js' %}"></script>
 {% endblock %}
