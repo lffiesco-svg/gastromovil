@@ -25,20 +25,11 @@
                 <h3 class="text-white font-black text-2xl mb-1">{{ restaurante.nombre }}</h3>
                 <p class="text-[#DC2626] text-sm font-semibold mb-3">{{ restaurante.direccion }}</p>
 
-                {% if 'beer' in restaurante.nombre|lower %}
-                    <a href="{% url 'menu_beer' %}" class="block w-full bg-[#DC2626] text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-[#DC2626]/90 transition-colors text-center">
-                        Ir al menú
-                    </a>
-                {% elif 'taqueria' in restaurante.nombre|lower %}
-                    <a href="{% url 'menu_taqueria' %}" class="block w-full bg-[#DC2626] text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-[#DC2626]/90 transition-colors text-center">
-                        Ir al menú
-                    </a>
-                {% else %}
-                    <a href="#" class="block w-full bg-[#DC2626] text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-[#DC2626]/90 transition-colors text-center">
-                        Ir al menú
-                    </a>
-                {% endif %}
-
+                {# ✅ Un solo enlace dinámico usando el pk del restaurante #}
+                <a href="{% url 'pagina_restaurante' restaurante.pk %}"
+                   class="block w-full bg-[#DC2626] text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-[#DC2626]/90 transition-colors text-center">
+                    Ir al menú
+                </a>
             </div>
         </div>
         {% empty %}

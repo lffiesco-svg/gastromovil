@@ -193,3 +193,10 @@ def pagina_restaurante(request, pk):
         'puede_calificar': puede_calificar,
         'pedido_para_calificar': pedido_para_calificar,
     })
+
+def vista_restaurantes(request):
+    """Vista HTML para mostrar la lista de restaurantes activos."""
+    restaurantes = Restaurante.objects.filter(activo=True)
+    return render(request, 'restaurantes/restaurantes.html', {
+        'restaurantes': restaurantes,
+    })
