@@ -61,8 +61,8 @@ def login_view(request):
             login(request, user)
             if user.is_superuser:
                 return redirect('/admin/')
-            elif user.rol == 'restautante':
-                return redirect('home_restaurante')
+            elif user.rol == 'restaurante':
+                return redirect('/admin/')
             elif user.rol == 'repartidor':
                 return redirect('home_repartidor')
             else:
