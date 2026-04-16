@@ -21,8 +21,7 @@ Cuando menciones un producto usa exactamente este formato:
   <p class="font-semibold text-gray-800">Nombre del producto - $precio</p>
   <p class="text-sm text-gray-500">Restaurante: nombre del restaurante</p>
   <a href="URL_DEL_PRODUCTO" 
-     class="inline-block mt-1 px-3 py-1 bg-orange-500 text-white text-sm rounded hover:bg-orange-600"
-     target="_blank">
+     class="inline-block mt-1 px-3 py-1 bg-orange-500 text-white text-sm rounded hover:bg-orange-600">
     Ver producto →
   </a>
 </div>
