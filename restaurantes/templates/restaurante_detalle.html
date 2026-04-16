@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ restaurante.nombre }} - GastroWeb{% endblock %}
+
+{% block content %}
+<section class="bg-white min-h-screen px-6 md:px-16 py-12">
+
+    <!-- CABECERA DEL RESTAURANTE -->
+    <div class="text-center mb-12">
+        {% if restaurante.imagen %}
+            <img src="{{ restaurante.imagen.url }}" alt="{{ restaurante.nombre }}"
+                 class="w-32 h-32 rounded-full object-cover mx-auto mb-4 shadow-lg border-4 border-[#DC2626]">
+        {% endif %}
+        <h2 class="text-4xl font-black text-gray-900 mb-2">{{ restaurante.nombre }}</h2>
+        <p class="text-gray-400 text-sm mb-1">
+            <i class="fas fa-map-marker-alt text-[#DC2626] mr-1"></i>{{ restaurante.direccion }}
+        </p>
+        {% if promedio %}
+        <div class="flex items-center justify-center gap-1 mt-2">
+            {% for i in "12345" %}
+                {% if forloop.counter <= promedio %}
+                    <i class="fas fa-star text-yellow-400 text-sm"></i>
+                {% else %}
+                    <i class="far fa-star text-gray-300 text-sm"></i>
+                {% endif %}
+            {% endfor %}
+            <span class="text-gray-500 text-sm ml-2">({{ promedio }})</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- CATEGORÍAS Y PRODUCTOS DINÁMICOS -->
+    {% if categorias %}
+
+        <!-- NAV DE CATEGORÍAS (anclas para saltar) -->
+        <div class="flex flex-wrap justify-center gap-3 mb-10">
+            {% for categoria in categorias %}
+            <a href="#cat-{{ categoria.id }}"
+               class="bg-gray-100 hover:bg-[#DC2626] hover:text-white text-gray-700 font-bold text-sm px-5 py-2 rounded-full transition-colors">
+                {{ categoria.nombre }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- SECCIÓN POR CADA CATEGORÍA -->
+        {% for categoria in categorias %}
+        <div id="cat-{{ categoria.id }}" class="mb-14 scroll-mt-6">
+            <div class="flex items-center gap-4 mb-6">
+                <h3 class="text-2xl font-black text-gray-900">{{ categoria.nombre }}</h3>
+                <div class="flex-1 h-0.5 bg-gray-100"></div>
+            </div>
+
+            {% with productos=categoria.productos.all %}
+            {% if productos %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                {% for producto in productos %}
+                {% if producto.disponible %}
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden flex flex-col">
+
+                    <!-- Imagen del producto -->
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}"
+                             class="w-full h-40 object-cover">
+                    {% else %}
+                        <div class="w-full h-40 bg-gray-50 flex items-center justify-center">
+                            <i class="fas fa-utensils text-3xl text-gray-200"></i>
+                        </div>
+                    {% endif %}
+
+                    <!-- Info del producto -->
+                    <div class="p-4 flex flex-col flex-1">
+                        <h4 class="font-black text-gray-900 text-base mb-1">{{ producto.nombre }}</h4>
+                        {% if producto.descripcion %}
+                            <p class="text-gray-400 text-xs mb-3 flex-1 line-clamp-2">{{ producto.descripcion }}</p>
+                        {% endif %}
+                        <div class="flex items-center justify-between mt-auto">
+                            <span class="font-black text-[#DC2626] text-lg">${{ producto.precio }}</span>
+                            <!-- Botón agregar al carrito (usa la lógica AJAX del carrito) -->
+                            <button
+                                class="btn-agregar-carrito bg-[#DC2626] text-white px-3 py-2 rounded-xl font-bold text-xs hover:bg-[#DC2626]/90 transition-colors flex items-center gap-1"
+                                data-id="{{ producto.id }}"
+                                data-nombre="{{ producto.nombre }}">
+                                <i class="fas fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-400 text-sm">No hay productos disponibles en esta categoría.</p>
+            {% endif %}
+            {% endwith %}
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="text-center py-20">
+            <i class="fas fa-utensils text-5xl text-gray-200 mb-4"></i>
+            <p class="text-gray-400 font-semibold">Este restaurante aún no tiene categorías disponibles.</p>
+        </div>
+    {% endif %}
+
+    <!-- SECCIÓN DE CALIFICACIONES -->
+    {% if calificaciones %}
+    <div class="mt-16 border-t border-gray-100 pt-12">
+        <h3 class="text-2xl font-black text-gray-900 mb-6 flex items-center gap-2">
+            <i class="fas fa-star text-yellow-400"></i> Opiniones de clientes
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for cal in calificaciones %}
+            <div class="bg-gray-50 rounded-2xl p-5">
+                <div class="flex items-center gap-2 mb-2">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= cal.puntuacion %}
+                            <i class="fas fa-star text-yellow-400 text-sm"></i>
+                        {% else %}
+                            <i class="far fa-star text-gray-300 text-sm"></i>
+                        {% endif %}
+                    {% endfor %}
+                    <span class="text-gray-500 text-xs ml-1">{{ cal.cliente.username }}</span>
+                </div>
+                {% if cal.comentario %}
+                    <p class="text-gray-600 text-sm">{{ cal.comentario }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- FORMULARIO DE CALIFICACIÓN -->
+    {% if puede_calificar %}
+    <div class="mt-10 bg-gray-50 rounded-2xl p-6 max-w-lg mx-auto">
+        <h4 class="font-black text-gray-900 text-lg mb-4">
+            <i class="fas fa-pen text-[#DC2626] mr-2"></i>Califica tu experiencia
+        </h4>
+        <form method="post" action="{% url 'calificar_restaurante' restaurante.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="pedido_id" value="{{ pedido_para_calificar.id }}">
+            <div class="mb-4">
+                <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Puntuación</label>
+                <select name="puntuacion" required class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-800 outline-none focus:border-[#DC2626] transition-colors text-sm">
+                    <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
+                    <option value="4">⭐⭐⭐⭐ Muy bueno</option>
+                    <option value="3">⭐⭐⭐ Bueno</option>
+                    <option value="2">⭐⭐ Regular</option>
+                    <option value="1">⭐ Malo</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Comentario</label>
+                <textarea name="comentario" rows="3" placeholder="¿Cómo fue tu experiencia?"
+                          class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-800 outline-none focus:border-[#DC2626] transition-colors placeholder-gray-400 resize-none text-sm"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-[#DC2626] text-white py-3 rounded-xl font-black text-sm hover:bg-[#DC2626]/90 transition-colors">
+                Enviar calificación
+            </button>
+        </form>
+    </div>
+    {% endif %}
+
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── Agregar al carrito vía AJAX ───────────────────────────────────────────────
+document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        try {
+            const res = await fetch(`/carrito/agregar/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify({ cantidad: 1 }),
+            });
+            const data = await res.json();
+
+            if (data.ok) {
+                // Actualizar badge del navbar
+                document.querySelectorAll('[data-carrito-badge]').forEach(b => {
+                    b.textContent = data.cantidad_total;
+                });
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                btn.classList.replace('bg-[#DC2626]', 'bg-green-500');
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
+                    btn.classList.replace('bg-green-500', 'bg-[#DC2626]');
+                    btn.disabled = false;
+                }, 1500);
+
+            } else if (data.error === 'restaurante_diferente') {
+                if (confirm(data.mensaje + '\n\n¿Vaciar el carrito y agregar este producto?')) {
+                    const res2 = await fetch(`/carrito/agregar/${id}/forzar/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        body: JSON.stringify({ cantidad: 1 }),
+                    });
+                    const data2 = await res2.json();
+                    if (data2.ok) {
+                        document.querySelectorAll('[data-carrito-badge]').forEach(b => {
+                            b.textContent = data2.cantidad_total;
+                        });
+                        btn.innerHTML = '<i class="fas fa-check"></i>';
+                        btn.classList.replace('bg-[#DC2626]', 'bg-green-500');
+                        setTimeout(() => {
+                            btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
+                            btn.classList.replace('bg-green-500', 'bg-[#DC2626]');
+                            btn.disabled = false;
+                        }, 1500);
+                    }
+                } else {
+                    btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
+                    btn.disabled = false;
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
+            btn.disabled = false;
+        }
+    });
+});
+</script>
+{% endblock %}
