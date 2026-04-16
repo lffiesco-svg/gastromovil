@@ -47,7 +47,7 @@ urlpatterns = [
     path('panel/', views.admin_panel, name='admin_panel'),
     path('panel-repartidor/', views.panel_repartidor, name='panel_repartidor'),
     path('panel-restaurante/', views.panel_restaurante, name='panel_restaurante'),
- 
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

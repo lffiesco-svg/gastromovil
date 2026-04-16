@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import Restaurante, Categoria, Producto
 
 class ProductoSerializer(serializers.ModelSerializer):
+    categoria_nombre = serializers.CharField(source='categoria.nombre', read_only=True)
+    categoria_restaurante = serializers.CharField(source='categoria.restaurante.nombre', read_only=True)
+    
     class Meta:
         model = Producto
         fields = '__all__'

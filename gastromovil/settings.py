@@ -103,13 +103,17 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': config('DB_NAME'),       # <-- debe ser DB_NAME, no gastromovil
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
+        'NAME': 'gastromovil',       
+        'USER': 'root',
+        'PASSWORD': 'rootroot',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
+
+print("USER:", 'root')
+print("PASSWORD:", 'rootroot')
+print("HOST:", 'localhost')
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

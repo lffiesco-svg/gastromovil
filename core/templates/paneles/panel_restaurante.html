@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Panel Restaurante - GastroWeb{% endblock %}
+{% block title %}Panel Restaurante Beer Club - GastroWeb{% endblock %}
 {% block content %}
 
 <section class="min-h-screen bg-gray-100 px-6 md:px-16 py-12">
@@ -29,7 +29,7 @@
 
     <!-- ESTADISTICAS -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-gradient-to-br from-[#DC2626] to-[#FF4500] rounded-2xl p-6 text-white shadow-lg shadow-red-900/20">
+        <div class="bg-linear-to-br from-[#DC2626] to-[#FF4500] rounded-2xl p-6 text-white shadow-lg shadow-red-900/20">
             <div class="flex justify-between items-center mb-3">
                 <div class="bg-white/20 p-2.5 rounded-xl">
                     <i class="fas fa-shopping-bag text-xl"></i>
@@ -39,7 +39,7 @@
             <p class="font-black">Pedidos hoy</p>
             <p class="text-white/70 text-xs mt-1">Nuevos pedidos</p>
         </div>
-        <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl p-6 text-white shadow-lg shadow-yellow-900/20">
+        <div class="bg-linear-to-br from-yellow-500 to-yellow-600 rounded-2xl p-6 text-white shadow-lg shadow-yellow-900/20">
             <div class="flex justify-between items-center mb-3">
                 <div class="bg-white/20 p-2.5 rounded-xl">
                     <i class="fas fa-fire text-xl"></i>
@@ -49,7 +49,7 @@
             <p class="font-black">En preparación</p>
             <p class="text-white/70 text-xs mt-1">Cocinando ahora</p>
         </div>
-        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg shadow-green-900/20">
+        <div class="bg-linear-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg shadow-green-900/20">
             <div class="flex justify-between items-center mb-3">
                 <div class="bg-white/20 p-2.5 rounded-xl">
                     <i class="fas fa-check text-xl"></i>
@@ -59,7 +59,7 @@
             <p class="font-black">Completados</p>
             <p class="text-white/70 text-xs mt-1">Entregados hoy</p>
         </div>
-        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-900/20">
+        <div class="bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-900/20">
             <div class="flex justify-between items-center mb-3">
                 <div class="bg-white/20 p-2.5 rounded-xl">
                     <i class="fas fa-dollar-sign text-xl"></i>
@@ -182,7 +182,7 @@
                             <th class="pb-3 text-right pr-2">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-50">
+                    <tbody id="tabla-productos" class="divide-y divide-gray-50"> 
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="py-4 pl-2">
                                 <div class="flex items-center gap-3">
@@ -207,6 +207,7 @@
                     </tbody>
                 </table>
             </div>
+            <div id="toast" class="fixed bottom-6 right-6 px-5 py-3 rounded-xl font-bold text-white shadow-lg opacity-0 z-50 transition-all"></div>
         </div>
 
         <!-- TAB AGREGAR PRODUCTO -->
@@ -217,34 +218,35 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Nombre</label>
-                        <input type="text" placeholder="Ej: Burger Clásica" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                        <input id="prod-nombre" type="text" placeholder="Ej: Burger Clásica"
+                            class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
                     </div>
                     <div>
                         <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Precio</label>
-                        <input type="number" placeholder="0" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                        <input id="prod-precio" type="number" placeholder="0"
+                            class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
                     </div>
                 </div>
 
                 <div>
                     <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Categoría</label>
-                    <select class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
+                    <select id="select-categoria"
+                        class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
                         <option value="">Selecciona categoría</option>
-                        <option value="burgers">Burgers</option>
-                        <option value="entradas">Entradas</option>
-                        <option value="bebidas">Bebidas</option>
-                        <option value="especiales">Especiales</option>
-                        <option value="picadas">Picadas</option>
+                        <!-- Se llenan dinámicamente con cargarCategoriasSelect() -->
                     </select>
                 </div>
 
                 <div>
                     <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Descripción</label>
-                    <textarea placeholder="Describe el producto..." class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400 h-24 resize-none"></textarea>
+                    <textarea id="prod-descripcion" placeholder="Describe el producto..."
+                        class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400 h-24 resize-none"></textarea>
                 </div>
 
                 <div>
                     <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Imagen</label>
-                    <div onclick="document.getElementById('imgInput').click()" class="w-full h-40 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 hover:border-[#DC2626] hover:bg-red-50 cursor-pointer flex flex-col items-center justify-center gap-3 transition-all">
+                    <div id="img-dropzone" onclick="document.getElementById('imgInput').click()"
+                        class="w-full h-40 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 hover:border-[#DC2626] hover:bg-red-50 cursor-pointer flex flex-col items-center justify-center gap-3 transition-all">
                         <i class="fas fa-image text-gray-400 text-3xl"></i>
                         <p class="text-sm font-bold text-gray-500">Haz clic para subir imagen</p>
                         <p class="text-xs text-gray-400">PNG, JPG — máximo 5 MB</p>
@@ -253,18 +255,21 @@
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <input type="checkbox" id="disponible" checked class="w-4 h-4 accent-[#DC2626] cursor-pointer">
-                    <label for="disponible" class="text-gray-700 text-sm font-bold cursor-pointer">Producto disponible</label>
+                    <input type="checkbox" id="prod-disponible" checked class="w-4 h-4 accent-[#DC2626] cursor-pointer">
+                    <label for="prod-disponible" class="text-gray-700 text-sm font-bold cursor-pointer">Producto disponible</label>
                 </div>
 
                 <div class="flex gap-3">
-                    <button class="flex-1 bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
+                    <button onclick="crearProducto()"
+                        class="flex-1 bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
                         <i class="fas fa-plus mr-2"></i> Crear Producto
                     </button>
-                    <button onclick="showTab('menu')" class="px-6 py-4 border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl font-black text-sm transition-colors">
+                    <button onclick="showTab('menu')"
+                        class="px-6 py-4 border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl font-black text-sm transition-colors">
                         Cancelar
                     </button>
                 </div>
+
             </div>
         </div>
 
@@ -275,25 +280,25 @@
 
                 <div>
                     <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Nombre del restaurante</label>
-                    <input type="text" placeholder="Nombre" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                    <input id="info-nombre" type="text" placeholder="Nombre" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
                 </div>
 
                 <div>
                     <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Dirección</label>
-                    <input type="text" placeholder="Dirección" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                    <input id="info-direccion" type="text" placeholder="Dirección" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
                 </div>
 
                 <div>
                     <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Teléfono</label>
-                    <input type="tel" placeholder="+57 300 000 0000" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                    <input id="info-telefono" type="tel" placeholder="+57 300 000 0000" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <input type="checkbox" id="activo" checked class="w-4 h-4 accent-[#DC2626] cursor-pointer">
-                    <label for="activo" class="text-gray-700 text-sm font-bold cursor-pointer">Restaurante activo</label>
+                    <input type="checkbox" id="info-activo" checked class="w-4 h-4 accent-[#DC2626] cursor-pointer">
+                    <label for="info-activo" class="text-gray-700 text-sm font-bold cursor-pointer">Restaurante activo</label>
                 </div>
 
-                <button class="bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
+                <button onclick="guardarInfo()" class="bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
                     <i class="fas fa-save mr-2"></i> Guardar cambios
                 </button>
             </div>
@@ -303,21 +308,154 @@
 </section>
 
 <script>
+const RESTAURANTE_ID = {{ restaurante.id }};
+const csrfToken = '{{ csrf_token }}';
+
+// ── UTILIDAD ──────────────────────────────────────────────
+async function api(url, method = 'GET', body = null) {
+    const opts = {
+        method,
+        headers: { 'X-CSRFToken': csrfToken },
+    };
+    if (body instanceof FormData) {
+        opts.body = body;
+    } else if (body) {
+        opts.headers['Content-Type'] = 'application/json';
+        opts.body = JSON.stringify(body);
+    }
+    const res = await fetch(url, opts);
+    return res.json();
+}
+
+// ── TABS ──────────────────────────────────────────────────
 function showTab(tab) {
-    const tabs = ['pedidos', 'menu', 'productos', 'info'];
-    tabs.forEach(t => {
+    ['pedidos', 'menu', 'productos', 'info'].forEach(t => {
         document.getElementById('content-' + t).classList.add('hidden');
         const btn = document.getElementById('tab-' + t);
         btn.classList.remove('text-[#DC2626]', 'border-b-2', 'border-[#DC2626]', 'bg-red-50');
         btn.classList.add('text-gray-500');
     });
     document.getElementById('content-' + tab).classList.remove('hidden');
-    const activeBtn = document.getElementById('tab-' + tab);
-    activeBtn.classList.add('text-[#DC2626]', 'border-b-2', 'border-[#DC2626]', 'bg-red-50');
-    activeBtn.classList.remove('text-gray-500');
+    const btn = document.getElementById('tab-' + tab);
+    btn.classList.add('text-[#DC2626]', 'border-b-2', 'border-[#DC2626]', 'bg-red-50');
+    btn.classList.remove('text-gray-500');
+
+    if (tab === 'menu') cargarProductos();
+    if (tab === 'productos') cargarCategoriasSelect();
+    if (tab === 'info') cargarInfo();
 }
 
-document.getElementById('imgInput').addEventListener('change', function() {
+// ── INFO DEL RESTAURANTE ──────────────────────────────────
+async function cargarInfo() {
+    const data = await api(`/api/restaurantes/${RESTAURANTE_ID}/`);
+    document.getElementById('info-nombre').value = data.nombre;
+    document.getElementById('info-direccion').value = data.direccion;
+    document.getElementById('info-telefono').value = data.telefono;
+    document.getElementById('info-activo').checked = data.activo;
+}
+
+async function guardarInfo() {
+    const body = {
+        nombre: document.getElementById('info-nombre').value,
+        direccion: document.getElementById('info-direccion').value,
+        telefono: document.getElementById('info-telefono').value,
+        activo: document.getElementById('info-activo').checked,
+        propietario: {{ request.user.id }},
+    };
+    const data = await api(`/api/restaurantes/${RESTAURANTE_ID}/editar/`, 'PUT', body);
+    if (data.mensaje) mostrarToast('✅ Información guardada');
+    else mostrarToast('❌ Error al guardar', true);
+}
+
+// ── PRODUCTOS ─────────────────────────────────────────────
+async function cargarProductos() {
+    const data = await api(`/api/productos/`);
+    // Filtramos solo los del restaurante actual
+    const mios = data.filter(p => p.categoria_restaurante_id == RESTAURANTE_ID);
+    const tbody = document.getElementById('tabla-productos');
+    tbody.innerHTML = mios.length === 0
+        ? `<tr><td colspan="5" class="py-8 text-center text-gray-400">No hay productos aún</td></tr>`
+        : mios.map(p => `
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-4 pl-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center">
+                            ${p.imagen
+                                ? `<img src="${p.imagen}" class="w-full h-full object-cover">`
+                                : `<i class="fas fa-hamburger text-gray-400"></i>`}
+                        </div>
+                        <p class="font-black text-gray-800">${p.nombre}</p>
+                    </div>
+                </td>
+                <td class="py-4 text-gray-500">${p.categoria_nombre ?? '-'}</td>
+                <td class="py-4 font-black text-gray-800">$${Number(p.precio).toLocaleString('es-CO')}</td>
+                <td class="py-4">
+                    <span class="text-xs font-bold px-3 py-1 rounded-full ${p.disponible ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">
+                        ${p.disponible ? 'Disponible' : 'No disponible'}
+                    </span>
+                </td>
+                <td class="py-4 pr-2">
+                    <div class="flex items-center justify-end gap-2">
+                        <button onclick="eliminarProducto(${p.id})"
+                            class="px-3 py-1.5 bg-red-50 text-red-500 hover:bg-red-100 rounded-lg text-xs font-bold">
+                            Eliminar
+                        </button>
+                    </div>
+                </td>
+            </tr>`).join('');
+}
+
+async function eliminarProducto(id) {
+    if (!confirm('¿Eliminar este producto?')) return;
+    await api(`/api/productos/${id}/eliminar/`, 'DELETE');
+    mostrarToast('🗑️ Producto eliminado');
+    cargarProductos();
+}
+
+async function cargarCategoriasSelect() {
+    const data = await api(`/api/categorias/`);
+    const mias = data.filter(c => c.restaurante == RESTAURANTE_ID);
+    const select = document.getElementById('select-categoria');
+    select.innerHTML = `<option value="">Selecciona categoría</option>`
+        + mias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+}
+
+async function crearProducto() {
+    const form = new FormData();
+    form.append('nombre', document.getElementById('prod-nombre').value);
+    form.append('precio', document.getElementById('prod-precio').value);
+    form.append('descripcion', document.getElementById('prod-descripcion').value);
+    form.append('disponible', document.getElementById('prod-disponible').checked);
+    form.append('categoria', document.getElementById('select-categoria').value);
+    const imgFile = document.getElementById('imgInput').files[0];
+    if (imgFile) form.append('imagen', imgFile);
+
+    const res = await fetch('/api/productos/crear/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrfToken },
+        body: form,
+    });
+    const data = await res.json();
+    if (data.mensaje) {
+        mostrarToast('✅ Producto creado');
+        showTab('menu');
+    } else {
+        mostrarToast('❌ ' + JSON.stringify(data), true);
+    }
+}
+
+// ── TOAST ─────────────────────────────────────────────────
+function mostrarToast(msg, error = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `fixed bottom-6 right-6 px-5 py-3 rounded-xl font-bold text-white shadow-lg transition-all z-50
+        ${error ? 'bg-red-500' : 'bg-gray-900'}`;
+    t.classList.remove('opacity-0');
+    setTimeout(() => t.classList.add('opacity-0'), 3000);
+}
+
+// ── IMAGEN PREVIEW ────────────────────────────────────────
+document.getElementById('imgInput').addEventListener('change', function () {
     const file = this.files[0];
     if (!file) return;
     const reader = new FileReader();
@@ -327,6 +465,9 @@ document.getElementById('imgInput').addEventListener('change', function() {
     };
     reader.readAsDataURL(file);
 });
+
+// Carga inicial
+cargarProductos();
 </script>
 
 {% endblock %}
