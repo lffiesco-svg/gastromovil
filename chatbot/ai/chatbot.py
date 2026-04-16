@@ -36,7 +36,8 @@ def construir_contexto_productos(productos, categoria=None, restaurante=None):
     for p in filtrados:
         restaurante_id = p['categoria__restaurante__id']
         producto_id = p['id']
-        url = f"{FRONTEND_BASE_URL}/restaurante/{restaurante_id}/producto/{producto_id}"
+        categoria_id = p['categoria__id']
+        url = f"{FRONTEND_BASE_URL}/restaurantes/restaurante/{restaurante_id}/#cat-{categoria_id}"
         descripcion = f" | Descripcion: {p['descripcion']}" if p.get('descripcion') else ""
         lineas.append(
             f"- {p['nombre']} | ${p['precio']}"
