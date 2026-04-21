@@ -20,6 +20,11 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+# La sesión expira al cerrar el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 1800  # sesión expira en 30 minutos de inactividad
+SESSION_SAVE_EVERY_REQUEST = True  # guarda la sesión en cada solicitud
+
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -239,8 +244,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'johanapalacio763@gmail.com'
-EMAIL_HOST_PASSWORD = 'ecptlzagzepjejar'  
-DEFAULT_FROM_EMAIL = 'johanapalacio763@gmail.com'
+EMAIL_HOST_PASSWORD = 'ecptlzagzepjejar'
+DEFAULT_FROM_EMAIL = 'Gastroweb <johanapalacio763@gmail.com>'
 
 ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
 

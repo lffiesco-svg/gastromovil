@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block NAVBAR %}{% endblock %}
 {% block title %}Panel Repartidor - GastroWeb{% endblock %}
 {% block content %}
 
@@ -70,6 +71,7 @@
         <div id="content-pendientes" class="p-6">
             <h3 class="font-black text-gray-900 text-xl mb-6">Pedidos Pendientes</h3>
             <div class="flex flex-col gap-4">
+                {% for pedido in pendientes %}
                 <div class="border-2 border-[#DC2626] rounded-2xl overflow-hidden">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-5 gap-4">
                         <div class="flex items-center gap-4">
@@ -77,47 +79,40 @@
                                 <i class="fas fa-shopping-bag text-[#DC2626] text-2xl"></i>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h3 class="font-black text-gray-900 text-lg">Pedido #001</h3>
-                                    <span class="bg-[#DC2626] text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                                        <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-                                        Nuevo
-                                    </span>
-                                </div>
-                                <p class="text-gray-500 text-sm">Beer Club · 2 productos</p>
-                                <p class="text-[#DC2626] font-black">$42.000</p>
+                                <h3 class="font-black text-gray-900 text-lg">Pedido #{{ pedido.id }}</h3>
+                                <p class="text-gray-500 text-sm">{{ pedido.restaurante.nombre }} · {{ pedido.detalles.count }} productos</p>
+                                <p class="text-[#DC2626] font-black">${{ pedido.total|floatformat:0 }}</p>
                             </div>
                         </div>
-                        <div class="flex flex-col gap-2 items-end">
-                            <button class="bg-[#DC2626] text-white px-5 py-2 rounded-xl font-black text-sm hover:bg-[#DC2626]/90 transition-colors flex items-center gap-2">
-                                <i class="fas fa-motorcycle"></i> Aceptar entrega
-                            </button>
-                        </div>
+                        <button onclick="aceptarEntrega({{ pedido.id }})"
+                            class="bg-[#DC2626] text-white px-5 py-2 rounded-xl font-black text-sm hover:bg-[#DC2626]/90 transition-colors flex items-center gap-2">
+                            <i class="fas fa-motorcycle"></i> Aceptar entrega
+                        </button>
                     </div>
                     <div class="border-t border-gray-100 px-5 py-3 bg-gray-50 flex flex-col md:flex-row gap-4">
                         <p class="text-gray-500 text-sm flex items-center gap-2">
                             <i class="fas fa-store text-[#DC2626]"></i>
-                            <span class="font-bold">Recoger en:</span> Beer Club, Garzón
+                            <span class="font-bold">Recoger en:</span> {{ pedido.restaurante.direccion }}
                         </p>
                         <p class="text-gray-500 text-sm flex items-center gap-2">
                             <i class="fas fa-map-marker-alt text-[#DC2626]"></i>
-                            <span class="font-bold">Entregar en:</span> Calle 5 # 10-20, Garzón
+                            <span class="font-bold">Entregar en:</span> {{ pedido.direccion_entrega }}
                         </p>
                     </div>
                 </div>
-
-                <div id="sin-pendientes" class="hidden text-center py-16 text-gray-400">
+                {% empty %}
+                <div class="text-center py-16 text-gray-400">
                     <i class="fas fa-motorcycle text-6xl mb-4 text-gray-200"></i>
                     <p class="font-black text-lg">No hay pedidos pendientes</p>
-                    <p class="text-sm mt-1">Los nuevos pedidos aparecerán aquí</p>
                 </div>
+                {% endfor %}
             </div>
         </div>
-
         <!-- TAB EN CAMINO -->
         <div id="content-encamino" class="p-6 hidden">
             <h3 class="font-black text-gray-900 text-xl mb-6">Pedidos En Camino</h3>
             <div class="flex flex-col gap-4">
+                {% for pedido in en_camino %}
                 <div class="border border-yellow-300 bg-yellow-50 rounded-2xl overflow-hidden">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-5 gap-4">
                         <div class="flex items-center gap-4">
@@ -125,38 +120,35 @@
                                 <i class="fas fa-motorcycle text-yellow-500 text-2xl"></i>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h3 class="font-black text-gray-900 text-lg">Pedido #002</h3>
-                                    <span class="bg-yellow-400 text-white text-xs font-bold px-3 py-1 rounded-full">En camino</span>
-                                </div>
-                                <p class="text-gray-500 text-sm">Taqueria donde Juancho · 3 productos</p>
-                                <p class="text-yellow-600 font-black">$35.000</p>
+                                <h3 class="font-black text-gray-900 text-lg">Pedido #{{ pedido.id }}</h3>
+                                <p class="text-gray-500 text-sm">{{ pedido.restaurante.nombre }} · {{ pedido.detalles.count }} productos</p>
+                                <p class="text-yellow-600 font-black">${{ pedido.total|floatformat:0 }}</p>
                             </div>
                         </div>
-                        <div class="flex flex-col gap-2 items-end">
-                            <button class="bg-green-500 text-white px-5 py-2 rounded-xl font-black text-sm hover:bg-green-600 transition-colors flex items-center gap-2">
-                                <i class="fas fa-check"></i> Marcar entregado
-                            </button>
-                        </div>
+                        <button onclick="marcarEntregado({{ pedido.id }})"
+                            class="bg-green-500 text-white px-5 py-2 rounded-xl font-black text-sm hover:bg-green-600 transition-colors flex items-center gap-2">
+                            <i class="fas fa-check"></i> Marcar entregado
+                        </button>
                     </div>
                     <div class="border-t border-yellow-200 px-5 py-3 flex flex-col md:flex-row gap-4">
                         <p class="text-gray-500 text-sm flex items-center gap-2">
                             <i class="fas fa-map-marker-alt text-yellow-500"></i>
-                            <span class="font-bold">Entregar en:</span> Calle 8 # 5-10, Garzón
-                        </p>
-                        <p class="text-gray-500 text-sm flex items-center gap-2">
-                            <i class="fas fa-clock text-yellow-500"></i>
-                            Tiempo estimado: 10 min
+                            <span class="font-bold">Entregar en:</span> {{ pedido.direccion_entrega }}
                         </p>
                     </div>
                 </div>
+                {% empty %}
+                <div class="text-center py-16 text-gray-400">
+                    <p class="font-black text-lg">No hay pedidos en camino</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
-
         <!-- TAB ENTREGADOS -->
         <div id="content-entregados" class="p-6 hidden">
             <h3 class="font-black text-gray-900 text-xl mb-6">Pedidos Entregados Hoy</h3>
             <div class="flex flex-col gap-4">
+                {% for pedido in entregados %}
                 <div class="border border-gray-200 rounded-2xl overflow-hidden">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-5 gap-4">
                         <div class="flex items-center gap-4">
@@ -164,29 +156,24 @@
                                 <i class="fas fa-check-circle text-green-500 text-2xl"></i>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h3 class="font-black text-gray-900 text-lg">Pedido #000</h3>
-                                    <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Entregado</span>
-                                </div>
-                                <p class="text-gray-500 text-sm">Beer Club · 1 producto</p>
-                                <p class="text-green-600 font-black">$18.000</p>
+                                <h3 class="font-black text-gray-900 text-lg">Pedido #{{ pedido.id }}</h3>
+                                <p class="text-gray-500 text-sm">{{ pedido.restaurante.nombre }} · {{ pedido.detalles.count }} productos</p>
+                                <p class="text-green-600 font-black">${{ pedido.total|floatformat:0 }}</p>
                             </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-gray-400 text-xs">Entregado a las</p>
-                            <p class="font-black text-gray-900">2:30 PM</p>
                         </div>
                     </div>
                     <div class="border-t border-gray-100 px-5 py-3 bg-gray-50">
                         <p class="text-gray-500 text-sm flex items-center gap-2">
                             <i class="fas fa-map-marker-alt text-green-500"></i>
-                            Calle 5 # 10-20, Garzón
+                            {{ pedido.direccion_entrega }}
                         </p>
                     </div>
                 </div>
-                <div class="text-center py-8 text-gray-400">
-                    <p class="text-sm">No hay más entregas hoy</p>
+                {% empty %}
+                <div class="text-center py-16 text-gray-400">
+                    <p class="font-black text-lg">No hay entregas hoy</p>
                 </div>
+                {% endfor %}
             </div>
         </div>
 
@@ -194,6 +181,26 @@
 </section>
 
 <script>
+const csrfToken = '{{ csrf_token }}';
+
+async function aceptarEntrega(pedidoId) {
+    const res = await fetch(`/pedidos/${pedidoId}/aceptar-entrega/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrfToken }
+    });
+    const data = await res.json();
+    if (data.ok) window.location.reload();
+}
+
+async function marcarEntregado(pedidoId) {
+    const res = await fetch(`/pedidos/${pedidoId}/marcar-entregado/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrfToken }
+    });
+    const data = await res.json();
+    if (data.ok) window.location.reload();
+}
+
 function showTab(tab) {
     const tabs = ['pendientes', 'encamino', 'entregados'];
     tabs.forEach(t => {

@@ -36,5 +36,9 @@ urlpatterns = [
 
     path('recuperar/', views.enviar_codigo_web, name='enviar_codigo_web'),
     path('verificar-codigo/', views.verificar_codigo_web, name='verificar_codigo_web'),
+    path('verificar-registro/', views.verificar_registro, name='verificar_registro'),
+
+    path('api/usuarios/', views.listar_usuarios_api),
+    path('api/usuarios/<int:pk>/eliminar/', views.eliminar_usuario_api),
 
 ]

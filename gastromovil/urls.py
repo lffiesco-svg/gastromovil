@@ -47,6 +47,7 @@ urlpatterns = [
     path('panel/', views.admin_panel, name='admin_panel'),
     path('panel-repartidor/', views.panel_repartidor, name='panel_repartidor'),
     path('panel-restaurante/', views.panel_restaurante, name='panel_restaurante'),
+    path('verificar-registro/', usuarios_views.verificar_registro, name='verificar_registro'),
 
 ]
 
