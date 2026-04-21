@@ -61,6 +61,27 @@
 </div>
 </section>
 
+{% if messages %}
+    {% for msg in messages %}
+    <div id="toast-contacto"
+         class="fixed top-6 right-6 z-50 bg-green-500 text-white px-6 py-4 rounded-2xl shadow-xl font-bold text-sm flex items-center gap-3">
+        <i class="fas fa-check-circle text-xl"></i>
+        {{ msg }}
+    </div>
+    {% endfor %}
+
+    <script>
+        setTimeout(() => {
+            const toast = document.getElementById('toast-contacto');
+            if (toast) {
+                toast.style.transition = 'opacity 0.5s';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500);
+            }
+        }, 3000); // desaparece en 3 segundos
+    </script>
+{% endif %}
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const slides = document.querySelectorAll('.carrusel-slide');

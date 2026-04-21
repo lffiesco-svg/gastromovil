@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from restaurantes.models import Restaurante, Categoria, Producto
+# Agrega estos imports al inicio del archivo (si no los tienes)
+from django.core.mail import send_mail
+from django.contrib import messages
+from django.conf import settings
+
 
 def index(request):
     return render(request, 'index.html')
@@ -160,3 +165,52 @@ def panel_repartidor(request):
 
 def panel_restaurante(request):
     return render(request, 'paneles/panel_restaurante.html')
+
+
+
+def contacto(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre', '').strip()
+        email = request.POST.get('email', '').strip()
+        telefono = request.POST.get('telefono', '').strip()
+        tipo = request.POST.get('tipo', '').strip()
+        mensaje = request.POST.get('mensaje', '').strip()
+        acepta = request.POST.get('acepta')
+
+        if not all([nombre, email, tipo, mensaje]):
+            messages.error(request, 'Por favor completa todos los campos obligatorios.')
+            return render(request, 'informacion/contacto.html', {'form_data': request.POST})
+
+        if not acepta:
+            messages.error(request, 'Debes aceptar la política de privacidad.')
+            return render(request, 'informacion/contacto.html', {'form_data': request.POST})
+
+        asunto = f'[GastroWeb] Consulta de {nombre} — {tipo}'
+        cuerpo = f"""
+Nueva consulta desde GastroWeb:
+
+👤 Nombre:   {nombre}
+📧 Correo:   {email}
+📞 Teléfono: {telefono or 'No indicado'}
+📋 Tipo:     {tipo}
+
+💬 Mensaje:
+{mensaje}
+        """.strip()
+
+        try:
+            send_mail(
+                subject=asunto,
+                message=cuerpo,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.CONTACTO_EMAIL],
+                fail_silently=False,
+            )
+            messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
+            return redirect('index')
+        except Exception as e:
+            print(f'[ERROR email contacto]: {e}')
+            messages.error(request, 'Hubo un error al enviar el mensaje. Intenta de nuevo.')
+
+    # ← ESTA LÍNEA ES LA QUE FALTABA
+    return render(request, 'informacion/contacto.html')

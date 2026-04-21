@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'allauth.account',             # para entrar con google
     'allauth.socialaccount',       # para entrar con google
     'allauth.socialaccount.providers.google',  # para entrar con google
+    'contacto',  # para el formulario de contacto
 ]
 SITE_ID = 2
 SOCIALACCOUNT_LOGIN_ON_GET = True
@@ -253,3 +254,15 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Configuración de correo con Gmail SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ospinacadenaoscar@gmail.com'
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # ← ver instrucciones abajo
+DEFAULT_FROM_EMAIL = 'GastroWeb <johanapalacio763@gmail.com>'
+CONTACTO_EMAIL = 'johanapalacio763@gmail.com'
