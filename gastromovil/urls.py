@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from pedidos import views as pedidos_views
 from usuarios import views as usuarios_views
+from core import views as core_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,6 +48,7 @@ urlpatterns = [
     path('panel/', views.admin_panel, name='admin_panel'),
     path('panel-repartidor/', views.panel_repartidor, name='panel_repartidor'),
     path('panel-restaurante/', views.panel_restaurante, name='panel_restaurante'),
+    path('contacto/', core_views.contacto, name='contacto'),
 
 ]
 

@@ -10,51 +10,97 @@
         <div class="bg-white rounded-2xl shadow-md p-8">
             <h2 class="font-black text-2xl text-gray-900 mb-6">Envíanos un mensaje</h2>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-
-                <div>
-                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Nombre completo <span class="text-red-500">*</span></label>
-                    <input type="text" placeholder="Tu nombre completo" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+            <!-- Mensajes de éxito / error -->
+            {% if messages %}
+                {% for msg in messages %}
+                <div class="mb-5 px-4 py-3 rounded-xl font-semibold text-sm
+                    {% if msg.tags == 'success' %}bg-green-100 text-green-800
+                    {% else %}bg-red-100 text-red-800{% endif %}">
+                    {% if msg.tags == 'success' %}
+                        <i class="fas fa-check-circle mr-2"></i>
+                    {% else %}
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                    {% endif %}
+                    {{ msg }}
                 </div>
+                {% endfor %}
+            {% endif %}
 
-                <div>
-                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Correo electrónico <span class="text-red-500">*</span></label>
-                    <input type="email" placeholder="tu@email.com" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+            <form method="post" action="{% url 'contacto' %}">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+                    <div>
+                        <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">
+                            Nombre completo <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="nombre" required
+                               value="{{ form_data.nombre|default:'' }}"
+                               placeholder="Tu nombre completo"
+                               class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                    </div>
+
+                    <div>
+                        <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">
+                            Correo electrónico <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" name="email" required
+                               value="{{ form_data.email|default:'' }}"
+                               placeholder="tu@email.com"
+                               class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                    </div>
+
+                    <div>
+                        <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Teléfono</label>
+                        <input type="tel" name="telefono"
+                               value="{{ form_data.telefono|default:'' }}"
+                               placeholder="+57 300 123 4567"
+                               class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                    </div>
+
+                    <div>
+                        <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">
+                            Tipo de consulta <span class="text-red-500">*</span>
+                        </label>
+                        <select name="tipo" required
+                                class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
+                            <option value="">Selecciona un tema</option>
+                            <option value="Problema con pedido" {% if form_data.tipo == 'Problema con pedido' %}selected{% endif %}>Problema con pedido</option>
+                            <option value="Domicilio" {% if form_data.tipo == 'Domicilio' %}selected{% endif %}>Domicilio</option>
+                            <option value="Restaurante" {% if form_data.tipo == 'Restaurante' %}selected{% endif %}>Restaurante</option>
+                            <option value="Otro" {% if form_data.tipo == 'Otro' %}selected{% endif %}>Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-full">
+                        <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">
+                            Mensaje <span class="text-red-500">*</span>
+                        </label>
+                        <textarea name="mensaje" required
+                                  placeholder="Describe tu consulta en detalle..."
+                                  class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400 h-32 resize-none">{{ form_data.mensaje|default:'' }}</textarea>
+                    </div>
+
+                    <div class="col-span-full flex items-start gap-3">
+                        <input type="checkbox" name="acepta" id="acepta"
+                               class="mt-1 w-4 h-4 accent-[#DC2626] cursor-pointer"
+                               {% if form_data.acepta %}checked{% endif %}>
+                        <label for="acepta" class="text-gray-500 text-sm cursor-pointer">
+                            He leído y acepto la
+                            <a href="#" class="text-[#DC2626] hover:underline font-bold">política de privacidad</a>
+                            y el tratamiento de mis datos personales
+                        </label>
+                    </div>
+
+                    <div class="col-span-full">
+                        <button type="submit"
+                                class="w-full bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
+                            <i class="fas fa-paper-plane mr-2"></i> Enviar mensaje
+                        </button>
+                    </div>
+
                 </div>
-
-                <div>
-                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Teléfono</label>
-                    <input type="tel" placeholder="+57 300 123 4567" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
-                </div>
-
-                <div>
-                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Tipo de consulta <span class="text-red-500">*</span></label>
-                    <select class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
-                        <option value="">Selecciona un tema</option>
-                        <option value="pedido">Problema con pedido</option>
-                        <option value="domicilio">Domicilio</option>
-                        <option value="restaurante">Restaurante</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                </div>
-
-                <div class="col-span-full">
-                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Mensaje <span class="text-red-500">*</span></label>
-                    <textarea placeholder="Describe tu consulta en detalle..." class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400 h-32 resize-none"></textarea>
-                </div>
-
-                <div class="col-span-full flex items-start gap-3">
-                    <input type="checkbox" class="mt-1 w-4 h-4 accent-[#DC2626] cursor-pointer">
-                    <p class="text-gray-500 text-sm">He leído y acepto la <a href="#" class="text-[#DC2626] hover:underline font-bold">política de privacidad</a> y el tratamiento de mis datos personales</p>
-                </div>
-
-                <div class="col-span-full">
-                    <button class="w-full bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
-                        <i class="fas fa-paper-plane mr-2"></i> Enviar mensaje
-                    </button>
-                </div>
-
-            </div>
+            </form>
         </div>
 
         <!-- COLUMNA DERECHA -->
