@@ -22,22 +22,71 @@ from django.views.decorators.cache import never_cache
 # Create your views here.
 
 #Auth
+@csrf_exempt
 def registro(request):
     if request.method == 'POST':
         form = UsuarioRegistroForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Cuenta creada exitosamente! Inicia sesion.')
-            return render(request, 'auth/register.html', {'form': UsuarioRegistroForm(), 'redirect_login': True})
-            user = form.save ()
-            login(request, user)
-            messages.success(request, 'Cuenta creada exitosamente.')
-            return redirect ('login')
+            # ✅ No guardes todavía, guarda los datos en sesión
+            request.session['registro_data'] = {
+                'first_name': form.cleaned_data['first_name'],
+                'last_name': form.cleaned_data['last_name'],
+                'email': form.cleaned_data['email'],
+                'telefono': form.cleaned_data['telefono'],
+                'password': form.cleaned_data['password1'],
+            }
+
+            codigo = str(random.randint(100000, 999999))
+            request.session['codigo_verificacion'] = codigo
+
+            send_mail(
+                subject='Código de verificación - Gastroweb',
+                message=f'Tu código de verificación es: {codigo}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[form.cleaned_data['email']],
+                fail_silently=False,
+            )
+
+            return redirect('verificar_registro')
     else:
         form = UsuarioRegistroForm()
     return render(request, 'auth/register.html', {'form': form})
 
 import json
+
+def verificar_registro(request):
+    if request.method == 'POST':
+        codigo_ingresado = request.POST.get('codigo')
+        codigo_sesion = request.session.get('codigo_verificacion')
+        datos = request.session.get('registro_data')
+
+        if not datos:
+            messages.error(request, 'Sesión expirada, regístrate de nuevo.')
+            return redirect('registro')
+
+        if codigo_ingresado == codigo_sesion:
+            # ✅ Código válido — crea el usuario
+            user = Usuario.objects.create_user(
+                username=datos['email'],
+                email=datos['email'],
+                first_name=datos['first_name'],
+                last_name=datos['last_name'],
+                telefono=datos['telefono'],
+                password=datos['password'],
+                rol='cliente'
+            )
+            
+            del request.session['codigo_verificacion']
+            del request.session['registro_data']
+
+            return render(request, 'auth/verificar_registro.html', {
+                'verificado': True
+            })
+        else:
+            messages.error(request, 'Código inválido. Intenta de nuevo.')
+
+    return render(request, 'auth/verificar_registro.html')
+
 
 @csrf_exempt
 def login_view(request):
@@ -59,6 +108,14 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
+            # ✅ Enviar correo de inicio de sesión exitoso
+            send_mail(
+                subject='Inicio de sesión exitoso - Gastroweb',
+                message=f'Hola {user.username}, has iniciado sesión exitosamente en Gastroweb.',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                fail_silently=True,  
+            )
             if user.rol == 'restaurante':          
                 return redirect('panel_restaurante')
             elif user.rol == 'repartidor':
@@ -178,7 +235,17 @@ def calificacion_crear(request, pedido_id):
 def registro_api(request):
     serializer = UsuarioSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        user = serializer.save()
+
+        # Enviar correo de bienvenida
+        send_mail(
+            subject='Bienvenido a Gastroweb',
+            message=f'Hola {user.username}, tu registro en Gastroweb fue exitoso. ¡Ya puedes iniciar sesión!',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+
         return Response({'mensaje': 'Usuario creado'}, status=201)
     return Response(serializer.errors, status=400)
 
@@ -373,26 +440,44 @@ def verificar_codigo_web(request):
         email = request.POST.get('email')
         codigo = request.POST.get('codigo')
         nueva_password = request.POST.get('password')
+
         try:
             usuario = Usuario.objects.get(email=email)
+
             registro = CodigoRecuperacion.objects.filter(
                 usuario=usuario, codigo=codigo
             ).last()
+
             if not registro:
                 messages.error(request, 'Codigo invalido')
                 return redirect('verificar_codigo_web')
             if registro.is_expired():
                 messages.error(request, 'El codigo ha expirado')
                 return redirect('verificar_codigo_web')
+
             usuario.set_password(nueva_password)
             usuario.save()
             registro.delete()
-            messages.success(request, 'Contrasena actualizada correctamente')
-            return redirect('login')
-        except Usuario.DoesNotExist:
-            messages.error(request, 'Usuario no encontrado')
-    return render(request, 'auth/verificar_codigo.html')
 
+            try:                                          
+                send_mail(
+                    subject='Cambio de contraseña exitoso - Gastroweb',
+                    message=f'Hola {usuario.username}, tu cambio de contraseña ha sido exitoso en Gastroweb. Si no realizaste este cambio, contactanos de inmediato.',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[usuario.email],
+                    fail_silently=False,
+                )
+                print("✅ CORREO ENVIADO A:", usuario.email)
+            except Exception as e:
+                print("❌ ERROR AL ENVIAR CORREO:", e)
+
+            messages.success(request, 'Contrasena actualizada correctamente')
+            return redirect('login')                     
+
+        except Usuario.DoesNotExist:                    
+            messages.error(request, 'Usuario no encontrado')
+
+    return render(request, 'auth/verificar_codigo.html')  
 
 @login_required
 def eliminar_cuenta(request):
@@ -402,3 +487,17 @@ def eliminar_cuenta(request):
         messages.success(request, 'Cuenta eliminada correctamente.')
         return redirect('index')
     return redirect('perfil')
+
+@api_view(['GET'])
+def listar_usuarios_api(request):
+    usuarios = Usuario.objects.all().values('id', 'username', 'email', 'rol')
+    return Response(list(usuarios))
+
+@api_view(['DELETE'])
+def eliminar_usuario_api(request, pk):
+    try:
+        usuario = Usuario.objects.get(pk=pk)
+        usuario.delete()
+        return Response({'mensaje': 'Usuario eliminado'})
+    except Usuario.DoesNotExist:
+        return Response({'error': 'No encontrado'}, status=404)

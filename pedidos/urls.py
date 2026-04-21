@@ -14,4 +14,10 @@ urlpatterns = [
     path('<int:pk>/estado/', views.cambiar_estado_pedido, name='cambiar_estado_pedido'),
 
     path('test-notificacion/', test_notificacion, name='test_notificacion'),
+
+    path('repartidor/', views.pedidos_repartidor, name='panel_repartidor'),
+    path('<int:pk>/aceptar-entrega/', views.aceptar_entrega, name='aceptar_entrega'),
+    path('<int:pk>/marcar-entregado/', views.marcar_entregado, name='marcar_entregado'),
+
+    path('api/pedidos/', views.listar_pedidos_api),
 ]

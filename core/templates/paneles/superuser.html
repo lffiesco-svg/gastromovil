@@ -1,0 +1,410 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Panel Admin - GastroWeb{% endblock %}
+{% block navbar %}{% endblock %}
+{% block content %}
+
+<section class="min-h-screen bg-gray-100 px-6 md:px-16 py-12">
+
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+            <p class="text-[#DC2626] text-xs font-bold tracking-widest uppercase mb-1">Panel Administrativo</p>
+            <h2 class="text-3xl font-black text-gray-900">GastroWeb Admin</h2>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="bg-white px-4 py-2 rounded-xl shadow-sm flex items-center gap-2">
+                <div class="w-8 h-8 bg-[#DC2626] rounded-full flex items-center justify-center text-white font-black text-sm">A</div>
+                <span class="text-gray-700 font-bold text-sm">Administrador</span>
+            </div>
+            <a href="{% url 'index' %}" class="bg-gray-800 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-gray-900 transition-colors flex items-center gap-2">
+                <i class="fas fa-right-from-bracket"></i> Salir
+            </a>
+        </div>
+    </div>
+
+    <!-- ESTADISTICAS -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-[#DC2626] rounded-2xl p-6 text-white">
+            <div class="flex justify-between items-center mb-3">
+                <div class="bg-white/20 p-2.5 rounded-xl"><i class="fas fa-utensils text-xl"></i></div>
+                <span class="text-4xl font-black" id="stat-restaurantes">0</span>
+            </div>
+            <p class="font-black">Restaurantes</p>
+            <p class="text-white/70 text-xs mt-1">Activos</p>
+        </div>
+        <div class="bg-green-500 rounded-2xl p-6 text-white">
+            <div class="flex justify-between items-center mb-3">
+                <div class="bg-white/20 p-2.5 rounded-xl"><i class="fas fa-shopping-bag text-xl"></i></div>
+                <span class="text-4xl font-black" id="stat-pedidos">0</span>
+            </div>
+            <p class="font-black">Pedidos hoy</p>
+            <p class="text-white/70 text-xs mt-1">En proceso</p>
+        </div>
+        <div class="bg-blue-500 rounded-2xl p-6 text-white">
+            <div class="flex justify-between items-center mb-3">
+                <div class="bg-white/20 p-2.5 rounded-xl"><i class="fas fa-users text-xl"></i></div>
+                <span class="text-4xl font-black" id="stat-usuarios">0</span>
+            </div>
+            <p class="font-black">Usuarios</p>
+            <p class="text-white/70 text-xs mt-1">Registrados</p>
+        </div>
+        <div class="bg-purple-500 rounded-2xl p-6 text-white">
+            <div class="flex justify-between items-center mb-3">
+                <div class="bg-white/20 p-2.5 rounded-xl"><i class="fas fa-box-open text-xl"></i></div>
+                <span class="text-4xl font-black" id="stat-productos">0</span>
+            </div>
+            <p class="font-black">Productos</p>
+            <p class="text-white/70 text-xs mt-1">En catálogo</p>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div class="flex border-b border-gray-100 overflow-x-auto">
+            <button onclick="showTab('restaurantes')" id="tab-restaurantes" class="tab-btn flex-1 py-4 text-sm font-black transition-colors text-[#DC2626] border-b-2 border-[#DC2626] bg-red-50 whitespace-nowrap px-6">
+                <i class="fas fa-utensils mr-2"></i>Restaurantes
+            </button>
+            <button onclick="showTab('productos')" id="tab-productos" class="tab-btn flex-1 py-4 text-sm font-black transition-colors text-gray-500 hover:text-gray-700 whitespace-nowrap px-6">
+                <i class="fas fa-hamburger mr-2"></i>Productos
+            </button>
+            <button onclick="showTab('pedidos')" id="tab-pedidos" class="tab-btn flex-1 py-4 text-sm font-black transition-colors text-gray-500 hover:text-gray-700 whitespace-nowrap px-6">
+                <i class="fas fa-shopping-bag mr-2"></i>Pedidos
+            </button>
+            <button onclick="showTab('usuarios')" id="tab-usuarios" class="tab-btn flex-1 py-4 text-sm font-black transition-colors text-gray-500 hover:text-gray-700 whitespace-nowrap px-6">
+                <i class="fas fa-users mr-2"></i>Usuarios
+            </button>
+            <button onclick="showTab('agregar')" id="tab-agregar" class="tab-btn flex-1 py-4 text-sm font-black transition-colors text-gray-500 hover:text-gray-700 whitespace-nowrap px-6">
+                <i class="fas fa-plus mr-2"></i>Agregar Producto
+            </button>
+        </div>
+
+        <!-- ✅ TAB RESTAURANTES -->
+        <div id="content-restaurantes" class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-black text-gray-900 text-xl">Restaurantes</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-left text-gray-400 text-xs uppercase tracking-wide border-b border-gray-100">
+                            <th class="pb-3 pl-2">Restaurante</th>
+                            <th class="pb-3">Propietario</th>
+                            <th class="pb-3">Teléfono</th>
+                            <th class="pb-3">Estado</th>
+                            <th class="pb-3 text-right pr-2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-restaurantes" class="divide-y divide-gray-50"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ✅ TAB PRODUCTOS -->
+        <div id="content-productos" class="p-6 hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-black text-gray-900 text-xl">Productos</h3>
+                <button onclick="showTab('agregar')" class="bg-[#DC2626] text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-[#DC2626]/90 transition-colors flex items-center gap-2">
+                    <i class="fas fa-plus"></i> Nuevo Producto
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-left text-gray-400 text-xs uppercase tracking-wide border-b border-gray-100">
+                            <th class="pb-3 pl-2">Producto</th>
+                            <th class="pb-3">Categoría</th>
+                            <th class="pb-3">Precio</th>
+                            <th class="pb-3">Estado</th>
+                            <th class="pb-3 text-right pr-2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-productos" class="divide-y divide-gray-50"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ✅ TAB PEDIDOS -->
+        <div id="content-pedidos" class="p-6 hidden">
+            <h3 class="font-black text-gray-900 text-xl mb-6">Pedidos</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-left text-gray-400 text-xs uppercase tracking-wide border-b border-gray-100">
+                            <th class="pb-3 pl-2">#</th>
+                            <th class="pb-3">Cliente</th>
+                            <th class="pb-3">Restaurante</th>
+                            <th class="pb-3">Total</th>
+                            <th class="pb-3">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-pedidos" class="divide-y divide-gray-50"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ✅ TAB USUARIOS -->
+        <div id="content-usuarios" class="p-6 hidden">
+            <h3 class="font-black text-gray-900 text-xl mb-6">Usuarios Registrados</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-left text-gray-400 text-xs uppercase tracking-wide border-b border-gray-100">
+                            <th class="pb-3 pl-2">Usuario</th>
+                            <th class="pb-3">Correo</th>
+                            <th class="pb-3">Rol</th>
+                            <th class="pb-3 text-right pr-2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-usuarios" class="divide-y divide-gray-50"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ✅ TAB AGREGAR PRODUCTO -->
+        <div id="content-agregar" class="p-6 hidden">
+            <h3 class="font-black text-gray-900 text-xl mb-6">Agregar Producto</h3>
+            <div class="max-w-xl flex flex-col gap-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Restaurante</label>
+                        <select id="select-restaurante" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
+                            <option value="">Selecciona restaurante</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Categoría</label>
+                        <select id="select-categoria" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
+                            <option value="">Selecciona categoría</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Nombre</label>
+                        <input id="prod-nombre" type="text" placeholder="Ej: Burger Clásica" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Precio</label>
+                        <input id="prod-precio" type="number" placeholder="0" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Descripción</label>
+                    <textarea id="prod-descripcion" placeholder="Describe el producto..." class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400 h-24 resize-none"></textarea>
+                </div>
+                <div>
+                    <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Imagen</label>
+                    <div id="dropzone" onclick="document.getElementById('imgInput').click()" class="w-full h-44 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 hover:border-[#DC2626] hover:bg-red-50 cursor-pointer flex flex-col items-center justify-center gap-3 transition-all">
+                        <i class="fas fa-image text-gray-400 text-3xl"></i>
+                        <p class="text-sm font-bold text-gray-500">Haz clic para subir imagen</p>
+                    </div>
+                    <input type="file" id="imgInput" accept="image/*" class="hidden">
+                </div>
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="prod-disponible" checked class="w-4 h-4 accent-[#DC2626] cursor-pointer">
+                    <label for="prod-disponible" class="text-gray-700 text-sm font-bold cursor-pointer">Producto disponible</label>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="crearProducto()" class="flex-1 bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
+                        <i class="fas fa-plus mr-2"></i> Crear Producto
+                    </button>
+                    <button onclick="showTab('productos')" class="px-6 py-4 border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl font-black text-sm transition-colors">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div id="toast" class="fixed bottom-6 right-6 px-5 py-3 rounded-xl font-bold text-white shadow-lg opacity-0 z-50 transition-all"></div>
+
+<script>
+const csrfToken = '{{ csrf_token }}';
+
+function showTab(tab) {
+    ['restaurantes','productos','pedidos','usuarios','agregar'].forEach(t => {
+        document.getElementById('content-' + t).classList.add('hidden');
+        const btn = document.getElementById('tab-' + t);
+        btn.classList.remove('text-[#DC2626]','border-b-2','border-[#DC2626]','bg-red-50');
+        btn.classList.add('text-gray-500');
+    });
+    document.getElementById('content-' + tab).classList.remove('hidden');
+    const btn = document.getElementById('tab-' + tab);
+    btn.classList.add('text-[#DC2626]','border-b-2','border-[#DC2626]','bg-red-50');
+    btn.classList.remove('text-gray-500');
+    if (tab === 'restaurantes') cargarRestaurantes();
+    if (tab === 'productos') cargarProductos();
+    if (tab === 'pedidos') cargarPedidos();
+    if (tab === 'usuarios') cargarUsuarios();
+    if (tab === 'agregar') cargarSelectsAgregar();
+}
+
+async function api(url, method = 'GET', body = null) {
+    const opts = { method, headers: { 'X-CSRFToken': csrfToken } };
+    if (body instanceof FormData) { opts.body = body; }
+    else if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+    const res = await fetch(url, opts);
+    return res.json();
+}
+
+async function cargarRestaurantes() {
+    const data = await api('/api/restaurantes/');
+    document.getElementById('stat-restaurantes').textContent = data.filter(r => r.activo).length;
+    document.getElementById('tbody-restaurantes').innerHTML = data.length === 0
+        ? `<tr><td colspan="5" class="py-8 text-center text-gray-400">No hay restaurantes</td></tr>`
+        : data.map(r => `
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-4 pl-2"><div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                        ${r.imagen ? `<img src="${r.imagen}" class="w-full h-full object-cover rounded-xl">` : `<i class="fas fa-utensils text-gray-400"></i>`}
+                    </div>
+                    <p class="font-black text-gray-800">${r.nombre}</p>
+                </div></td>
+                <td class="py-4 text-gray-500">${r.propietario_nombre ?? '-'}</td>
+                <td class="py-4 text-gray-500">${r.telefono ?? '-'}</td>
+                <td class="py-4"><span class="text-xs font-bold px-3 py-1 rounded-full ${r.activo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">${r.activo ? 'Activo' : 'Inactivo'}</span></td>
+                <td class="py-4 pr-2"><div class="flex justify-end">
+                    <button onclick="toggleRestaurante(${r.id}, ${r.activo})" class="px-3 py-1.5 ${r.activo ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-600'} rounded-lg text-xs font-bold">
+                        ${r.activo ? 'Desactivar' : 'Activar'}
+                    </button>
+                </div></td>
+            </tr>`).join('');
+}
+
+async function toggleRestaurante(id, activo) {
+    await api(`/api/restaurantes/${id}/editar/`, 'PUT', { activo: !activo });
+    cargarRestaurantes();
+    mostrarToast(activo ? '🔴 Restaurante desactivado' : '✅ Restaurante activado');
+}
+
+async function cargarProductos() {
+    const data = await api('/api/productos/');
+    document.getElementById('stat-productos').textContent = data.length;
+    document.getElementById('tbody-productos').innerHTML = data.length === 0
+        ? `<tr><td colspan="5" class="py-8 text-center text-gray-400">No hay productos</td></tr>`
+        : data.map(p => `
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-4 pl-2"><div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center">
+                        ${p.imagen ? `<img src="${p.imagen}" class="w-full h-full object-cover">` : `<i class="fas fa-hamburger text-gray-400"></i>`}
+                    </div>
+                    <p class="font-black text-gray-800">${p.nombre}</p>
+                </div></td>
+                <td class="py-4 text-gray-500">${p.categoria_nombre ?? '-'}</td>
+                <td class="py-4 font-black text-gray-800">$${Number(p.precio).toLocaleString('es-CO')}</td>
+                <td class="py-4"><span class="text-xs font-bold px-3 py-1 rounded-full ${p.disponible ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">${p.disponible ? 'Disponible' : 'No disponible'}</span></td>
+                <td class="py-4 pr-2"><div class="flex justify-end">
+                    <button onclick="eliminarProducto(${p.id})" class="px-3 py-1.5 bg-red-50 text-red-500 hover:bg-red-100 rounded-lg text-xs font-bold">Eliminar</button>
+                </div></td>
+            </tr>`).join('');
+}
+
+async function eliminarProducto(id) {
+    if (!confirm('¿Eliminar este producto?')) return;
+    await api(`/api/productos/${id}/eliminar/`, 'DELETE');
+    mostrarToast('🗑️ Producto eliminado');
+    cargarProductos();
+}
+
+async function cargarPedidos() {
+    const data = await api('/api/pedidos/');
+    document.getElementById('stat-pedidos').textContent = data.length;
+    document.getElementById('tbody-pedidos').innerHTML = data.length === 0
+        ? `<tr><td colspan="5" class="py-8 text-center text-gray-400">No hay pedidos</td></tr>`
+        : data.map(p => `
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-4 pl-2 font-black text-gray-800">#${p.id}</td>
+                <td class="py-4 text-gray-500">${p.cliente_nombre ?? '-'}</td>
+                <td class="py-4 text-gray-500">${p.restaurante_nombre ?? '-'}</td>
+                <td class="py-4 font-black text-gray-800">$${Number(p.total).toLocaleString('es-CO')}</td>
+                <td class="py-4"><span class="text-xs font-bold px-3 py-1 rounded-full
+                    ${p.estado === 'entregado' ? 'bg-green-100 text-green-700' :
+                      p.estado === 'cancelado' ? 'bg-red-100 text-red-700' :
+                      p.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700'}">
+                    ${p.estado}</span></td>
+            </tr>`).join('');
+}
+
+async function cargarUsuarios() {
+    const data = await api('/api/usuarios/');
+    document.getElementById('stat-usuarios').textContent = data.length;
+    document.getElementById('tbody-usuarios').innerHTML = data.length === 0
+        ? `<tr><td colspan="4" class="py-8 text-center text-gray-400">No hay usuarios</td></tr>`
+        : data.map(u => `
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-4 pl-2"><div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-[#DC2626] rounded-full flex items-center justify-center text-white font-black text-xs">${u.username?.charAt(0).toUpperCase()}</div>
+                    <p class="font-black text-gray-800">${u.username}</p>
+                </div></td>
+                <td class="py-4 text-gray-500">${u.email}</td>
+                <td class="py-4"><span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-700">${u.rol}</span></td>
+                <td class="py-4 pr-2"><div class="flex justify-end">
+                    <button onclick="eliminarUsuario(${u.id})" class="px-3 py-1.5 bg-red-50 text-red-500 hover:bg-red-100 rounded-lg text-xs font-bold">Eliminar</button>
+                </div></td>
+            </tr>`).join('');
+}
+
+async function eliminarUsuario(id) {
+    if (!confirm('¿Eliminar este usuario?')) return;
+    await api(`/api/usuarios/${id}/eliminar/`, 'DELETE');
+    mostrarToast('🗑️ Usuario eliminado');
+    cargarUsuarios();
+}
+
+async function cargarSelectsAgregar() {
+    const restaurantes = await api('/api/restaurantes/');
+    document.getElementById('select-restaurante').innerHTML = `<option value="">Selecciona restaurante</option>`
+        + restaurantes.map(r => `<option value="${r.id}">${r.nombre}</option>`).join('');
+}
+
+document.getElementById('select-restaurante')?.addEventListener('change', async function() {
+    const id = this.value;
+    if (!id) return;
+    const categorias = await api('/api/categorias/');
+    const mias = categorias.filter(c => c.restaurante == id);
+    document.getElementById('select-categoria').innerHTML = `<option value="">Selecciona categoría</option>`
+        + mias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+});
+
+async function crearProducto() {
+    const form = new FormData();
+    form.append('nombre', document.getElementById('prod-nombre').value);
+    form.append('precio', document.getElementById('prod-precio').value);
+    form.append('descripcion', document.getElementById('prod-descripcion').value);
+    form.append('disponible', document.getElementById('prod-disponible').checked);
+    form.append('categoria', document.getElementById('select-categoria').value);
+    const imgFile = document.getElementById('imgInput').files[0];
+    if (imgFile) form.append('imagen', imgFile);
+    const res = await fetch('/api/productos/crear/', {
+        method: 'POST', headers: { 'X-CSRFToken': csrfToken }, body: form,
+    });
+    const data = await res.json();
+    if (data.mensaje) { mostrarToast('✅ Producto creado'); showTab('productos'); }
+    else mostrarToast('❌ ' + JSON.stringify(data), true);
+}
+
+function mostrarToast(msg, error = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `fixed bottom-6 right-6 px-5 py-3 rounded-xl font-bold text-white shadow-lg transition-all z-50 ${error ? 'bg-red-500' : 'bg-gray-900'}`;
+    t.classList.remove('opacity-0');
+    setTimeout(() => t.classList.add('opacity-0'), 3000);
+}
+
+document.getElementById('imgInput')?.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        document.getElementById('dropzone').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain rounded-xl p-2">`;
+    };
+    reader.readAsDataURL(file);
+});
+
+cargarRestaurantes();
+</script>
+
+{% endblock %}
