@@ -204,5 +204,10 @@ def vista_restaurantes(request):
 
 @login_required
 def panel_restaurante(request):
-    restaurante = get_object_or_404(Restaurante, propietario=request.user)
-    return render(request, 'panel/restaurante.html', {'restaurante': restaurante})
+    try:
+        restaurante = Restaurante.objects.get(propietario=request.user)
+    except Restaurante.DoesNotExist:
+        restaurante = None
+    return render(request, 'paneles/panel_restaurante.html', {
+        'restaurante': restaurante
+    })

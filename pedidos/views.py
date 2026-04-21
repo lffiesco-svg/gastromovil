@@ -9,6 +9,8 @@ from restaurantes.models import Producto
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 @login_required
 def lista_pedidos(request):
@@ -188,3 +190,60 @@ def test_notificacion(request):
         }
     )
     return JsonResponse({"ok": True, "enviado_a": f"{tipo}_{sala}"})
+
+@login_required
+def pedidos_repartidor(request):
+    from django.utils import timezone
+    hoy = timezone.now().date()
+    
+    pendientes = Pedido.objects.filter(
+        estado='enviado'
+    ).select_related('restaurante', 'direccion_entrega', 'cliente')
+    
+    en_camino = Pedido.objects.filter(
+        estado='en_camino',
+        repartidor=request.user
+    ).select_related('restaurante', 'direccion_entrega', 'cliente')
+    
+    entregados = Pedido.objects.filter(
+        estado='entregado',
+        repartidor=request.user,
+        fecha=hoy
+    ).select_related('restaurante', 'direccion_entrega', 'cliente')
+    
+    return render(request, 'pedidos/panel_repartidor.html', {
+        'pendientes': pendientes,
+        'en_camino': en_camino,
+        'entregados': entregados,
+    })
+
+@login_required
+def aceptar_entrega(request, pk):
+    if request.method == 'POST':
+        pedido = get_object_or_404(Pedido, pk=pk, estado='enviado')
+        pedido.estado = 'en_camino'
+        pedido.repartidor = request.user
+        pedido.save()
+        return JsonResponse({'ok': True})
+    return JsonResponse({'ok': False}, status=400)
+
+@login_required
+def marcar_entregado(request, pk):
+    if request.method == 'POST':
+        pedido = get_object_or_404(Pedido, pk=pk, estado='en_camino', repartidor=request.user)
+        pedido.estado = 'entregado'
+        pedido.save()
+        return JsonResponse({'ok': True})
+    return JsonResponse({'ok': False}, status=400)
+
+@api_view(['GET'])
+def listar_pedidos_api(request):
+    pedidos = Pedido.objects.select_related('cliente', 'restaurante').all()
+    data = [{
+        'id': p.id,
+        'cliente_nombre': p.cliente.username,
+        'restaurante_nombre': p.restaurante.nombre,
+        'total': p.total,
+        'estado': p.estado,
+    } for p in pedidos]
+    return Response(data)

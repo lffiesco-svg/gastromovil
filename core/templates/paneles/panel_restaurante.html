@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+{% block NAVBAR %}{% endblock %}
 {% load static %}
 {% block title %}Panel Restaurante Beer Club - GastroWeb{% endblock %}
+<script src="https://cdn.tailwindcss.com"></script>
 {% block content %}
 
 <section class="min-h-screen bg-gray-100 px-6 md:px-16 py-12">
@@ -308,7 +310,7 @@
 </section>
 
 <script>
-const RESTAURANTE_ID = {{ restaurante.id }};
+const RESTAURANTE_ID = {{ restaurante.id|default:"null" }};
 const csrfToken = '{{ csrf_token }}';
 
 // ── UTILIDAD ──────────────────────────────────────────────

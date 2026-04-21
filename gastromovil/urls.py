@@ -1,4 +1,4 @@
-from django.contrib import admin
+﻿from django.contrib import admin
 from django.urls import path, include
 from core import views
 from django.conf import settings
@@ -37,20 +37,16 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('carrito/', views.carrito, name='carrito'),
-    path('contacto/', views.contacto, name='contacto'), 
+    path('contacto/', views.contacto, name='contacto'),
     path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contraseña'),
     path('mispedidos/', views.historial, name='historial'),
     path('verificar/', views.verificar_codigo, name='verificar_codigo'),
     path('enviar-codigo/', usuarios_views.enviar_codigo_web, name='enviar_codigo_web'),
-
-
     path('test-notificacion/', pedidos_views.test_notificacion, name='test_notificacion'),
     path('panel/', views.admin_panel, name='admin_panel'),
     path('panel-repartidor/', views.panel_repartidor, name='panel_repartidor'),
     path('panel-restaurante/', views.panel_restaurante, name='panel_restaurante'),
-    path('contacto/', core_views.contacto, name='contacto'),
-
+    path('verificar-registro/', usuarios_views.verificar_registro, name='verificar_registro'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

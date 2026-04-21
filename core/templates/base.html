@@ -11,7 +11,7 @@
         <link rel="icon" href="{% static 'img/favicon.ico' %}">
     </head>
     <body class="bg-[#1a0a0a] text-white">
-
+{% block NAVBAR %}
     <!-- NAVBAR -->
     <nav class="bg-[#2a1010] sticky top-0 z-50 px-6 md:px-16 py-4 flex justify-between items-center">
         <div class="flex items-center gap-3">
@@ -64,6 +64,7 @@
             <i class="fas fa-bars"></i>
         </button>
     </nav>
+{% endblock %}
 
     <!-- MENU MOVIL -->
     <div id="menuMovil" class="hidden bg-[#2a1010] px-6 py-4 flex-col gap-4 md:hidden">
@@ -209,7 +210,15 @@
             document.getElementById('dropdownMenu').classList.add('hidden');
         }
     });
+    
     </script>
-
+<script>
+    {% if user.is_authenticated %}
+    if (!sessionStorage.getItem('activo')) {
+        window.location.href = "{% url 'logout' %}";
+    }
+    sessionStorage.setItem('activo', '1');
+    {% endif %}
+</script>
     </body>
 </html>

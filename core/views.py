@@ -158,7 +158,7 @@ def verificar_codigo(request):
     return render(request, 'auth/verificar_codigo.html')
 
 def admin_panel(request):
-    return render(request, 'paneles/admin_panel.html')
+    return render(request, 'paneles/superuser.html')
 
 def panel_repartidor(request):
     return render(request, 'paneles/panel_repartidor.html')
