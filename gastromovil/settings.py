@@ -9,7 +9,7 @@ from decouple import config
 load_dotenv()
 import ssl
 import certifi
-ssl._create_default_https_context = ssl._create_unverified_context
+
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -239,30 +239,18 @@ JAZZMIN_UI_TWEAKS = {
     },
 }
 
-EMAIL_BACKEND = 'gastromovil.email_backend.UnverifiedSSLEmailBackend'
+# ✅ Un solo backend SSL para todos los send_mail del proyecto
+EMAIL_BACKEND = 'usuarios.backends.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+# Cuenta principal (registro, verificación, recuperación)
 EMAIL_HOST_USER = 'johanapalacio763@gmail.com'
 EMAIL_HOST_PASSWORD = 'ecptlzagzepjejar'
-DEFAULT_FROM_EMAIL = 'Gastroweb <johanapalacio763@gmail.com>'
+DEFAULT_FROM_EMAIL = 'Gastroweb <ospinacadenaoscar@gmail.com>'
 
-ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
-
-CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
-]
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Configuración de correo con Gmail SMTP
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ospinacadenaoscar@gmail.com'
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # ← ver instrucciones abajo
-DEFAULT_FROM_EMAIL = 'GastroWeb <johanapalacio763@gmail.com>'
-CONTACTO_EMAIL = 'johanapalacio763@gmail.com'
+# Cuenta para contactenos (solo como variable, no como backend)
+CONTACTO_EMAIL = 'ospinacadenaoscar@gmail.com'
+CONTACTO_EMAIL_PASSWORD = config('CONTACTO_EMAIL_PASSWORD')

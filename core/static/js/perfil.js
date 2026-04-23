@@ -1,6 +1,6 @@
 // PERFIL
 function toggleEditar() {
-    const campos = ['nombre', 'apellido', 'email', 'telefono'];
+    const campos = ['nombre', 'apellido', 'telefono'];
     const editarBtn = document.getElementById('editarBtn');
     const guardarBtn = document.getElementById('guardarBtn');
     
@@ -18,7 +18,7 @@ function toggleEditar() {
 }
 
 function guardarCambios() {
-    const campos = ['nombre', 'apellido', 'email', 'telefono'];
+    const campos = ['nombre', 'apellido', 'telefono'];
     const editarBtn = document.getElementById('editarBtn');
     const guardarBtn = document.getElementById('guardarBtn');
 

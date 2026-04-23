@@ -16,6 +16,12 @@ class CategoriaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class RestauranteSerializer(serializers.ModelSerializer):
+    propietario_nombre = serializers.CharField(source='propietario.username', read_only=True)
+
     class Meta:
         model = Restaurante
         fields = '__all__'
+        extra_kwargs = {
+            'propietario': {'required': False},
+            'nombre': {'required': False},
+        }
