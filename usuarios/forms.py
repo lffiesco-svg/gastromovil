@@ -16,7 +16,7 @@ class UsuarioRegistroForm(forms.ModelForm):
     def clean_first_name(self):
         nombre = self.cleaned_data.get('first_name')
         if not nombre.replace(' ', '').isalpha():
-            raise forms.ValidationError('El nombre solo puede contener letras.')
+            raise forms.ValidationError('El nombre solo puede contener letras.') 
         return nombre
 
     def clean_last_name(self):

@@ -42,7 +42,9 @@ def editar_restaurante(request, pk):
         restaurante = Restaurante.objects.get(pk=pk)
     except Restaurante.DoesNotExist:
         return Response({'error': 'Restaurante no encontrado'}, status=404)
-    serializer = RestauranteSerializer(restaurante, data=request.data)
+    
+    # partial=True permite enviar solo los campos que quieres cambiar
+    serializer = RestauranteSerializer(restaurante, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response({'mensaje': 'Restaurante actualizado', 'data': serializer.data})
@@ -116,7 +118,8 @@ def editar_producto(request, pk):
         producto = Producto.objects.get(pk=pk)
     except Producto.DoesNotExist:
         return Response({'error': 'Producto no encontrado'}, status=404)
-    serializer = ProductoSerializer(producto, data=request.data)
+    
+    serializer = ProductoSerializer(producto, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response({'mensaje': 'Producto actualizado', 'data': serializer.data})

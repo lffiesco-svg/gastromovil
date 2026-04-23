@@ -1,11 +1,15 @@
 @import "tailwindcss";
 
-/**
-  * A catch-all path to Django template files, JavaScript, and Python files
-  * that contain Tailwind CSS classes and will be scanned by Tailwind to generate the final CSS file.
-  *
-  * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
-  * the scope of this path.
-  */
 @source "../../../**/*.{html,py,js}";
 @source "../../../templates/**/*.html";
+
+@source inline("
+  bg-green-100 text-green-700
+  bg-gray-100 text-gray-500
+  bg-red-100 text-red-700
+  bg-yellow-100 text-yellow-700
+  bg-blue-100 text-blue-700
+  bg-red-50 text-red-500
+  bg-green-50 text-green-600
+  border-b-2
+"); 

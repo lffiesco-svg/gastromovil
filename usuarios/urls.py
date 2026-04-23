@@ -40,5 +40,5 @@ urlpatterns = [
 
     path('api/usuarios/', views.listar_usuarios_api),
     path('api/usuarios/<int:pk>/eliminar/', views.eliminar_usuario_api),
-
+    path('api/usuarios/<int:pk>/editar/', views.editar_usuario_api),
 ]

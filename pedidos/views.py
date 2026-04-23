@@ -238,11 +238,11 @@ def marcar_entregado(request, pk):
 
 @api_view(['GET'])
 def listar_pedidos_api(request):
-    pedidos = Pedido.objects.select_related('cliente', 'restaurante').all()
+    pedidos = Pedido.objects.all()
     data = [{
         'id': p.id,
-        'cliente_nombre': p.cliente.username,
-        'restaurante_nombre': p.restaurante.nombre,
+        'cliente_nombre': p.cliente.username if p.cliente else '-',
+        'restaurante_nombre': p.restaurante.nombre if p.restaurante else '-',
         'total': p.total,
         'estado': p.estado,
     } for p in pedidos]

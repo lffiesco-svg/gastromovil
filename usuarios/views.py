@@ -18,6 +18,8 @@ from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
 from django.contrib.auth import logout
 from django.views.decorators.cache import never_cache
+from django.core.mail import EmailMultiAlternatives
+from .email_template import get_email_html, codigo_box, parrafo, nota
 
 # Create your views here.
 
@@ -39,19 +41,27 @@ def registro(request):
             codigo = str(random.randint(100000, 999999))
             request.session['codigo_verificacion'] = codigo
 
-            send_mail(
-                subject='Código de verificación - Gastroweb',
-                message=f'Tu código de verificación es: {codigo}',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[form.cleaned_data['email']],
-                fail_silently=False,
+            html = get_email_html(
+                titulo='Código de verificación',
+                contenido_central=
+                    parrafo(f'Hola <strong>{form.cleaned_data["first_name"]}</strong>, gracias por registrarte en GastroWeb. Usa este código para verificar tu cuenta:') +
+                    codigo_box(codigo) +
+                    nota('Este código expira en 10 minutos. No lo compartas con nadie.')
             )
+
+            email = EmailMultiAlternatives(
+                subject='Código de verificación - Gastroweb',
+                body=f'Tu código de verificación es: {codigo}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[form.cleaned_data['email']],
+            )
+            email.attach_alternative(html, "text/html")
+            email.send(fail_silently=False)
 
             return redirect('verificar_registro')
     else:
         form = UsuarioRegistroForm()
     return render(request, 'auth/register.html', {'form': form})
-
 import json
 
 def verificar_registro(request):
@@ -108,14 +118,25 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            # ✅ Enviar correo de inicio de sesión exitoso
-            send_mail(
-                subject='Inicio de sesión exitoso - Gastroweb',
-                message=f'Hola {user.username}, has iniciado sesión exitosamente en Gastroweb.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=True,  
+            
+            # ✅ Correo HTML de inicio de sesión
+            html = get_email_html(
+                titulo='Inicio de sesión exitoso',
+                contenido_central=
+                    parrafo(f'Hola <strong>{user.first_name}</strong>, has iniciado sesión exitosamente en <strong>GastroWeb</strong>.') +
+                    parrafo('Si no fuiste tú, cambia tu contraseña de inmediato.') +
+                    nota(f'Fecha y hora: {user.last_login.strftime("%d/%m/%Y %H:%M")} UTC')
             )
+
+            email_msg = EmailMultiAlternatives(
+                subject='Inicio de sesión exitoso - Gastroweb',
+                body=f'Hola {user.first_name}, has iniciado sesión exitosamente en Gastroweb.',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[user.email],
+            )
+            email_msg.attach_alternative(html, "text/html")
+            email_msg.send(fail_silently=True)
+
             if user.rol == 'restaurante':          
                 return redirect('panel_restaurante')
             elif user.rol == 'repartidor':
@@ -150,7 +171,7 @@ def perfil(request):
         usuario.first_name = request.POST.get('first_name', usuario.first_name)
         usuario.last_name = request.POST.get('last_name', usuario.last_name)
         usuario.email = request.POST.get('email', usuario.email)
-        usuario.telefono = telefono
+        usuario.telefono = telefono 
         usuario.save()
         messages.success(request, 'Perfil actualizado correctamente.')
         return redirect('perfil')
@@ -400,26 +421,35 @@ def verificar_codigo(request):
 
 # --- RECUPERACION DE CONTRASENA (WEB) ---
 
+from django.core.mail import EmailMultiAlternatives
+from .email_template import get_email_html, codigo_box, parrafo, nota
+
 def enviar_codigo_web(request):
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
         try:
             usuario = Usuario.objects.get(email__iexact=email)
             
-            
             CodigoRecuperacion.objects.filter(usuario=usuario).delete()
-
             codigo = str(secrets.SystemRandom().randint(100000, 999999))
             CodigoRecuperacion.objects.create(usuario=usuario, codigo=codigo)
 
-
             try:
-                email_msg = EmailMessage(
-                    subject='Código de recuperación',
+                html = get_email_html(
+                    titulo='Recuperación de contraseña',
+                    contenido_central=
+                        parrafo(f'Hola <strong>{usuario.first_name}</strong>, recibimos una solicitud para restablecer tu contraseña.') +
+                        codigo_box(codigo) +
+                        nota('Este código expira en 10 minutos. Si no solicitaste esto, ignora este mensaje.')
+                )
+
+                email_msg = EmailMultiAlternatives(
+                    subject='Código de recuperación - Gastroweb',
                     body=f'Tu código de verificación es: {codigo}',
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[email],
                 )
+                email_msg.attach_alternative(html, "text/html")
                 email_msg.send(fail_silently=False)
                 
                 messages.success(request, f'Código enviado exitosamente a {email}')
@@ -499,5 +529,17 @@ def eliminar_usuario_api(request, pk):
         usuario = Usuario.objects.get(pk=pk)
         usuario.delete()
         return Response({'mensaje': 'Usuario eliminado'})
+    except Usuario.DoesNotExist:
+        return Response({'error': 'No encontrado'}, status=404)
+    
+@api_view(['PUT'])
+def editar_usuario_api(request, pk):
+    try:
+        usuario = Usuario.objects.get(pk=pk)
+        usuario.username = request.data.get('username', usuario.username)
+        usuario.email = request.data.get('email', usuario.email)
+        usuario.rol = request.data.get('rol', usuario.rol)
+        usuario.save()
+        return Response({'mensaje': 'Usuario actualizado'})
     except Usuario.DoesNotExist:
         return Response({'error': 'No encontrado'}, status=404)
