@@ -251,6 +251,15 @@ EMAIL_HOST_USER = 'johanapalacio763@gmail.com'
 EMAIL_HOST_PASSWORD = 'ecptlzagzepjejar'
 DEFAULT_FROM_EMAIL = 'Gastroweb <ospinacadenaoscar@gmail.com>'
 
+ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # Cuenta para contactenos (solo como variable, no como backend)
 CONTACTO_EMAIL = 'ospinacadenaoscar@gmail.com'
 CONTACTO_EMAIL_PASSWORD = config('CONTACTO_EMAIL_PASSWORD')
