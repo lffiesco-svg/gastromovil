@@ -1,4 +1,3 @@
-// PERFIL
 function toggleEditar() {
     const campos = ['nombre', 'apellido', 'telefono'];
     const editarBtn = document.getElementById('editarBtn');
@@ -6,11 +5,8 @@ function toggleEditar() {
     
     campos.forEach(id => {
         const input = document.getElementById(id);
-        input.disabled = !input.disabled;
-        if (!input.disabled) {
-            input.classList.add('border-[#FF8C00]', 'bg-white');
-            input.classList.remove('bg-gray-100');
-        }
+        input.disabled = false;
+        input.style.borderColor = '#DC2626';
     });
 
     editarBtn.classList.add('hidden');
@@ -25,19 +21,9 @@ function guardarCambios() {
     campos.forEach(id => {
         const input = document.getElementById(id);
         input.disabled = true;
-        input.classList.remove('border-[#FF8C00]', 'bg-white');
-        input.classList.add('bg-gray-100');
+        input.style.borderColor = '#3a1515';
     });
 
     editarBtn.classList.remove('hidden');
     guardarBtn.classList.add('hidden');
-}
-
-// MODAL ELIMINAR CUENTA
-function abrirModalEliminar() {
-    document.getElementById('modal-eliminar').classList.remove('hidden');
-}
-
-function cerrarModalEliminar() {
-    document.getElementById('modal-eliminar').classList.add('hidden');
 }

@@ -3,8 +3,8 @@
 {% block title %}Mi Perfil - GastroWeb{% endblock %}
 {% block content %}
 
-<section class="min-h-screen bg-gray-100 px-6 md:px-16 py-12">
-    <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-10">
+<section class="min-h-screen bg-[#1a0a0a] px-6 md:px-16 py-12">
+    <div class="max-w-2xl mx-auto bg-[#2a1010] rounded-3xl border border-[#4a2020] shadow-xl p-10">
 
         <!-- MENSAJES -->
         {% if messages %}
@@ -17,16 +17,16 @@
 
         <!-- ENCABEZADO -->
         <div class="flex items-center gap-6 mb-8">
-            <div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-black text-3xl bg-linear-to-r from-[#FF8C00] to-[#e67e00]">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-black text-3xl" style="background: linear-gradient(to right, #ef4444, #b91c1c);">
                 {{ usuario.first_name|first|upper }}{{ usuario.last_name|first|upper }}
             </div>
             <div>
-                <h2 class="text-3xl font-black text-gray-900">{{ usuario.first_name }} {{ usuario.last_name }}</h2>
-                <p class="text-gray-500">{{ usuario.email }}</p>
+                <h2 class="text-3xl font-black text-white">{{ usuario.first_name }} {{ usuario.last_name }}</h2>
+                <p class="text-gray-400">{{ usuario.email }}</p>
             </div>
         </div>
 
-        <hr class="mb-6">
+        <hr class="mb-6 border-[#4a2020]">
 
         <!-- FORMULARIO EDITAR PERFIL -->
         <form method="POST" action="{% url 'perfil' %}" id="formPerfil">
@@ -34,27 +34,27 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
                 <div>
-                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Nombre</label>
-                    <input id="nombre" name="first_name" type="text" value="{{ usuario.first_name }}" disabled
-                        class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 disabled:opacity-60 transition-colors">
+                    <label class="text-white text-xs font-bold uppercase tracking-wider mb-2 block">Nombre</label>
+                    <input id="nombre" name="first_name" type="text" value="{{ usuario.first_name }}" disabled 
+                        class="w-full bg-[#1a0a0a] text-white px-4 py-3 rounded-xl outline-none border border-[#4a2020] disabled:opacity-100 transition-colors">
                 </div>
 
                 <div>
-                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Apellido</label>
-                    <input id="apellido" name="last_name" type="text" value="{{ usuario.last_name }}" disabled
-                        class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 disabled:opacity-60 transition-colors">
+                    <label class="text-white text-xs font-bold uppercase tracking-wider mb-2 block">Apellido</label>
+                    <input id="apellido" name="last_name" type="text" value="{{ usuario.last_name }}" disabled 
+                        class="w-full bg-[#1a0a0a] text-white px-4 py-3 rounded-xl outline-none border border-[#4a2020] disabled:opacity-100 transition-colors">
                 </div>
 
                 <div class="col-span-full">
-                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Correo Electrónico</label>
+                    <label class="text-white text-xs font-bold uppercase tracking-wider mb-2 block">Correo Electrónico</label>
                     <input id="email" type="email" value="{{ usuario.email }}" disabled readonly
-                        class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 disabled:opacity-60 transition-colors">
+                        class="w-full bg-[#1a0a0a] text-white px-4 py-3 rounded-xl outline-none border border-[#4a2020] disabled:opacity-100 transition-colors">
                 </div>
 
                 <div class="col-span-full">
-                    <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">Teléfono</label>
-                    <input id="telefono" name="telefono" type="tel" value="{{ usuario.telefono }}" disabled
-                        class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 disabled:opacity-60 transition-colors">
+                    <label class="text-white text-xs font-bold uppercase tracking-wider mb-2 block">Teléfono</label>
+                    <input id="telefono" name="telefono" type="tel" value="{{ usuario.telefono }}" disabled 
+                        class="w-full bg-[#1a0a0a] text-white px-4 py-3 rounded-xl outline-none border border-[#4a2020] disabled:opacity-100 transition-colors">
                 </div>
 
             </div>
@@ -62,6 +62,7 @@
             <!-- BOTONES -->
             <div class="mt-8 flex flex-col gap-3">
                 <button type="button" id="editarBtn" onclick="toggleEditar()"
+                style="background: linear-gradient(to right, #ef4444, #b91c1c);"
                     class="w-full bg-[#FF8C00] text-white py-4 rounded-xl mb-3 font-black text-sm tracking-widest uppercase hover:bg-[#e67e00] transition-colors">
                     <i class="fas fa-user-pen mr-2"></i> Editar Perfil
                 </button>
@@ -75,11 +76,13 @@
         <!-- BOTONES FUERA DEL FORM -->
         <div class="flex flex-col gap-3 mt-3">
             <button onclick="abrirModalEliminar()"
-                class="w-full bg-white text-red-500 py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-red-50 transition-colors border border-red-200">
+                style="background: linear-gradient(to right, #ef4444, #b91c1c);"
+                class="w-full text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase transition-colors border border-red-200">
                 <i class="fas fa-trash mr-2"></i> Eliminar Cuenta
             </button>
             <a href="{% url 'logout' %}">
-                <button class="w-full bg-white text-gray-500 py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-gray-50 transition-colors border border-gray-200">
+                <button style="background: linear-gradient(to right, #9ca3af, #4b5563);"
+                    class="w-full text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase transition-colors border border-gray-200">
                     <i class="fas fa-right-from-bracket mr-2"></i> Cerrar Sesión
                 </button>
             </a>
@@ -108,6 +111,17 @@
         {% endif %}
 
     </div>
+
+    <style>
+    input, input:enabled, input:not(:disabled) {
+        background-color: #1a0a0a !important;
+        -webkit-box-shadow: 0 0 0 1000px #1a0a0a inset !important;
+        box-shadow: 0 0 0 1000px #1a0a0a inset !important;
+        -webkit-text-fill-color: white !important;
+        caret-color: white;
+        border-color: #4a2020 !important;
+    }
+</style>
 </section>
 
 <!-- MODAL ELIMINAR CUENTA -->

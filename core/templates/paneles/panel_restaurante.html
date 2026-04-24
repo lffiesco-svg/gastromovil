@@ -1,17 +1,16 @@
 {% extends 'base.html' %}
-{% block NAVBAR %}{% endblock %}
+{% block navbar %}{% endblock %}
 {% load static %}
 {% block title %}Panel Restaurante Beer Club - GastroWeb{% endblock %}
 <script src="https://cdn.tailwindcss.com"></script>
 {% block content %}
 
 <section class="min-h-screen bg-gray-100 px-6 md:px-16 py-12">
-
     <!-- HEADER -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
             <p class="text-[#DC2626] text-xs font-bold tracking-widest uppercase mb-1">Panel Restaurante</p>
-            <h2 class="text-3xl font-black text-gray-900">Mi Restaurante</h2>
+            <h2 class="text-3xl font-black text-gray-900">Mi Restaurante Beer Club</h2>
         </div>
         <div class="flex items-center gap-3">
             <div class="bg-white px-4 py-2 rounded-xl shadow-sm flex items-center gap-2">
@@ -468,8 +467,7 @@ document.getElementById('imgInput').addEventListener('change', function () {
     reader.readAsDataURL(file);
 });
 
-// Carga inicial
-cargarProductos();
+
 </script>
 
 {% endblock %}

@@ -12,7 +12,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('', views.index, name='index'),
-    path('restaurantes/', views.restaurantes, name='restaurantes'),
     path('usuarios/', include('usuarios.urls')),
     path('restaurantes/', include('restaurantes.urls')),
     path('repartidores/', include('repartidores.urls')),
