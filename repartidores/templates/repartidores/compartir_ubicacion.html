@@ -18,6 +18,11 @@
             <p id="hora-display" class="text-white font-mono text-sm">—</p>
         </div>
 
+        <div class="bg-yellow-900 border border-yellow-600 rounded-xl p-3 mb-4 text-left">
+            <p class="text-yellow-400 text-xs font-bold mb-1">⚠️ Importante</p>
+            <p class="text-yellow-200 text-xs">Para que el seguimiento funcione correctamente, mantén la pantalla encendida o configura tu celular para que no se bloquee automáticamente.</p>
+        </div>
+
         <button id="btn-iniciar"
             class="w-full bg-[#DC2626] text-white py-3 px-6 rounded-xl font-bold text-lg hover:bg-red-700 transition-colors mb-3">
             Iniciar
@@ -36,6 +41,7 @@
     const wsUrl = `ws://${window.location.host}/ws/ubicacion/${repartidorId}/`;
     let socket = null;
     let watchId = null;
+    let wakeLock = null;
 
     const btnIniciar = document.getElementById('btn-iniciar');
     const btnDetener = document.getElementById('btn-detener');
@@ -53,6 +59,31 @@
         alert(msg);
     }
 
+    async function activarWakeLock() {
+        try {
+            if ('wakeLock' in navigator) {
+                wakeLock = await navigator.wakeLock.request('screen');
+                console.log('Wake Lock activado');
+            }
+        } catch (err) {
+            console.log('Wake Lock no disponible:', err);
+        }
+    }
+
+    async function liberarWakeLock() {
+        if (wakeLock) {
+            await wakeLock.release();
+            wakeLock = null;
+            console.log('Wake Lock liberado');
+        }
+    }
+
+    document.addEventListener('visibilitychange', async () => {
+        if (wakeLock !== null && document.visibilityState === 'visible') {
+            await activarWakeLock();
+        }
+    });
+
     btnIniciar.addEventListener('click', () => {
         if (!navigator.geolocation) {
             mostrarError('Tu navegador no soporta geolocalización.');
@@ -62,6 +93,7 @@
         socket = new WebSocket(wsUrl);
 
         socket.onopen = () => {
+            activarWakeLock();
             estadoTexto.textContent = 'Conectado — enviando ubicación en vivo';
             estadoIcon.textContent = '🟢';
             btnIniciar.style.display = 'none';
@@ -94,6 +126,7 @@
     });
 
     btnDetener.addEventListener('click', () => {
+        liberarWakeLock();
         if (watchId) navigator.geolocation.clearWatch(watchId);
         if (socket) socket.close();
         btnDetener.style.display = 'none';
