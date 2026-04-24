@@ -47,7 +47,10 @@ urlpatterns = [
     path('panel-repartidor/', views.panel_repartidor, name='panel_repartidor'),
     path('panel-restaurante/', views.panel_restaurante, name='panel_restaurante'),
     path('verificar-registro/', usuarios_views.verificar_registro, name='verificar_registro'),
+    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+urlpatterns += staticfiles_urlpatterns()
 

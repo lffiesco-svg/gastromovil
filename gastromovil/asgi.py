@@ -8,16 +8,22 @@ https://docs.djangoproject.com/en/6.0/howto/deployment/asgi/
 """
 
 import os
+import django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gastromovil.settings')
+django.setup()
+
 from django.core.asgi import get_asgi_application
-from channels.routing import ProtocolTypeRouter, URLRouter 
+from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 import pedidos.routing
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gastromovil.settings')
+import repartidores.routing
 
 application = ProtocolTypeRouter({
     'http': get_asgi_application(),
     'websocket': AuthMiddlewareStack(
-        URLRouter(pedidos.routing.websocket_urlpatterns)
+        URLRouter(
+            pedidos.routing.websocket_urlpatterns +
+            repartidores.routing.websocket_urlpatterns
+        )
     ),
 })

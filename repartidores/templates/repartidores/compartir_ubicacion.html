@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Compartir Ubicación{% endblock %}
+
+{% block content %}
+<div class="bg-[#1a0a0a] min-h-screen flex flex-col items-center justify-center px-6 py-12">
+    <div class="bg-[#2a1010] border-2 border-[#4a2020] rounded-2xl p-8 w-full max-w-sm text-center">
+        
+        <div id="estado-icon" class="text-6xl mb-4">📍</div>
+        <h2 class="text-white font-black text-2xl mb-2">Compartir Ubicación</h2>
+        <p id="estado-texto" class="text-gray-400 text-sm mb-6">Presiona el botón para empezar</p>
+
+        <div id="coordenadas" class="hidden bg-[#1a0a0a] rounded-xl p-4 mb-6 text-left">
+            <p class="text-xs text-gray-500 mb-1">Latitud</p>
+            <p id="lat-display" class="text-white font-mono text-sm mb-3">—</p>
+            <p class="text-xs text-gray-500 mb-1">Longitud</p>
+            <p id="lng-display" class="text-white font-mono text-sm mb-3">—</p>
+            <p class="text-xs text-gray-500 mb-1">Última actualización</p>
+            <p id="hora-display" class="text-white font-mono text-sm">—</p>
+        </div>
+
+        <button id="btn-iniciar"
+            class="w-full bg-[#DC2626] text-white py-3 px-6 rounded-xl font-bold text-lg hover:bg-red-700 transition-colors mb-3">
+            Iniciar
+        </button>
+        <button id="btn-detener" style="display:none"
+            class="w-full bg-[#4a2020] text-white py-3 px-6 rounded-xl font-bold text-lg hover:bg-[#6a3030] transition-colors mb-3">
+            Detener
+        </button>
+
+        <p id="error-msg" class="text-red-400 text-xs hidden"></p>
+    </div>
+</div>
+
+<script>
+    const repartidorId = 2;
+    const wsUrl = `ws://${window.location.host}/ws/ubicacion/${repartidorId}/`;
+    let socket = null;
+    let watchId = null;
+
+    const btnIniciar = document.getElementById('btn-iniciar');
+    const btnDetener = document.getElementById('btn-detener');
+    const estadoTexto = document.getElementById('estado-texto');
+    const estadoIcon = document.getElementById('estado-icon');
+    const coordenadas = document.getElementById('coordenadas');
+    const latDisplay = document.getElementById('lat-display');
+    const lngDisplay = document.getElementById('lng-display');
+    const horaDisplay = document.getElementById('hora-display');
+    const errorMsg = document.getElementById('error-msg');
+
+    function mostrarError(msg) {
+        errorMsg.textContent = msg;
+        errorMsg.classList.remove('hidden');
+        alert(msg);
+    }
+
+    btnIniciar.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+            mostrarError('Tu navegador no soporta geolocalización.');
+            return;
+        }
+
+        socket = new WebSocket(wsUrl);
+
+        socket.onopen = () => {
+            estadoTexto.textContent = 'Conectado — enviando ubicación en vivo';
+            estadoIcon.textContent = '🟢';
+            btnIniciar.style.display = 'none';
+            btnDetener.style.display = 'block';
+            coordenadas.classList.remove('hidden');
+            errorMsg.classList.add('hidden');
+
+            watchId = navigator.geolocation.watchPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    socket.send(JSON.stringify({ latitud: lat, longitud: lng }));
+                    latDisplay.textContent = lat.toFixed(6);
+                    lngDisplay.textContent = lng.toFixed(6);
+                    horaDisplay.textContent = new Date().toLocaleTimeString();
+                },
+                (err) => mostrarError('No se pudo obtener tu ubicación: ' + err.message),
+                { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+            );
+        };
+
+        socket.onerror = () => {
+            mostrarError('WebSocket falló - el servidor no soporta WS');
+        };
+
+        socket.onclose = () => {
+            estadoTexto.textContent = 'Desconectado';
+            estadoIcon.textContent = '🔴';
+        };
+    });
+
+    btnDetener.addEventListener('click', () => {
+        if (watchId) navigator.geolocation.clearWatch(watchId);
+        if (socket) socket.close();
+        btnDetener.style.display = 'none';
+        btnIniciar.style.display = 'block';
+        coordenadas.classList.add('hidden');
+        estadoTexto.textContent = 'Presiona el botón para empezar';
+        estadoIcon.textContent = '📍';
+    });
+</script>
+{% endblock %}
