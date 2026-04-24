@@ -148,6 +148,7 @@ def login_view(request):
         else:
             messages.error(request, "Correo o contrasena incorrectos")
             return redirect('login')
+    return render(request, 'auth/login.html')
 
 @never_cache
 def logout_view(request):

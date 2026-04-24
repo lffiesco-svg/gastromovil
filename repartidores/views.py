@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Repartidor, UbicacionRepartidor
 from .forms import RepartidorForm, UbicacionRepartidorForm
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 # Create your views here.
 @login_required
@@ -183,3 +185,12 @@ def api_todas_ubicaciones(request):
         for u in ubicaciones
     ]
     return Response(data) 
+# Quita el decorador temporalmente para probar
+# Quita el decorador temporalmente para probar
+def compartir_ubicacion(request):
+    return render(request, 'repartidores/compartir_ubicacion.html')
+
+def seguimiento_cliente(request, repartidor_id):
+    return render(request, 'repartidores/seguimiento_cliente.html', {
+        'repartidor_id': repartidor_id
+    })
