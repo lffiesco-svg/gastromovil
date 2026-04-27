@@ -265,5 +265,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Cuenta para contactenos (solo como variable, no como backend)
 CONTACTO_EMAIL = 'ospinacadenaoscar@gmail.com'
 CONTACTO_EMAIL_PASSWORD = config('CONTACTO_EMAIL_PASSWORD')
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.137.197', '192.168.137.183', '192.168.40.8']
+ALLOWED_HOSTS = ['*']
 DJANGO_ALLOW_ASYNC_UNSAFE = True
