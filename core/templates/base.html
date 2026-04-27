@@ -9,24 +9,42 @@
         {% tailwind_css %}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link rel="icon" href="{% static 'img/favicon.ico' %}">
+        <style>
+            .carrito-badge {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                transform: translate(40%, -40%);
+                background-color: #DC2626;
+                color: white;
+                font-size: 9px;
+                font-weight: 900;
+                min-width: 15px;
+                height: 15px;
+                padding: 0 3px;
+                border-radius: 9999px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1;
+                pointer-events: none;
+            }
+        </style>
     </head>
     <body class="bg-[#1a0a0a] text-white">
 {% block navbar %}
-    <!-- NAVBAR -->
     <nav class="bg-[#2a1010] sticky top-0 z-50 px-6 md:px-16 py-4 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <img src="{% static 'img/Logo.jpeg' %}" alt="GastroMovil" class="w-11 h-11 rounded-full object-cover">
             <span class="text-white font-bold text-xl">Gastro<strong class="text-[#DC2626]">Web</strong></span>
         </div>
 
-        <!-- MENU DESKTOP -->
         <ul class="hidden md:flex gap-10 list-none ml-auto mr-10">
             <li><a href="{% url 'index' %}" class="text-white hover:text-[#DC2626] font-bold uppercase tracking-wider text-sm transition-colors">Inicio</a></li>
             <li><a href="{% url 'restaurantes' %}" class="text-white hover:text-[#DC2626] font-bold uppercase tracking-wider text-sm transition-colors">Restaurantes</a></li>
             <li><a href="{% url 'contacto' %}" class="text-white hover:text-[#DC2626] font-bold uppercase tracking-wider text-sm transition-colors">Contactenos</a></li>
         </ul>
 
-        <!-- ICONOS DESKTOP -->
         <div class="hidden md:flex items-center gap-5">
             {% if user.is_authenticated %}
             <div class="relative" id="userDropdown">
@@ -43,23 +61,29 @@
                 </div>
             </div>
             {% else %}
-            <a href="{% url 'login' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
+            <a href="{% url 'login' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300">
                 <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                 </svg>
             </a>
             {% endif %}
-            <a href="{% url 'carrito' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
+
+            <!-- CARRITO DESKTOP -->
+            <a href="{% url 'carrito' %}" id="carrito-link-desktop" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300">
                 <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="8" cy="21" r="1"/>
                     <circle cx="19" cy="21" r="1"/>
                     <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
                 </svg>
+                {% if carrito_total %}
+                <span data-carrito-badge class="carrito-badge">
+                    {% if carrito_total > 9 %}9+{% else %}{{ carrito_total }}{% endif %}
+                </span>
+                {% endif %}
             </a>
         </div>
 
-        <!-- BOTON HAMBURGUESA MOVIL -->
         <button id="menuBtn" class="md:hidden text-white text-2xl" onclick="toggleMenu()">
             <i class="fas fa-bars"></i>
         </button>
@@ -74,30 +98,36 @@
         <a href="{% url 'contacto' %}" class="text-white hover:text-[#DC2626] font-bold uppercase tracking-wider text-sm transition-colors block py-2 border-b border-[#4a2020]">Contactenos</a>
         <div class="flex items-center gap-5 py-2">
             {% if user.is_authenticated %}
-            <a href="{% url 'perfil' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
+            <a href="{% url 'perfil' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300">
                 <div class="w-9 h-9 rounded-full bg-[#DC2626] flex items-center justify-center text-white font-black text-sm">
                     {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
                 </div>
             </a>
             {% else %}
-            <a href="{% url 'login' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
+            <a href="{% url 'login' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300">
                 <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                 </svg>
             </a>
             {% endif %}
-            <a href="{% url 'carrito' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300 transform hover:scale-105">
+
+            <!-- CARRITO MÓVIL -->
+            <a href="{% url 'carrito' %}" id="carrito-link-movil" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300">
                 <svg class="w-6 h-6 text-white group-hover:text-[#DC2626] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="8" cy="21" r="1"/>
                     <circle cx="19" cy="21" r="1"/>
                     <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
                 </svg>
+                {% if carrito_total %}
+                <span data-carrito-badge class="carrito-badge">
+                    {% if carrito_total > 9 %}9+{% else %}{{ carrito_total }}{% endif %}
+                </span>
+                {% endif %}
             </a>
         </div>
     </div>
 
-    <!-- CONTENIDO -->
     {% block content %}{% endblock %}
 
     <!-- FOOTER -->
@@ -203,22 +233,14 @@
         const menu = document.getElementById('dropdownMenu');
         menu.classList.toggle('hidden');
     }
-
     document.addEventListener('click', function(e) {
         const dropdown = document.getElementById('userDropdown');
         if (dropdown && !dropdown.contains(e.target)) {
             document.getElementById('dropdownMenu').classList.add('hidden');
         }
     });
-    
     </script>
-<script>
-    {% if user.is_authenticated %}
-    if (!sessionStorage.getItem('activo')) {
-        window.location.href = "{% url 'logout' %}";
-    }
-    sessionStorage.setItem('activo', '1');
-    {% endif %}
-</script>
+    {% block extra_js %}{% endblock %}
+
     </body>
 </html>

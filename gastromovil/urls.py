@@ -35,7 +35,6 @@ urlpatterns = [
     path('menu/taqueria/maruchas/', views.maruchas, name='maruchas'),
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
-    path('carrito/', views.carrito, name='carrito'),
     path('contacto/', views.contacto, name='contacto'),
     path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contraseña'),
     path('mispedidos/', views.historial, name='historial'),
@@ -46,6 +45,7 @@ urlpatterns = [
     path('panel-repartidor/', views.panel_repartidor, name='panel_repartidor'),
     path('panel-restaurante/', views.panel_restaurante, name='panel_restaurante'),
     path('verificar-registro/', usuarios_views.verificar_registro, name='verificar_registro'),
+    path('carrito/', include('carrito.urls')),
     
 ]
 
