@@ -25,6 +25,5 @@ urlpatterns = [
     path('api/productos/<int:pk>/eliminar/', views.eliminar_producto),
     path('', views.vista_restaurantes, name='restaurantes'),
 
-    path('panel-restaurante/', views.panel_restaurante, name='panel_restaurante'),
 
 ]

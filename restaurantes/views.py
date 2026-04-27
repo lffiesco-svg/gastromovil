@@ -2,7 +2,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Restaurante, Categoria, Producto
 from .serializers import RestauranteSerializer, CategoriaSerializer, ProductoSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from better_profanity import profanity
 from django.contrib.auth.decorators import login_required
@@ -208,9 +209,151 @@ def vista_restaurantes(request):
 @login_required
 def panel_restaurante(request):
     try:
-        restaurante = Restaurante.objects.get(propietario=request.user)
+        restaurante = request.user.restaurante
     except Restaurante.DoesNotExist:
         restaurante = None
-    return render(request, 'paneles/panel_restaurante.html', {
-        'restaurante': restaurante
+    return render(request, 'paneles/panel_restaurante.html', {'restaurante': restaurante})
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def restaurante_detalle_api(request, pk):
+    r = get_object_or_404(Restaurante, pk=pk, propietario=request.user)
+    return Response({
+        'id': r.id,
+        'nombre': r.nombre,
+        'direccion': r.direccion,
+        'telefono': r.telefono,
+        'activo': r.activo,
     })
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def restaurante_editar_api(request, pk):
+    r = get_object_or_404(Restaurante, pk=pk, propietario=request.user)
+    r.nombre = request.data.get('nombre', r.nombre)
+    r.direccion = request.data.get('direccion', r.direccion)
+    r.telefono = request.data.get('telefono', r.telefono)
+    r.activo = request.data.get('activo', r.activo)
+    r.save()
+    return Response({'mensaje': 'Guardado correctamente'})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def productos_api(request):
+    # Producto tiene FK directa a Restaurante — más simple
+    productos = Producto.objects.filter(
+        restaurante__propietario=request.user
+    ).select_related('categoria', 'restaurante')
+
+    data = [{
+        'id': p.id,
+        'nombre': p.nombre,
+        'precio': str(p.precio),
+        'descripcion': p.descripcion,
+        'disponible': p.disponible,
+        'imagen': request.build_absolute_uri(p.imagen.url) if p.imagen else None,
+        'categoria_nombre': p.categoria.nombre if p.categoria else '-',
+        'categoria_restaurante_id': p.restaurante_id,  # directo, sin pasar por categoria
+    } for p in productos]
+    return Response(data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def producto_crear_api(request):
+    nombre = request.data.get('nombre', '').strip()
+    precio = request.data.get('precio')
+    descripcion = request.data.get('descripcion', '')
+    disponible = request.data.get('disponible', 'true') in [True, 'true', 'True']
+    categoria_id = request.data.get('categoria')
+    imagen = request.FILES.get('imagen')
+
+    if not nombre or not precio:
+        return Response({'error': 'Nombre y precio son obligatorios'}, status=400)
+
+    restaurante = get_object_or_404(Restaurante, propietario=request.user)
+
+    categoria = None
+    if categoria_id:
+        # Validar que la categoría pertenece al restaurante del usuario
+        categoria = get_object_or_404(Categoria, pk=categoria_id, restaurante=restaurante)
+
+    producto = Producto.objects.create(
+        nombre=nombre,
+        precio=precio,
+        descripcion=descripcion,
+        disponible=disponible,
+        categoria=categoria,
+        restaurante=restaurante,
+    )
+    if imagen:
+        producto.imagen = imagen
+        producto.save()
+
+    return Response({'mensaje': 'Producto creado', 'id': producto.id})
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def producto_eliminar_api(request, pk):
+    # Validar que el producto es del restaurante del usuario
+    producto = get_object_or_404(Producto, pk=pk, restaurante__propietario=request.user)
+    producto.delete()
+    return Response({'mensaje': 'Eliminado'})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def categorias_api(request):
+    categorias = Categoria.objects.filter(restaurante__propietario=request.user)
+    data = [{'id': c.id, 'nombre': c.nombre, 'restaurante': c.restaurante_id} for c in categorias]
+    return Response(data)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def producto_editar_api(request, pk):
+    producto = get_object_or_404(Producto, pk=pk, restaurante__propietario=request.user)
+    producto.nombre = request.data.get('nombre', producto.nombre)
+    producto.precio = request.data.get('precio', producto.precio)
+    producto.descripcion = request.data.get('descripcion', producto.descripcion)
+    producto.disponible = request.data.get('disponible', producto.disponible)
+    categoria_id = request.data.get('categoria')
+    if categoria_id:
+        restaurante = get_object_or_404(Restaurante, propietario=request.user)
+        producto.categoria = get_object_or_404(Categoria, pk=categoria_id, restaurante=restaurante)
+    if request.FILES.get('imagen'):
+        producto.imagen = request.FILES.get('imagen')
+    producto.save()
+    return Response({'mensaje': 'Producto actualizado'})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def categorias_crear_api(request):
+    restaurante = get_object_or_404(Restaurante, propietario=request.user)
+    nombre = request.data.get('nombre', '').strip()
+    if not nombre:
+        return Response({'error': 'Nombre requerido'}, status=400)
+    c = Categoria.objects.create(nombre=nombre, restaurante=restaurante)
+    return Response({'mensaje': 'Categoría creada', 'id': c.id})
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def categoria_editar_api(request, pk):
+    restaurante = get_object_or_404(Restaurante, propietario=request.user)
+    c = get_object_or_404(Categoria, pk=pk, restaurante=restaurante)
+    c.nombre = request.data.get('nombre', c.nombre)
+    c.save()
+    return Response({'mensaje': 'Categoría actualizada'})
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def categoria_eliminar_api(request, pk):
+    restaurante = get_object_or_404(Restaurante, propietario=request.user)
+    c = get_object_or_404(Categoria, pk=pk, restaurante=restaurante)
+    c.delete()
+    return Response({'mensaje': 'Eliminada'})
