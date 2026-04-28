@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from PIL import Image
 
 class Restaurante(models.Model):
     nombre = models.CharField(max_length=100)
@@ -82,3 +84,12 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+def validar_png(value):
+    if not value.name.lower().endswith('.png'):
+        raise ValidationError('Solo se permiten archivos PNG.')
+
+def validar_dimensiones_restaurante(value):
+    img = Image.open(value)
+    if img.width != 400 or img.height != 250:
+        raise ValidationError('La imagen debe ser exactamente 400×250 px.')
