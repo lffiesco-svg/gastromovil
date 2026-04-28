@@ -18,11 +18,7 @@ class Pedido(models.Model):
     fecha = models.DateField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     notas = models.TextField(blank=True)
-    repartidor = models.ForeignKey(
-    Usuario, on_delete=models.SET_NULL,
-    null=True, blank=True,
-    related_name='entregas'
-) 
+    repartidor = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True, related_name='entregas')
 
     def __str__(self):
         return f"Pedido #{self.id} - {self.cliente.username}"
@@ -35,4 +31,3 @@ class DetallePedido(models.Model):
 
     def __str__(self):
         return f"{self.cantidad} x {self.producto.nombre}"
-    

@@ -1,10 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from PIL import Image as PilImage
-from usuarios.models import Usuario
 
-
-# ── Validadores ───────────────────────────────────────────────────────────────
 
 def validar_png(imagen):
     if not imagen.name.lower().endswith('.png'):
@@ -20,10 +17,9 @@ def validar_dimensiones_restaurante(imagen):
         )
 
 
-# ── Modelos ───────────────────────────────────────────────────────────────────
-
 class Restaurante(models.Model):
-    propietario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='restaurantes')
+    # Usamos string 'usuarios.Usuario' para evitar circular import
+    propietario = models.ForeignKey('usuarios.Usuario', on_delete=models.CASCADE, related_name='restaurantes')
     nombre      = models.CharField(max_length=200)
     direccion   = models.CharField(max_length=200)
     telefono    = models.CharField(max_length=15)
@@ -41,7 +37,7 @@ class Restaurante(models.Model):
 
 
 class Categoria(models.Model):
-    restaurante = models.ForeignKey(Restaurante, on_delete=models.CASCADE, related_name='categoias')
+    restaurante = models.ForeignKey(Restaurante, on_delete=models.CASCADE, related_name='categorias')
     nombre      = models.CharField(max_length=100)
 
     def __str__(self):

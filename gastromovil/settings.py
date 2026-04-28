@@ -19,6 +19,10 @@ MEDIA_URL = '/media/'
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # tu React en desarrollo
+]
+CORS_ALLOW_CREDENTIALS = True
 
 # La sesión expira al cerrar el navegador
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -87,7 +91,7 @@ ROOT_URLCONF = 'gastromovil.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'core' / 'templates'],
+        'DIRS': [BASE_DIR / 'core' / 'templates', BASE_DIR / 'restaurantes' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,6 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',  # ← agrega esta línea
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
