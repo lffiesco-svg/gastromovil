@@ -3,6 +3,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from .models import UbicacionRepartidor
 
+
 class UbicacionConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
@@ -26,7 +27,6 @@ class UbicacionConsumer(AsyncWebsocketConsumer):
         latitud = data.get('latitud')
         longitud = data.get('longitud')
 
-        # Guarda usando el ID de la URL en vez del usuario autenticado
         await self.guardar_ubicacion(latitud, longitud)
 
         await self.channel_layer.group_send(
@@ -55,3 +55,25 @@ class UbicacionConsumer(AsyncWebsocketConsumer):
             )
         except Usuario.DoesNotExist:
             pass
+
+
+class RepartidorConsumer(AsyncWebsocketConsumer):
+
+    async def connect(self):
+        self.repartidor_id = self.scope['url_route']['kwargs']['repartidor_id']
+        self.group_name = f'repartidor_{self.repartidor_id}'
+
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_name
+        )
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.group_name,
+            self.channel_name
+        )
+
+    async def notificacion_pedido(self, event):
+        await self.send(text_data=json.dumps(event['data']))

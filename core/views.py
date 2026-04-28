@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from restaurantes.models import Restaurante, Categoria, Producto
-# Agrega estos imports al inicio del archivo (si no los tienes)
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.conf import settings
@@ -30,7 +29,6 @@ def register_view(request):
 @login_required(login_url='login')
 def perfil(request):
     return render(request, 'usua/perfil.html')
-    return render(request, 'auth/perfil.html', {'usuario': request.user})
 
 # RESTAURANTES
 def restaurantes(request):
@@ -145,9 +143,6 @@ def maruchas(request):
 def carrito(request):
     return render(request, 'pedidos/carrito.html')
 
-def contacto(request):
-    return render(request, 'informacion/contacto.html')
-
 def recuperar_contrasena(request):
     return render(request, 'auth/recuperar_contrasena.html')
 
@@ -160,14 +155,49 @@ def verificar_codigo(request):
 def admin_panel(request):
     return render(request, 'paneles/superuser.html')
 
+
+# ── PANEL REPARTIDOR ─────────────────────────────────────────
+@login_required
 def panel_repartidor(request):
-    return render(request, 'paneles/panel_repartidor.html')
+    from pedidos.models import Pedido
+    from django.utils import timezone
+    hoy = timezone.now().date()
+
+    # Pedidos disponibles para cualquier repartidor (estado 'enviado')
+    pendientes = Pedido.objects.filter(
+        estado='enviado'
+    ).select_related('restaurante', 'direccion_entrega', 'cliente')
+
+    # Pedidos que este repartidor ya aceptó y está llevando
+    en_camino = Pedido.objects.filter(
+        estado='en_camino',
+        repartidor=request.user
+    ).select_related('restaurante', 'direccion_entrega', 'cliente')
+
+    # Pedidos que este repartidor entregó hoy
+    entregados = Pedido.objects.filter(
+        estado='entregado',
+        repartidor=request.user,
+        fecha=hoy
+    ).select_related('restaurante', 'direccion_entrega', 'cliente')
+
+    ganancias = sum(p.total for p in entregados)
+
+    return render(request, 'paneles/panel_repartidor.html', {
+        'pendientes': pendientes,
+        'en_camino': en_camino,
+        'entregados': entregados,
+        'ganancias': ganancias,
+        'repartidor_id': request.user.id,
+    })
+# ─────────────────────────────────────────────────────────────
+
 
 def panel_restaurante(request):
     return render(request, 'paneles/panel_restaurante.html')
 
 
-
+# ── CONTACTO ─────────────────────────────────────────────────
 def contacto(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre', '').strip()
@@ -212,5 +242,4 @@ Nueva consulta desde GastroWeb:
             print(f'[ERROR email contacto]: {e}')
             messages.error(request, 'Hubo un error al enviar el mensaje. Intenta de nuevo.')
 
-    # ← ESTA LÍNEA ES LA QUE FALTABA
     return render(request, 'informacion/contacto.html')
