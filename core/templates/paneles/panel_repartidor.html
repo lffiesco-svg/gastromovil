@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block navbar %}{% endblock %}
+{% block NAVBAR %}{% endblock %}
 {% block title %}Panel Repartidor - GastroWeb{% endblock %}
 {% block content %}
 
@@ -29,26 +29,26 @@
         </div>
     </div>
 
-    <!-- ESTADISTICAS -->
+    <!-- ESTADISTICAS — ahora con variables reales del contexto -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="bg-white rounded-2xl p-6 shadow-sm border-l-4 border-[#DC2626]">
             <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Pendientes</p>
-            <p class="text-4xl font-black text-gray-900">0</p>
+            <p class="text-4xl font-black text-gray-900">{{ pendientes.count }}</p>
             <p class="text-gray-400 text-xs mt-1">Por recoger</p>
         </div>
         <div class="bg-white rounded-2xl p-6 shadow-sm border-l-4 border-yellow-400">
             <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">En camino</p>
-            <p class="text-4xl font-black text-gray-900">0</p>
+            <p class="text-4xl font-black text-gray-900">{{ en_camino.count }}</p>
             <p class="text-gray-400 text-xs mt-1">En entrega</p>
         </div>
         <div class="bg-white rounded-2xl p-6 shadow-sm border-l-4 border-green-500">
             <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Entregados hoy</p>
-            <p class="text-4xl font-black text-gray-900">0</p>
+            <p class="text-4xl font-black text-gray-900">{{ entregados.count }}</p>
             <p class="text-gray-400 text-xs mt-1">Completados</p>
         </div>
         <div class="bg-white rounded-2xl p-6 shadow-sm border-l-4 border-blue-500">
             <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Ganancias hoy</p>
-            <p class="text-4xl font-black text-gray-900">$0</p>
+            <p class="text-4xl font-black text-gray-900">${{ ganancias|floatformat:0 }}</p>
             <p class="text-gray-400 text-xs mt-1">Total del día</p>
         </div>
     </div>
@@ -108,6 +108,7 @@
                 {% endfor %}
             </div>
         </div>
+
         <!-- TAB EN CAMINO -->
         <div id="content-encamino" class="p-6 hidden">
             <h3 class="font-black text-gray-900 text-xl mb-6">Pedidos En Camino</h3>
@@ -144,6 +145,7 @@
                 {% endfor %}
             </div>
         </div>
+
         <!-- TAB ENTREGADOS -->
         <div id="content-entregados" class="p-6 hidden">
             <h3 class="font-black text-gray-900 text-xl mb-6">Pedidos Entregados Hoy</h3>
@@ -182,25 +184,73 @@
 
 <script>
 const csrfToken = '{{ csrf_token }}';
+const repartidorId = '{{ repartidor_id }}';
 
+// ── WEBSOCKET: recibir pedidos disponibles en tiempo real ──────
+const wsUrl = `ws://${window.location.host}/ws/repartidor/${repartidorId}/`;
+const ws = new WebSocket(wsUrl);
+
+ws.onopen = () => {
+    console.log('🟢 WebSocket repartidor conectado');
+};
+
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    console.log('📩 Notificación recibida:', data);
+
+    if (data.tipo === 'pedido_listo') {
+        mostrarNotificacion(data.mensaje);
+        // Recarga la página tras 2 segundos para mostrar el nuevo pedido
+        setTimeout(() => window.location.reload(), 2000);
+    }
+};
+
+ws.onerror = (e) => {
+    console.error('❌ WebSocket error:', e);
+};
+
+ws.onclose = () => {
+    console.log('🔴 WebSocket desconectado — reintentando en 5s...');
+    setTimeout(() => window.location.reload(), 5000);
+};
+
+// ── NOTIFICACIÓN VISUAL ────────────────────────────────────────
+function mostrarNotificacion(mensaje) {
+    const div = document.createElement('div');
+    div.className = 'fixed top-6 right-6 z-50 bg-[#DC2626] text-white px-6 py-4 rounded-2xl shadow-xl font-black text-sm flex items-center gap-3';
+    div.style.animation = 'slideIn 0.3s ease';
+    div.innerHTML = `<i class="fas fa-bell text-xl animate-bounce"></i><span>${mensaje}</span>`;
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 5000);
+}
+
+// ── ACEPTAR ENTREGA ────────────────────────────────────────────
 async function aceptarEntrega(pedidoId) {
     const res = await fetch(`/pedidos/${pedidoId}/aceptar-entrega/`, {
         method: 'POST',
         headers: { 'X-CSRFToken': csrfToken }
     });
     const data = await res.json();
-    if (data.ok) window.location.reload();
+    if (data.ok) {
+        mostrarNotificacion('✅ ¡Entrega aceptada! Ve a recoger el pedido.');
+        setTimeout(() => window.location.reload(), 1500);
+    }
 }
 
+// ── MARCAR ENTREGADO ───────────────────────────────────────────
 async function marcarEntregado(pedidoId) {
     const res = await fetch(`/pedidos/${pedidoId}/marcar-entregado/`, {
         method: 'POST',
         headers: { 'X-CSRFToken': csrfToken }
     });
     const data = await res.json();
-    if (data.ok) window.location.reload();
+    if (data.ok) {
+        mostrarNotificacion('🎉 ¡Pedido entregado exitosamente!');
+        setTimeout(() => window.location.reload(), 1500);
+    }
 }
 
+// ── TABS ───────────────────────────────────────────────────────
 function showTab(tab) {
     const tabs = ['pendientes', 'encamino', 'entregados'];
     tabs.forEach(t => {
