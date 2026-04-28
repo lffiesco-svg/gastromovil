@@ -160,7 +160,7 @@
                     Garzón, Colombia
                 </p>
                 <p class="text-gray-600 text-sm mb-3 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.338c0 4.56 1.875 8.67 4.9 11.647l2.338-2.338a.75.75 0 01.75-.188 8.25 8.25 0 002.578.413.75.75 0 01.75.75v2.504c0 .364-.26.676-.62.724a14.25 14.25 0 01-12.566-12.566.727.727 0 01.724-.62h2.504a.75.75 0 01.75.75c0 .9.143 1.77.413 2.578a.75.75 0 01-.188.75l-2.338 2.338z"/></svg>
+                    <svg class="w-4 h-4 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.338c0 4.56 1.875 8.67 4.9 11.647l2.338-2.338a.75.75 0 01.75-.188 8.25 8.25 0 002.578.413.75.75 0 01.75.75v2.504c0 .364-.26.676-.62.724a14.25 14.566-12.566.727.727 0 01.724-.62h2.504a.75.75 0 01.75.75c0 .9.143 1.77.413 2.578a.75.75 0 01-.188.75l-2.338 2.338z"/></svg>
                     +57 320 846 0726
                 </p>
                 <p class="text-gray-600 text-sm flex items-center gap-2">
@@ -227,7 +227,8 @@
         </div>
     </div>
 
-    <script src="{% static 'js/main.js' %}"></script>
+    <!-- FIX CACHÉ: cambia ?v=2 a ?v=3, ?v=4, etc. cada vez que modifiques main.js -->
+    <script src="{% static 'js/main.js' %}?v=2"></script>
     <script>
     function toggleDropdown() {
         const menu = document.getElementById('dropdownMenu');
