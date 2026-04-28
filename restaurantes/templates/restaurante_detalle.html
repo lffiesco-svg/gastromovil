@@ -156,8 +156,6 @@
 
 {% block extra_js %}
 <script>
-const BADGE_CLASS = 'absolute top-0 right-0 bg-[#DC2626] text-white text-[10px] font-black min-w-[18px] h-[18px] rounded-full flex items-center justify-center leading-none px-1 pointer-events-none border-2 border-[#2a1010]';
-
 function actualizarBadge(cantidad) {
     ['carrito-link-desktop', 'carrito-link-movil'].forEach(id => {
         const link = document.getElementById(id);
@@ -166,10 +164,10 @@ function actualizarBadge(cantidad) {
         if (!badge) {
             badge = document.createElement('span');
             badge.setAttribute('data-carrito-badge', '');
-            badge.className = BADGE_CLASS;
+            badge.className = 'carrito-badge';
             link.appendChild(badge);
         }
-        badge.textContent = cantidad;
+        badge.textContent = cantidad > 9 ? '9+' : cantidad;
     });
 }
 
