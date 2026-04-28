@@ -59,7 +59,6 @@ urlpatterns = [
     path('menu/taqueria/maruchas/', views.maruchas, name='maruchas'),
 
     # ── OTRAS PÁGINAS ─────────────────────────────────────
-    path('carrito/', views.carrito, name='carrito'),
     path('contacto/', views.contacto, name='contacto'),
     path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contraseña'),
     path('mispedidos/', views.historial, name='historial'),

@@ -3,8 +3,6 @@ from django.core.exceptions import ValidationError
 from PIL import Image as PilImage
 
 
-# ── Validadores ───────────────────────────────────────────────────────────────
-
 def validar_png(imagen):
     if not imagen.name.lower().endswith('.png'):
         raise ValidationError('Solo se permiten imágenes en formato PNG.')
@@ -19,9 +17,8 @@ def validar_dimensiones_restaurante(imagen):
         )
 
 
-# ── Modelos ───────────────────────────────────────────────────────────────────
-
 class Restaurante(models.Model):
+    # Usamos string 'usuarios.Usuario' para evitar circular import
     propietario = models.ForeignKey('usuarios.Usuario', on_delete=models.CASCADE, related_name='restaurantes')
     nombre      = models.CharField(max_length=200)
     direccion   = models.CharField(max_length=200)
@@ -33,7 +30,7 @@ class Restaurante(models.Model):
                     null=True,
                     validators=[validar_png, validar_dimensiones_restaurante],
                     help_text='PNG de exactamente 400×250 px con fondo transparente.'
-                )
+                  )
 
     def __str__(self):
         return self.nombre
