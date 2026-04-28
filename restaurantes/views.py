@@ -244,10 +244,21 @@ def restaurante_editar_api(request, pk):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def productos_api(request):
-    # Producto tiene FK directa a Restaurante — más simple
     productos = Producto.objects.filter(
-        restaurante__propietario=request.user
-    ).select_related('categoria', 'restaurante')
+        categoria__restaurante__propietario=request.user
+    ).select_related('categoria', 'categoria__restaurante')
+    data = [{
+        'id': p.id,
+        'nombre': p.nombre,
+        'precio': str(p.precio),
+        'descripcion': p.descripcion,
+        'disponible': p.disponible,
+        'imagen': request.build_absolute_uri(p.imagen.url) if p.imagen else None,
+        'categoria_nombre': p.categoria.nombre if p.categoria else '-',
+        'categoria_id': p.categoria_id,
+        'categoria_restaurante_id': p.categoria.restaurante_id if p.categoria else None,
+    } for p in productos]
+    return Response(data)
 
     data = [{
         'id': p.id,
@@ -262,6 +273,8 @@ def productos_api(request):
     return Response(data)
 
 
+from decimal import Decimal, InvalidOperation
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def producto_crear_api(request):
@@ -275,11 +288,15 @@ def producto_crear_api(request):
     if not nombre or not precio:
         return Response({'error': 'Nombre y precio son obligatorios'}, status=400)
 
+    try:
+        precio = Decimal(precio)
+    except (InvalidOperation, TypeError):
+        return Response({'error': 'Precio inválido'}, status=400)
+
     restaurante = get_object_or_404(Restaurante, propietario=request.user)
 
     categoria = None
-    if categoria_id:
-        # Validar que la categoría pertenece al restaurante del usuario
+    if categoria_id and str(categoria_id).strip():
         categoria = get_object_or_404(Categoria, pk=categoria_id, restaurante=restaurante)
 
     producto = Producto.objects.create(
@@ -288,8 +305,8 @@ def producto_crear_api(request):
         descripcion=descripcion,
         disponible=disponible,
         categoria=categoria,
-        restaurante=restaurante,
     )
+
     if imagen:
         producto.imagen = imagen
         producto.save()
@@ -301,7 +318,7 @@ def producto_crear_api(request):
 @permission_classes([IsAuthenticated])
 def producto_eliminar_api(request, pk):
     # Validar que el producto es del restaurante del usuario
-    producto = get_object_or_404(Producto, pk=pk, restaurante__propietario=request.user)
+    producto = get_object_or_404(Producto, pk=pk, categoria__restaurante__propietario=request.user)
     producto.delete()
     return Response({'mensaje': 'Eliminado'})
 
@@ -316,7 +333,11 @@ def categorias_api(request):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def producto_editar_api(request, pk):
-    producto = get_object_or_404(Producto, pk=pk, restaurante__propietario=request.user)
+    producto = get_object_or_404(
+    Producto,
+    pk=pk,
+    categoria__restaurante__propietario=request.user
+)
     producto.nombre = request.data.get('nombre', producto.nombre)
     producto.precio = request.data.get('precio', producto.precio)
     producto.descripcion = request.data.get('descripcion', producto.descripcion)

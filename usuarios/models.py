@@ -5,7 +5,7 @@ from datetime import timedelta
 from restaurantes.models import Restaurante
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from restaurantes.models import Restaurante
+
 
 # Create your models here.
 class Usuario(AbstractUser):
@@ -74,6 +74,7 @@ def save(self, *args, **kwargs):
 receiver(post_save, sender=Usuario)
 def crear_restaurante_para_usuario(sender, instance, created, **kwargs):
     if created and instance.rol == 'restaurante':
+        from restaurantes.models import Restaurante
         Restaurante.objects.create(
             nombre=f"Restaurante de {instance.first_name}",
             propietario=instance,
