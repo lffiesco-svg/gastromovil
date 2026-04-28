@@ -157,6 +157,7 @@ def login_view(request):
         else:
             messages.error(request, "Correo o contraseña incorrectos")
             return redirect('login')
+    return render(request, 'auth/login.html')
 
     return render(request, 'auth/login.html')
 

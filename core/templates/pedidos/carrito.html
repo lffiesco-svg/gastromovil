@@ -13,21 +13,76 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        <!-- CARRITO VACIO -->
-        <div class="lg:col-span-2 bg-white rounded-2xl p-12 shadow-sm flex flex-col items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 text-gray-200 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
-            <h3 class="font-black text-gray-400 text-2xl mb-2">Tu carrito está vacío</h3>
-            <p class="text-gray-400 text-sm mb-6">Agrega productos para comenzar tu pedido</p>
-            <a href="{% url 'restaurantes' %}" class="bg-[#DC2626] text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-[#DC2626]/90 transition-colors">
-                <i class="fas fa-utensils mr-2"></i> Ver Restaurantes
-            </a>
+        <!-- LADO IZQUIERDO -->
+        <div class="lg:col-span-2">
+            {% if items %}
+
+            <!-- RESTAURANTE -->
+            <div class="bg-white rounded-2xl px-6 py-4 shadow-sm mb-4 flex items-center gap-3">
+                <i class="fas fa-store text-[#DC2626] text-lg"></i>
+                <span class="font-bold text-gray-700 text-sm">{{ item.restaurante_nombre }}</span>
+            </div>
+
+            <!-- PRODUCTOS -->
+            <div class="bg-white rounded-2xl shadow-sm divide-y divide-gray-100 overflow-hidden">
+                {% for item in items %}
+                <div class="flex items-center gap-4 px-6 py-4">
+                    <div class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        {% if item.imagen_url %}
+                        <img src="{{ item.imagen_url }}" alt="{{ item.nombre }}" class="w-full h-full object-cover rounded-xl">
+                        {% else %}
+                        <i class="fas fa-utensils text-gray-300 text-xl"></i>
+                        {% endif %}
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-black text-gray-900 text-sm">{{ item.nombre }}</p>
+                        <p class="text-[#DC2626] font-bold text-sm">${{ item.precio }}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="btn-restar w-8 h-8 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-[#DC2626] font-black transition-colors flex items-center justify-center"
+                            data-id="{{ item.producto_id }}">
+                            <i class="fas fa-minus text-xs"></i>
+                        </button>
+                        <span class="font-black text-gray-900 w-6 text-center">{{ item.cantidad }}</span>
+                        <button class="btn-sumar w-8 h-8 rounded-full bg-gray-100 hover:bg-green-100 text-gray-600 hover:text-green-600 font-black transition-colors flex items-center justify-center"
+                            data-id="{{ item.producto_id }}">
+                            <i class="fas fa-plus text-xs"></i>
+                        </button>
+                    </div>
+                    <div class="text-right min-w-[70px]">
+                        <p class="font-black text-gray-900 text-sm">${{ item.subtotal }}</p>
+                    </div>
+                    <button class="btn-eliminar text-gray-300 hover:text-[#DC2626] transition-colors ml-2"
+                        data-id="{{ item.producto_id }}">
+                        <i class="fas fa-trash text-sm"></i>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-4 flex justify-end">
+                <button id="btn-vaciar" class="text-gray-400 hover:text-[#DC2626] text-xs font-bold transition-colors">
+                    <i class="fas fa-trash mr-1"></i> Vaciar carrito
+                </button>
+            </div>
+
+            {% else %}
+            <!-- CARRITO VACÍO -->
+            <div class="bg-white rounded-2xl p-12 shadow-sm flex flex-col items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 text-gray-200 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <h3 class="font-black text-gray-400 text-2xl mb-2">Tu carrito está vacío</h3>
+                <p class="text-gray-400 text-sm mb-6">Agrega productos para comenzar tu pedido</p>
+                <a href="{% url 'restaurantes' %}" class="bg-[#DC2626] text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-[#DC2626]/90 transition-colors">
+                    <i class="fas fa-utensils mr-2"></i> Ver Restaurantes
+                </a>
+            </div>
+            {% endif %}
         </div>
 
         <!-- PANEL DERECHO -->
         <div class="flex flex-col gap-6">
-
             <div class="bg-white rounded-2xl p-6 shadow-sm flex flex-col gap-6">
 
                 <!-- RESUMEN -->
@@ -38,29 +93,29 @@
                     <div class="flex flex-col gap-3">
                         <div class="flex justify-between text-sm text-gray-400">
                             <span>Subtotal</span>
-                            <span>$0</span>
+                            <span>${{ total }}</span>
                         </div>
                         <div class="flex justify-between text-sm text-gray-400">
                             <span>Domicilio</span>
-                            <span>$0</span>
+                            <span>$3.000</span>
                         </div>
                         <div class="border-t border-gray-200 pt-3 flex justify-between font-black text-gray-900 text-lg">
                             <span>Total</span>
-                            <span class="text-[#DC2626]">$0</span>
+                            <span class="text-[#DC2626]">${{ total_con_domicilio }}</span>
                         </div>
                     </div>
                     <div class="bg-gray-100 rounded-xl p-4 mt-4 flex items-center gap-3">
                         <i class="fas fa-clock text-[#DC2626] text-xl"></i>
                         <div>
                             <p class="text-gray-400 text-xs">Tiempo estimado</p>
-                            <p class="font-black text-gray-900">-- min</p>
+                            <p class="font-black text-gray-900">25-35 min</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="border-t border-gray-100"></div>
 
-                <!-- DIRECCION DE ENTREGA -->
+                <!-- DIRECCIÓN -->
                 <div>
                     <h3 class="font-black text-gray-900 text-lg mb-4 flex items-center gap-2">
                         <i class="fas fa-map-marker-alt text-[#DC2626]"></i> Dirección de Entrega
@@ -68,27 +123,27 @@
                     <div class="flex flex-col gap-4">
                         <div>
                             <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Dirección</label>
-                            <input type="text" placeholder="Ej: Calle 5 # 10-20, Garzón" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                            <input type="text" id="direccion" placeholder="Ej: Calle 5 # 10-20" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
                         </div>
                         <div>
                             <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Barrio</label>
-                            <input type="text" placeholder="Ej: Centro" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                            <input type="text" id="barrio" placeholder="Ej: Centro" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
                         </div>
                         <div>
                             <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Indicaciones adicionales</label>
-                            <textarea placeholder="Ej: Casa azul, portón negro..." class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400 h-24 resize-none"></textarea>
+                            <textarea id="notas" placeholder="Ej: Casa azul, portón negro..." class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400 h-24 resize-none"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <div class="border-t border-gray-100"></div>
 
-                <!-- METODO DE PAGO -->
+                <!-- MÉTODO DE PAGO -->
                 <div>
                     <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">
                         <i class="fas fa-wallet text-[#DC2626] mr-2"></i>Método de Pago
                     </label>
-                    <select class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
+                    <select id="metodo-pago" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
                         <option value="">Selecciona un método</option>
                         <option value="efectivo">💵 Efectivo contraentrega</option>
                         <option value="nequi">📱 Nequi</option>
@@ -96,12 +151,18 @@
                     </select>
                 </div>
 
-                <!-- BOTON PAGAR -->
-                <button class="w-full bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
+                <!-- BOTÓN PAGAR -->
+                {% if items %}
+                <button id="btn-pagar" class="w-full bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
                     <i class="fas fa-bag-shopping mr-2"></i> Pagar Ahora
                 </button>
+                {% else %}
+                <button disabled class="w-full bg-gray-200 text-gray-400 py-4 rounded-xl font-black text-sm tracking-widest uppercase cursor-not-allowed">
+                    <i class="fas fa-bag-shopping mr-2"></i> Pagar Ahora
+                </button>
+                {% endif %}
 
-                <!-- MENSAJES DOMICILIO -->
+                <!-- MENSAJES -->
                 <div class="flex flex-col gap-3">
                     <div class="flex items-center gap-3 text-gray-500 text-xs">
                         <i class="fas fa-shield-halved text-[#DC2626] text-lg"></i>
@@ -120,10 +181,88 @@
                 <a href="{% url 'restaurantes' %}" class="w-full block text-center text-gray-400 hover:text-[#DC2626] text-sm font-bold transition-colors">
                     <i class="fas fa-arrow-left mr-2"></i> Seguir comprando
                 </a>
-
             </div>
         </div>
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const CSRF = '{{ csrf_token }}';
+
+document.querySelectorAll('.btn-sumar').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const res = await fetch(`/carrito/agregar/${btn.dataset.id}/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF, 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ cantidad: 1 })
+        });
+        if ((await res.json()).ok) location.reload();
+    });
+});
+
+document.querySelectorAll('.btn-restar').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const res = await fetch(`/carrito/restar/${btn.dataset.id}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF, 'X-Requested-With': 'XMLHttpRequest' },
+        });
+        if ((await res.json()).ok) location.reload();
+    });
+});
+
+document.querySelectorAll('.btn-eliminar').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const res = await fetch(`/carrito/eliminar/${btn.dataset.id}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF, 'X-Requested-With': 'XMLHttpRequest' },
+        });
+        if ((await res.json()).ok) location.reload();
+    });
+});
+
+const btnVaciar = document.getElementById('btn-vaciar');
+if (btnVaciar) {
+    btnVaciar.addEventListener('click', async () => {
+        if (!confirm('¿Vaciar el carrito?')) return;
+        const res = await fetch('/carrito/vaciar/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF, 'X-Requested-With': 'XMLHttpRequest' },
+        });
+        if ((await res.json()).ok) location.reload();
+    });
+}
+
+const btnPagar = document.getElementById('btn-pagar');
+if (btnPagar) {
+    btnPagar.addEventListener('click', async () => {
+        const direccion = document.getElementById('direccion').value.trim();
+        const barrio = document.getElementById('barrio').value.trim();
+        const notas = document.getElementById('notas').value.trim();
+        const metodo = document.getElementById('metodo-pago').value;
+
+        if (!direccion || !barrio) return alert('Por favor completa la dirección y el barrio.');
+        if (!metodo) return alert('Por favor selecciona un método de pago.');
+
+        btnPagar.disabled = true;
+        btnPagar.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Procesando...';
+
+        const res = await fetch('/carrito/confirmar/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF, 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ direccion, barrio, notas, metodo_pago: metodo })
+        });
+        const data = await res.json();
+        if (data.ok) {
+            window.location.href = `/pedidos/${data.pedido_id}/`;
+        } else {
+            alert(data.error || 'Error al crear el pedido.');
+            btnPagar.disabled = false;
+            btnPagar.innerHTML = '<i class="fas fa-bag-shopping mr-2"></i> Pagar Ahora';
+        }
+    });
+}
+</script>
 {% endblock %}

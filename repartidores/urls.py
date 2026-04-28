@@ -20,5 +20,7 @@ urlpatterns = [
     path('api/ubicaciones/', views.api_todas_ubicaciones, name='api_todas_ubicaciones'),
     path('api/ubicaciones/crear/', views.api_crear_ubicacion),
     path('api/ubicaciones/<int:repartidor_id>/', views.api_obtener_ubicacion),
+    path('compartir-ubicacion/', views.compartir_ubicacion, name='compartir_ubicacion'),
+    path('seguimiento/<int:repartidor_id>/', views.seguimiento_cliente, name='seguimiento_cliente'),
 ]
 

@@ -4,15 +4,12 @@
 
 {% block content %}
 <section class="bg-white min-h-screen px-6 md:px-16 py-12">
-    <!-- BOTÓN VOLVER -->
-<div class="mb-8 border-b ">
-    <a href="{% url 'restaurantes' %}"
-       class="inline-flex items-center gap-2 text-gray-500 hover:text-[#DC2626] font-bold text-sm transition-colors">
-        <i class="fas fa-arrow-left"></i> Volver a restaurantes
-    </a>
-</div>
+    <div class="mb-8 border-b">
+        <a href="{% url 'restaurantes' %}" class="inline-flex items-center gap-2 text-gray-500 hover:text-[#DC2626] font-bold text-sm transition-colors">
+            <i class="fas fa-arrow-left"></i> Volver a restaurantes
+        </a>
+    </div>
 
-    <!-- CABECERA DEL RESTAURANTE -->
     <div class="text-center mb-12">
         {% if restaurante.imagen %}
             <img src="{{ restaurante.imagen.url }}" alt="{{ restaurante.nombre }}"
@@ -36,10 +33,7 @@
         {% endif %}
     </div>
 
-    <!-- CATEGORÍAS Y PRODUCTOS DINÁMICOS -->
     {% if categorias %}
-
-        <!-- NAV DE CATEGORÍAS (anclas para saltar) -->
         <div class="flex flex-wrap justify-center gap-3 mb-10">
             {% for categoria in categorias %}
             <a href="#cat-{{ categoria.id }}"
@@ -49,32 +43,25 @@
             {% endfor %}
         </div>
 
-        <!-- SECCIÓN POR CADA CATEGORÍA -->
         {% for categoria in categorias %}
         <div id="cat-{{ categoria.id }}" class="mb-14">
             <div class="flex items-center gap-4 mb-6">
                 <h3 class="text-2xl font-black text-gray-900">{{ categoria.nombre }}</h3>
                 <div class="flex-1 h-0.5 bg-gray-100"></div>
             </div>
-
             {% with productos=categoria.productos.all %}
             {% if productos %}
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                 {% for producto in productos %}
                 {% if producto.disponible %}
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden flex flex-col">
-
-                    <!-- Imagen del producto -->
                     {% if producto.imagen %}
-                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}"
-                             class="w-full h-40 object-cover">
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-40 object-cover">
                     {% else %}
                         <div class="w-full h-40 bg-gray-50 flex items-center justify-center">
                             <i class="fas fa-utensils text-3xl text-gray-200"></i>
                         </div>
                     {% endif %}
-
-                    <!-- Info del producto -->
                     <div class="p-4 flex flex-col flex-1">
                         <h4 class="font-black text-gray-900 text-base mb-1">{{ producto.nombre }}</h4>
                         {% if producto.descripcion %}
@@ -82,7 +69,6 @@
                         {% endif %}
                         <div class="flex items-center justify-between mt-auto">
                             <span class="font-black text-[#DC2626] text-lg">${{ producto.precio }}</span>
-                            <!-- Botón agregar al carrito (usa la lógica AJAX del carrito) -->
                             <button
                                 class="btn-agregar-carrito bg-[#DC2626] text-white px-3 py-2 rounded-xl font-bold text-xs hover:bg-[#DC2626]/90 transition-colors flex items-center gap-1"
                                 data-id="{{ producto.id }}"
@@ -101,7 +87,6 @@
             {% endwith %}
         </div>
         {% endfor %}
-
     {% else %}
         <div class="text-center py-20">
             <i class="fas fa-utensils text-5xl text-gray-200 mb-4"></i>
@@ -109,7 +94,6 @@
         </div>
     {% endif %}
 
-    <!-- SECCIÓN DE CALIFICACIONES -->
     {% if calificaciones %}
     <div class="mt-16 border-t border-gray-100 pt-12">
         <h3 class="text-2xl font-black text-gray-900 mb-6 flex items-center gap-2">
@@ -137,7 +121,6 @@
     </div>
     {% endif %}
 
-    <!-- FORMULARIO DE CALIFICACIÓN -->
     {% if puede_calificar %}
     <div class="mt-10 bg-gray-50 rounded-2xl p-6 max-w-lg mx-auto">
         <h4 class="font-black text-gray-900 text-lg mb-4">
@@ -173,7 +156,23 @@
 
 {% block extra_js %}
 <script>
-// ── Agregar al carrito vía AJAX ───────────────────────────────────────────────
+const BADGE_CLASS = 'absolute top-0 right-0 bg-[#DC2626] text-white text-[10px] font-black min-w-[18px] h-[18px] rounded-full flex items-center justify-center leading-none px-1 pointer-events-none border-2 border-[#2a1010]';
+
+function actualizarBadge(cantidad) {
+    ['carrito-link-desktop', 'carrito-link-movil'].forEach(id => {
+        const link = document.getElementById(id);
+        if (!link) return;
+        let badge = link.querySelector('[data-carrito-badge]');
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.setAttribute('data-carrito-badge', '');
+            badge.className = BADGE_CLASS;
+            link.appendChild(badge);
+        }
+        badge.textContent = cantidad;
+    });
+}
+
 document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
     btn.addEventListener('click', async () => {
         const id = btn.dataset.id;
@@ -193,17 +192,12 @@ document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
             const data = await res.json();
 
             if (data.ok) {
-                // Actualizar badge del navbar
-                document.querySelectorAll('[data-carrito-badge]').forEach(b => {
-                    b.textContent = data.cantidad_total;
-                });
-                btn.innerHTML = '<i class="fas fa-check"></i>';
-                btn.classList.replace('bg-[#DC2626]', 'bg-green-500');
+                actualizarBadge(data.cantidad_total);
+                btn.innerHTML = '<i class="fas fa-check"></i> Agregado';
                 setTimeout(() => {
                     btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
-                    btn.classList.replace('bg-green-500', 'bg-[#DC2626]');
                     btn.disabled = false;
-                }, 1500);
+                }, 1200);
 
             } else if (data.error === 'restaurante_diferente') {
                 if (confirm(data.mensaje + '\n\n¿Vaciar el carrito y agregar este producto?')) {
@@ -218,16 +212,12 @@ document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
                     });
                     const data2 = await res2.json();
                     if (data2.ok) {
-                        document.querySelectorAll('[data-carrito-badge]').forEach(b => {
-                            b.textContent = data2.cantidad_total;
-                        });
-                        btn.innerHTML = '<i class="fas fa-check"></i>';
-                        btn.classList.replace('bg-[#DC2626]', 'bg-green-500');
+                        actualizarBadge(data2.cantidad_total);
+                        btn.innerHTML = '<i class="fas fa-check"></i> Agregado';
                         setTimeout(() => {
                             btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
-                            btn.classList.replace('bg-green-500', 'bg-[#DC2626]');
                             btn.disabled = false;
-                        }, 1500);
+                        }, 1200);
                     }
                 } else {
                     btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
@@ -243,32 +233,23 @@ document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
 });
 </script>
 <script>
-// ── Scroll suave compensando navbar sticky ───────────────────────────────────
 function scrollToCategoria(id) {
     const target = document.getElementById(id);
     if (!target) return;
     const navbarHeight = document.querySelector('nav').offsetHeight;
-    const offset = 32;
-    const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight - offset;
+    const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight - 32;
     window.scrollTo({ top, behavior: 'smooth' });
 }
-
-// Al hacer clic en los botones de categoría
 document.querySelectorAll('a[href^="#cat-"]').forEach(link => {
     link.addEventListener('click', function(e) {
         e.preventDefault();
-        const id = this.getAttribute('href').slice(1);
-        scrollToCategoria(id);
+        scrollToCategoria(this.getAttribute('href').slice(1));
     });
 });
-
-// Al cargar la página si la URL ya tiene un #cat-X (viene del chatbot)
 window.addEventListener('load', function() {
-    const hash = window.location.hash; // ej: "#cat-3"
+    const hash = window.location.hash;
     if (hash && hash.startsWith('#cat-')) {
-        setTimeout(() => {
-            scrollToCategoria(hash.slice(1));
-        }, 500); // pequeño delay para que cargue todo el DOM
+        setTimeout(() => scrollToCategoria(hash.slice(1)), 500);
     }
 });
 </script>
