@@ -4,13 +4,16 @@ from django.contrib import messages
 from django.db import transaction
 from .models import Pedido, DetallePedido
 from .forms import PedidoForm, DetallePedidoForm, CambiarEstadoForm
-from restaurantes.models import Producto
+from restaurantes.models import Producto, Restaurante
 # Vista temporal de prueba
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 
 @login_required
 def lista_pedidos(request):
@@ -107,10 +110,15 @@ def cancelar_pedido(request, pk):
 
 @login_required
 def pedidos_restaurante(request):
+    restaurante = get_object_or_404(Restaurante, propietario=request.user)
     pedidos = Pedido.objects.filter(
-        restaurante__propietario=request.user
+        restaurante=restaurante
     ).select_related('cliente', 'direccion_entrega').order_by('-fecha')
-    return render(request, 'pedidos/lista_restaurante.html', {'pedidos': pedidos})
+    
+    return render(request, 'pedidos/lista_restaurante.html', {
+        'pedidos': pedidos,
+        'restaurante': restaurante,  # <- esto faltaba
+    })
 
 
 @login_required
@@ -236,14 +244,79 @@ def marcar_entregado(request, pk):
         return JsonResponse({'ok': True})
     return JsonResponse({'ok': False}, status=400)
 
+
+
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def listar_pedidos_api(request):
-    pedidos = Pedido.objects.all()
+    pedidos = Pedido.objects.filter(
+        restaurante__propietario=request.user
+    ).select_related('cliente', 'restaurante', 'direccion_entrega').order_by('-fecha')
+    
     data = [{
         'id': p.id,
-        'cliente_nombre': p.cliente.username if p.cliente else '-',
-        'restaurante_nombre': p.restaurante.nombre if p.restaurante else '-',
-        'total': p.total,
+        'cliente_nombre': p.cliente.get_full_name() or p.cliente.username,
+        'total': str(p.total),
         'estado': p.estado,
+        'fecha': p.fecha.isoformat(),
+        'notas': p.notas,
+        'direccion': str(p.direccion_entrega) if p.direccion_entrega else '',
+        'productos': [{
+            'nombre': d.producto.nombre,
+            'cantidad': d.cantidad,
+            'precio': str(d.precio_unitario),
+        } for d in p.detalles.select_related('producto').all()]
     } for p in pedidos]
     return Response(data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def pedidos_activos_api(request):
+    pedidos = Pedido.objects.filter(
+        restaurante__propietario=request.user,
+        estado__in=['pendiente', 'aceptado', 'preparando']
+    ).select_related('cliente', 'direccion_entrega').prefetch_related('detalles__producto').order_by('-fecha')
+
+    data = [{
+        'id': p.id,
+        'cliente': p.cliente.get_full_name() or p.cliente.username,
+        'total': str(p.total),
+        'estado': p.estado,
+        'direccion': str(p.direccion_entrega) if p.direccion_entrega else 'Sin dirección',
+        'notas': p.notas,
+        'productos': [{
+            'nombre': d.producto.nombre,
+            'cantidad': d.cantidad,
+        } for d in p.detalles.all()]
+    } for p in pedidos]
+    return Response(data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def cambiar_estado_api(request, pk):
+    pedido = get_object_or_404(Pedido, pk=pk, restaurante__propietario=request.user)
+    nuevo_estado = request.data.get('estado')
+
+    estados_validos = [e[0] for e in Pedido.ESTADOS]
+    if nuevo_estado not in estados_validos:
+        return Response({'error': 'Estado inválido'}, status=400)
+
+    pedido.estado = nuevo_estado
+    pedido.save()
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f'cliente_{pedido.cliente.id}',
+        {
+            'type': 'notificacion_pedido',
+            'data': {
+                'tipo': 'cambio_estado',
+                'mensaje': f'Tu pedido #{pedido.id} está: {pedido.get_estado_display()}',
+                'pedido_id': pedido.id,
+                'estado': pedido.estado,
+            }
+        }
+    )
+    return Response({'mensaje': f'Estado actualizado a {pedido.get_estado_display()}'})

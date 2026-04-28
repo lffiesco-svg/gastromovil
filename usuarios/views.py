@@ -20,6 +20,7 @@ from django.contrib.auth import logout
 from django.views.decorators.cache import never_cache
 from django.core.mail import EmailMultiAlternatives
 from .email_template import get_email_html, codigo_box, parrafo, nota
+import threading
 
 # Create your views here.
 
@@ -98,6 +99,8 @@ def verificar_registro(request):
     return render(request, 'auth/verificar_registro.html')
 
 
+
+
 @csrf_exempt
 def login_view(request):
     if request.method == 'POST':
@@ -111,43 +114,51 @@ def login_view(request):
         try:
             usuario = Usuario.objects.get(email=email)
         except Usuario.DoesNotExist:
-            messages.error(request, "Correo o contrasena incorrectos")
+            messages.error(request, "Correo o contraseña incorrectos")
             return redirect('login')
 
         user = authenticate(request, username=usuario.username, password=password)
 
         if user is not None:
             login(request, user)
-            
-            # ✅ Correo HTML de inicio de sesión
-            html = get_email_html(
-                titulo='Inicio de sesión exitoso',
-                contenido_central=
-                    parrafo(f'Hola <strong>{user.first_name}</strong>, has iniciado sesión exitosamente en <strong>GastroWeb</strong>.') +
-                    parrafo('Si no fuiste tú, cambia tu contraseña de inmediato.') +
-                    nota(f'Fecha y hora: {user.last_login.strftime("%d/%m/%Y %H:%M")} UTC')
-            )
 
-            email_msg = EmailMultiAlternatives(
-                subject='Inicio de sesión exitoso - Gastroweb',
-                body=f'Hola {user.first_name}, has iniciado sesión exitosamente en Gastroweb.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[user.email],
-            )
-            email_msg.attach_alternative(html, "text/html")
-            email_msg.send(fail_silently=True)
+            # ── Enviar correo en segundo plano para no bloquear el redirect ──
+            def enviar_correo():
+                try:
+                    html = get_email_html(
+                        titulo='Inicio de sesión exitoso',
+                        contenido_central=
+                            parrafo(f'Hola <strong>{user.first_name}</strong>, has iniciado sesión exitosamente en <strong>GastroWeb</strong>.') +
+                            parrafo('Si no fuiste tú, cambia tu contraseña de inmediato.') +
+                            nota(f'Fecha y hora: {user.last_login.strftime("%d/%m/%Y %H:%M")} UTC')
+                    )
+                    email_msg = EmailMultiAlternatives(
+                        subject='Inicio de sesión exitoso - Gastroweb',
+                        body=f'Hola {user.first_name}, has iniciado sesión en Gastroweb.',
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        to=[user.email],
+                    )
+                    email_msg.attach_alternative(html, "text/html")
+                    email_msg.send(fail_silently=True)
+                except Exception:
+                    pass
 
-            if user.rol == 'restaurante':          
+            threading.Thread(target=enviar_correo, daemon=True).start()
+
+            # ── Redirigir inmediatamente sin esperar el correo ──
+            if user.is_superuser:
+                return redirect('/admin/')
+            elif user.rol == 'restaurante':
                 return redirect('panel_restaurante')
             elif user.rol == 'repartidor':
                 return redirect('panel_repartidor')
-            elif user.is_superuser:                
-                return redirect('/admin/')
             else:
                 return redirect('index')
         else:
-            messages.error(request, "Correo o contrasena incorrectos")
+            messages.error(request, "Correo o contraseña incorrectos")
             return redirect('login')
+    return render(request, 'auth/login.html')
+
     return render(request, 'auth/login.html')
 
 @never_cache

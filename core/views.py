@@ -163,9 +163,13 @@ def admin_panel(request):
 def panel_repartidor(request):
     return render(request, 'paneles/panel_repartidor.html')
 
+@login_required
 def panel_restaurante(request):
-    return render(request, 'paneles/panel_restaurante.html')
-
+    try:
+        restaurante = Restaurante.objects.get(propietario=request.user)
+    except Restaurante.DoesNotExist:
+        restaurante = None
+    return render(request, 'paneles/panel_restaurante.html', {'restaurante': restaurante})
 
 
 def contacto(request):
