@@ -3,11 +3,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
+from django.shortcuts import redirect
 from core import views
 from core import views as core_views
 from pedidos import views as pedidos_views
 from usuarios import views as usuarios_views
+from usuarios.views import logout_view
 from restaurantes.views import (
     restaurante_detalle_api, restaurante_editar_api,
     productos_api, producto_crear_api, producto_eliminar_api,
@@ -20,6 +21,8 @@ from pedidos.views import (
 
 urlpatterns = [
     # ── ADMIN ─────────────────────────────────────────────
+    path('admin/logout/', logout_view, name='admin_logout'),
+    path('admin/login/', lambda request: redirect('/usuarios/login/')),
     path('admin/', admin.site.urls),
 
     # ── AUTH / ALLAUTH ────────────────────────────────────
@@ -89,7 +92,7 @@ urlpatterns = [
     path('api/categorias/<int:pk>/eliminar/', categoria_eliminar_api, name='api_categoria_eliminar'),
     path('api/categorias/', categorias_api, name='api_categorias'),
 
-    # ── CHATBOT (al final para no tragarse las demás /api/) ──
+    # ── CHATBOT ───────────────────────────────────────────
     path('api/', include('chatbot.urls')),
 
     # ── RELOAD DEV ────────────────────────────────────────

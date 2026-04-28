@@ -31,7 +31,7 @@ class RestauranteAdmin(admin.ModelAdmin):
             'fields': ('activo',)
         }),
         ('Imagen', {
-            'fields': ('logo',)
+            'fields': ('imagen',)
         }),
     )
 
@@ -55,7 +55,7 @@ class RestauranteAdmin(admin.ModelAdmin):
 
     @admin.display(description='Tiene imagen', boolean=True)
     def tiene_imagen(self, obj):
-        return bool(obj.logo)
+        return bool(obj.imagen)
 
     @admin.action(description='Activar restaurantes')
     def activar_restaurante(self, request, queryset):
@@ -84,7 +84,7 @@ class CategoriaAdmin(admin.ModelAdmin):
 
     @admin.display(description='Total productos')
     def total_productos(self, obj):
-        return obj.producto_set.count()
+        return obj.productos.count()
 
 
 @admin.register(Producto)

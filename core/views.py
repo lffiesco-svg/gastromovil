@@ -167,9 +167,17 @@ def panel_repartidor(request):
 def panel_restaurante(request):
     try:
         restaurante = Restaurante.objects.get(propietario=request.user)
+        categorias = Categoria.objects.filter(restaurante=restaurante).prefetch_related('productos')
+        productos = Producto.objects.filter(categoria__restaurante=restaurante)
     except Restaurante.DoesNotExist:
         restaurante = None
-    return render(request, 'paneles/panel_restaurante.html', {'restaurante': restaurante})
+        categorias = []
+        productos = []
+    return render(request, 'paneles/panel_restaurante.html', {
+        'restaurante': restaurante,
+        'categorias': categorias,
+        'productos': productos,
+    })
 
 
 def contacto(request):
