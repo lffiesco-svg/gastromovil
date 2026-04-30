@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Restaurantes - GastroWeb{% endblock %}
-
 {% block content %}
 <style>
   .restaurant-card {
@@ -30,28 +29,24 @@
     display: block;
   }
 </style>
-
 <section class="bg-[#1a0a0a] px-6 md:px-16 py-16 min-h-screen">
     <p class="flex items-center gap-3 text-[#DC2626] text-base font-bold tracking-widest uppercase mb-4">
         <span class="inline-block w-9 h-0.5 bg-[#DC2626]"></span>
         Nuestros restaurantes
     </p>
     <h2 class="text-5xl font-black text-white mb-12">Elige tu antojo <span class="text-[#DC2626]">favorito</span></h2>
-
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {% for restaurante in restaurantes %}
-        <div class="restaurant-card bg-[#2a1010] rounded-2xl overflow-hidden border-2 border-[#4a2020] hover:border-[#DC2626] transition-all flex flex-col">
-
-            {% if restaurante.imagen and restaurante.imagen.name %}
-                <div class="card-img">
-                    <img src="{{ restaurante.imagen.url }}" alt="{{ restaurante.nombre }}">
-                </div>
-            {% else %}
-                <div class="card-img bg-[#1a0a0a] flex items-center justify-center">
-                    <i class="fas fa-utensils text-5xl text-[#4a2020]"></i>
-                </div>
-            {% endif %}
-
+        <div class="bg-[#2a1010] rounded-2xl overflow-hidden border-2 border-[#4a2020] hover:border-[#DC2626] hover:-translate-y-2 transition-all w-full md:w-92">
+            <div class="relative">
+                {% if restaurante.imagen %}
+                    <img src="{{ restaurante.imagen.url }}" alt="{{ restaurante.nombre }}" class="w-full h-84 object-contain bg-[#1a0a0a]">
+                {% else %}
+                    <div class="w-full h-full bg-[#1a0a0a] flex items-center justify-center py-10">
+                        <i class="fas fa-utensils text-5xl text-[#4a2020]"></i>
+                    </div>
+                {% endif %}
+            </div>
             <div class="px-4 py-4 text-center flex flex-col flex-1 justify-between">
                 <div>
                     <h3 class="text-white font-black text-lg mb-1 leading-tight">{{ restaurante.nombre }}</h3>

@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <!-- ESTADISTICAS -->
+    <!-- ESTADISTICAS — ahora con variables reales del contexto -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="bg-white rounded-2xl p-6 shadow-sm border-l-4 border-[#DC2626]">
             <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Pendientes</p>
@@ -216,130 +216,46 @@
 <script>
 const csrfToken = '{{ csrf_token }}';
 const repartidorId = '{{ repartidor_id }}';
-const mapaIniciado = {};
 
-function toggleMapa(id, pedidoId) {
-    const el = document.getElementById(id);
-    el.classList.toggle('hidden');
-    if (!mapaIniciado[pedidoId] && !el.classList.contains('hidden')) {
-        mapaIniciado[pedidoId] = true;
-        iniciarMapa(pedidoId);
-    }
-}
-
-function iniciarMapa(pedidoId) {
-    const mapa = L.map('map-' + pedidoId).setView([2.1927, -75.6266], 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-    }).addTo(mapa);
-
-    const iconoDestino = L.divIcon({
-        html: `<div style="background:#DC2626;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.4);font-size:16px;">📦</div>`,
-        className: '', iconSize: [36, 36], iconAnchor: [18, 18],
-    });
-
-    const iconoRepartidor = L.divIcon({
-        html: `<div style="background:#2563EB;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.4);font-size:16px;">🛵</div>`,
-        className: '', iconSize: [36, 36], iconAnchor: [18, 18],
-    });
-
-    L.marker([2.1927, -75.6266], { icon: iconoDestino })
-        .addTo(mapa)
-        .bindPopup('📦 Destino de entrega')
-        .openPopup();
-
-    let marcadorRepartidor = null;
-    let linea = null;
-
-    if (navigator.geolocation) {
-        navigator.geolocation.watchPosition((pos) => {
-            const lat = pos.coords.latitude;
-            const lng = pos.coords.longitude;
-
-            if (marcadorRepartidor) {
-                marcadorRepartidor.setLatLng([lat, lng]);
-            } else {
-                marcadorRepartidor = L.marker([lat, lng], { icon: iconoRepartidor })
-                    .addTo(mapa)
-                    .bindPopup('🛵 Mi ubicación');
-            }
-
-            if (linea) mapa.removeLayer(linea);
-            linea = L.polyline(
-                [[lat, lng], [2.1927, -75.6266]],
-                { color: '#DC2626', weight: 3, dashArray: '8, 8' }
-            ).addTo(mapa);
-
-            mapa.fitBounds([[lat, lng], [2.1927, -75.6266]], { padding: [40, 40] });
-        }, null, { enableHighAccuracy: true });
-    }
-}
-
-// ── WEBSOCKET ──────────────────────────────────────────────────
-const wsUrl = `ws://127.0.0.1:8000/ws/repartidor/${repartidorId}/`;
+// ── WEBSOCKET: recibir pedidos disponibles en tiempo real ──────
+const wsUrl = `ws://${window.location.host}/ws/repartidor/${repartidorId}/`;
 const ws = new WebSocket(wsUrl);
 
-ws.onopen = () => console.log('🟢 WebSocket repartidor conectado');
+ws.onopen = () => {
+    console.log('🟢 WebSocket repartidor conectado');
+};
+
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
+    console.log('📩 Notificación recibida:', data);
 
-    // Viene del signal cuando el restaurante acepta el pedido
-    if (data.tipo === 'pedido_disponible') {
-        mostrarNotificacion(`🛵 Nuevo pedido disponible de ${data.restaurante}`);
-        agregarTarjetaPedido(data.pedido_id, data.restaurante, data.direccion);
+    if (data.tipo === 'pedido_listo') {
+        mostrarNotificacion(data.mensaje);
+        // Recarga la página tras 2 segundos para mostrar el nuevo pedido
+        setTimeout(() => window.location.reload(), 2000);
     }
 };
-ws.onerror = (e) => console.error('❌ WebSocket error:', e);
-ws.onclose = () => setTimeout(() => window.location.reload(), 5000);
 
-// Agrega la tarjeta en el tab de pendientes sin recargar la página
-function agregarTarjetaPedido(pedidoId, restaurante, direccion) {
-    const contenedor = document.querySelector('#content-pendientes .flex.flex-col.gap-4');
+ws.onerror = (e) => {
+    console.error('❌ WebSocket error:', e);
+};
 
-    // Quitar el mensaje de "No hay pedidos" si existe
-    const empty = contenedor.querySelector('.text-center');
-    if (empty) empty.remove();
+ws.onclose = () => {
+    console.log('🔴 WebSocket desconectado — reintentando en 5s...');
+    setTimeout(() => window.location.reload(), 5000);
+};
 
-    const card = document.createElement('div');
-    card.className = 'border-2 border-[#DC2626] rounded-2xl overflow-hidden';
-    card.id = `pedido-ws-${pedidoId}`;
-    card.innerHTML = `
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-5 gap-4">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-shopping-bag text-[#DC2626] text-2xl"></i>
-                </div>
-                <div>
-                    <h3 class="font-black text-gray-900 text-lg">Pedido #${pedidoId}</h3>
-                    <p class="text-gray-500 text-sm">${restaurante}</p>
-                </div>
-            </div>
-            <button onclick="aceptarEntrega(${pedidoId})"
-                class="bg-[#DC2626] text-white px-5 py-2 rounded-xl font-black text-sm hover:bg-[#DC2626]/90 transition-colors flex items-center gap-2">
-                <i class="fas fa-motorcycle"></i> Aceptar entrega
-            </button>
-        </div>
-        <div class="border-t border-gray-100 px-5 py-3 bg-gray-50">
-            <p class="text-gray-500 text-sm flex items-center gap-2">
-                <i class="fas fa-map-marker-alt text-[#DC2626]"></i>
-                <span class="font-bold">Entregar en:</span> ${direccion}
-            </p>
-        </div>
-    `;
-    contenedor.prepend(card);  // lo pone arriba de todo
-}
-
-ws.onerror = (e) => console.error('❌ WebSocket error:', e);
-ws.onclose = () => setTimeout(() => window.location.reload(), 5000);
-
+// ── NOTIFICACIÓN VISUAL ────────────────────────────────────────
 function mostrarNotificacion(mensaje) {
     const div = document.createElement('div');
     div.className = 'fixed top-6 right-6 z-50 bg-[#DC2626] text-white px-6 py-4 rounded-2xl shadow-xl font-black text-sm flex items-center gap-3';
+    div.style.animation = 'slideIn 0.3s ease';
     div.innerHTML = `<i class="fas fa-bell text-xl animate-bounce"></i><span>${mensaje}</span>`;
     document.body.appendChild(div);
     setTimeout(() => div.remove(), 5000);
 }
 
+// ── ACEPTAR ENTREGA ────────────────────────────────────────────
 async function aceptarEntrega(pedidoId) {
     const res = await fetch(`/pedidos/${pedidoId}/aceptar-entrega/`, {
         method: 'POST',
@@ -352,6 +268,7 @@ async function aceptarEntrega(pedidoId) {
     }
 }
 
+// ── MARCAR ENTREGADO ───────────────────────────────────────────
 async function marcarEntregado(pedidoId) {
     const res = await fetch(`/pedidos/${pedidoId}/marcar-entregado/`, {
         method: 'POST',
@@ -364,6 +281,7 @@ async function marcarEntregado(pedidoId) {
     }
 }
 
+// ── TABS ───────────────────────────────────────────────────────
 function showTab(tab) {
     const tabs = ['pendientes', 'encamino', 'entregados'];
     tabs.forEach(t => {

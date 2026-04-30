@@ -101,7 +101,7 @@ def verificar_registro(request):
 
 
 
-@csrf_exempt
+#@csrf_exempt
 def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -125,12 +125,13 @@ def login_view(request):
             # ── Enviar correo en segundo plano para no bloquear el redirect ──
             def enviar_correo():
                 try:
+                    ip = request.META.get('REMOTE_ADDR', 'desconocida')
                     html = get_email_html(
                         titulo='Inicio de sesión exitoso',
                         contenido_central=
-                            parrafo(f'Hola <strong>{user.first_name}</strong>, has iniciado sesión exitosamente en <strong>GastroWeb</strong>.') +
+                            parrafo(f'Hola <strong>{user.first_name}</strong>, has iniciado sesión en <strong>GastroWeb</strong>.') +
                             parrafo('Si no fuiste tú, cambia tu contraseña de inmediato.') +
-                            nota(f'Fecha y hora: {user.last_login.strftime("%d/%m/%Y %H:%M")} UTC')
+                            nota(f'IP: {ip} | Fecha: {user.last_login.strftime("%d/%m/%Y %H:%M")} UTC')
                     )
                     email_msg = EmailMultiAlternatives(
                         subject='Inicio de sesión exitoso - Gastroweb',
@@ -464,7 +465,6 @@ def enviar_codigo_web(request):
                 email_msg.attach_alternative(html, "text/html")
                 email_msg.send(fail_silently=False)
                 
-                messages.success(request, f'Código enviado exitosamente a {email}')
                 request.session['email_recuperacion'] = email
                 return redirect('verificar_codigo_web')
                 
@@ -491,35 +491,35 @@ def verificar_codigo_web(request):
             ).last()
 
             if not registro:
-                messages.error(request, 'Codigo invalido')
-                return redirect('verificar_codigo_web')
+                return JsonResponse({'ok': False, 'error': 'Código inválido'}, status=400)
+            
             if registro.is_expired():
-                messages.error(request, 'El codigo ha expirado')
-                return redirect('verificar_codigo_web')
+                return JsonResponse({'ok': False, 'error': 'El código ha expirado'}, status=400)
 
             usuario.set_password(nueva_password)
             usuario.save()
             registro.delete()
 
-            try:                                          
-                send_mail(
-                    subject='Cambio de contraseña exitoso - Gastroweb',
-                    message=f'Hola {usuario.username}, tu cambio de contraseña ha sido exitoso en Gastroweb. Si no realizaste este cambio, contactanos de inmediato.',
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[usuario.email],
-                    fail_silently=False,
-                )
-                print("✅ CORREO ENVIADO A:", usuario.email)
-            except Exception as e:
-                print("❌ ERROR AL ENVIAR CORREO:", e)
+            # Enviar correo de confirmación en segundo plano
+            def enviar_correo():
+                try:
+                    send_mail(
+                        subject='Cambio de contraseña exitoso - Gastroweb',
+                        message=f'Hola {usuario.username}, tu contraseña fue cambiada exitosamente.',
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[usuario.email],
+                        fail_silently=True,
+                    )
+                except:
+                    pass
+            threading.Thread(target=enviar_correo, daemon=True).start()
 
-            messages.success(request, 'Contrasena actualizada correctamente')
-            return redirect('login')                     
+            return JsonResponse({'ok': True, 'redirect': '/login/'})
 
-        except Usuario.DoesNotExist:                    
-            messages.error(request, 'Usuario no encontrado')
+        except Usuario.DoesNotExist:
+            return JsonResponse({'ok': False, 'error': 'Usuario no encontrado'}, status=404)
 
-    return render(request, 'auth/verificar_codigo.html')  
+    return render(request, 'auth/verificar_codigo.html')
 
 @login_required
 def eliminar_cuenta(request):

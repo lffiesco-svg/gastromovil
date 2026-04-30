@@ -63,30 +63,17 @@ class RepartidorConsumer(AsyncWebsocketConsumer):
         self.repartidor_id = self.scope['url_route']['kwargs']['repartidor_id']
         self.group_name = f'repartidor_{self.repartidor_id}'
 
-        # Se une a su grupo personal
-        await self.channel_layer.group_add(self.group_name, self.channel_name)
-
-        # Si está disponible, también se une al grupo colectivo
-        if await self.esta_disponible():
-            await self.channel_layer.group_add("repartidores_disponibles", self.channel_name)
-
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_name
+        )
         await self.accept()
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(self.group_name, self.channel_name)
-        await self.channel_layer.group_discard("repartidores_disponibles", self.channel_name)
+        await self.channel_layer.group_discard(
+            self.group_name,
+            self.channel_name
+        )
 
     async def notificacion_pedido(self, event):
         await self.send(text_data=json.dumps(event['data']))
-
-    # Agrega este método para recibir del signal
-    async def pedido_disponible(self, event):
-        await self.send(text_data=json.dumps(event))
-
-    @database_sync_to_async
-    def esta_disponible(self):
-        from .models import Repartidor
-        return Repartidor.objects.filter(
-            usuario_id=self.repartidor_id,
-            estado='disponible'
-        ).exists()

@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Mis Pedidos - GastroWeb{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-gray-100 px-4 md:px-8 py-10">
+    <div class="max-w-3xl mx-auto">
+
+        <!-- ENCABEZADO -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-black text-gray-900 flex items-center gap-3">
+                <span class="w-10 h-10 bg-[#DC2626] rounded-xl flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                </span>
+                Mis Pedidos
+            </h1>
+            <p class="text-gray-500 text-sm mt-1">Revisa el estado y detalle de todos tus pedidos</p>
+        </div>
+
+        <!-- SIN PEDIDOS -->
+        {% if not pedidos %}
+        <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
+            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/>
+                </svg>
+            </div>
+            <h3 class="text-gray-700 font-black text-xl mb-2">Aún no tienes pedidos</h3>
+            <p class="text-gray-400 text-sm mb-6">Explora nuestros restaurantes y haz tu primer pedido</p>
+            <a href="{% url 'restaurantes' %}" class="inline-flex items-center gap-2 bg-[#DC2626] text-white px-6 py-3 rounded-xl font-black text-sm hover:bg-[#DC2626]/90 transition-colors">
+                Ver restaurantes
+            </a>
+        </div>
+
+        {% else %}
+
+        <!-- LISTA DE PEDIDOS -->
+        <div class="flex flex-col gap-5">
+            {% for pedido in pedidos %}
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+
+                <!-- CABECERA -->
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center font-black text-gray-600 text-sm">
+                            #{{ pedido.id }}
+                        </div>
+                        <div>
+                            <p class="font-black text-gray-900 text-sm">{{ pedido.restaurante.nombre }}</p>
+                            <p class="text-gray-400 text-xs">{{ pedido.fecha }}</p>
+                        </div>
+                    </div>
+
+                    <!-- BADGE ESTADO -->
+                    <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wide
+                        {% if pedido.estado == 'pendiente' %}bg-yellow-100 text-yellow-700
+                        {% elif pedido.estado == 'aceptado' %}bg-blue-100 text-blue-700
+                        {% elif pedido.estado == 'preparando' %}bg-orange-100 text-orange-700
+                        {% elif pedido.estado == 'enviado' %}bg-purple-100 text-purple-700
+                        {% elif pedido.estado == 'entregado' %}bg-green-100 text-green-700
+                        {% elif pedido.estado == 'cancelado' %}bg-red-100 text-red-700
+                        {% endif %}">
+                        {% if pedido.estado == 'pendiente' %}⏳ Pendiente
+                        {% elif pedido.estado == 'aceptado' %}✅ Aceptado
+                        {% elif pedido.estado == 'preparando' %}🍳 Preparando
+                        {% elif pedido.estado == 'enviado' %}🛵 En camino
+                        {% elif pedido.estado == 'entregado' %}📦 Entregado
+                        {% elif pedido.estado == 'cancelado' %}❌ Cancelado
+                        {% endif %}
+                    </span>
+                </div>
+
+                <!-- PRODUCTOS -->
+                <div class="px-6 py-4">
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Productos</p>
+                    <div class="flex flex-col gap-2">
+                        {% for detalle in pedido.detalles.all %}
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-6 h-6 bg-[#DC2626]/10 text-[#DC2626] rounded-lg flex items-center justify-center text-xs font-black">
+                                    {{ detalle.cantidad }}
+                                </span>
+                                <span class="text-gray-700 text-sm font-medium">{{ detalle.producto.nombre }}</span>
+                            </div>
+                            <span class="text-gray-500 text-sm font-bold">${{ detalle.subtotal|floatformat:"0" }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- PIE: DIRECCIÓN Y TOTAL -->
+                <div class="px-6 py-4 bg-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-gray-100">
+                    <div class="flex items-center gap-2 text-gray-500 text-xs">
+                        <svg class="w-4 h-4 text-[#DC2626] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                        </svg>
+                        {% if pedido.direccion_entrega %}
+                            {{ pedido.direccion_entrega.calle }}{% if pedido.direccion_entrega.barrio %}, {{ pedido.direccion_entrega.barrio }}{% endif %}
+                        {% else %}
+                            <span class="italic">Sin dirección registrada</span>
+                        {% endif %}
+                    </div>
+                    <div class="flex items-center gap-3">
+                        {% if pedido.notas %}
+                        <span class="text-gray-400 text-xs italic">"{{ pedido.notas }}"</span>
+                        {% endif %}
+                        <span class="text-[#DC2626] font-black text-base">${{ pedido.total|floatformat:"0" }}</span>
+                    </div>
+                </div>
+
+                <!-- BARRA DE PROGRESO -->
+                {% if pedido.estado != 'cancelado' %}
+                <div class="px-6 py-4 border-t border-gray-100">
+                    {% with estados_progreso='pendiente,aceptado,preparando,enviado,entregado' %}
+                    {% with orden_actual=pedido.estado %}
+                    <div class="flex items-center gap-0">
+
+                        {% for paso in 'pendiente,aceptado,preparando,enviado,entregado'|make_list %}
+                        {% endfor %}
+
+                        <!-- Paso 1: Pendiente -->
+                        <div class="flex flex-col items-center flex-1">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black
+                                {% if pedido.estado == 'pendiente' or pedido.estado == 'aceptado' or pedido.estado == 'preparando' or pedido.estado == 'enviado' or pedido.estado == 'entregado' %}bg-[#DC2626] text-white{% else %}bg-gray-200 text-gray-400{% endif %}">
+                                {% if pedido.estado == 'aceptado' or pedido.estado == 'preparando' or pedido.estado == 'enviado' or pedido.estado == 'entregado' %}✓{% else %}1{% endif %}
+                            </div>
+                            <span class="text-xs text-gray-400 mt-1 hidden sm:block">Pendiente</span>
+                        </div>
+
+                        <div class="flex-1 h-1 {% if pedido.estado == 'aceptado' or pedido.estado == 'preparando' or pedido.estado == 'enviado' or pedido.estado == 'entregado' %}bg-[#DC2626]{% else %}bg-gray-200{% endif %} mb-4"></div>
+
+                        <!-- Paso 2: Aceptado -->
+                        <div class="flex flex-col items-center flex-1">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black
+                                {% if pedido.estado == 'aceptado' or pedido.estado == 'preparando' or pedido.estado == 'enviado' or pedido.estado == 'entregado' %}bg-[#DC2626] text-white{% else %}bg-gray-200 text-gray-400{% endif %}">
+                                {% if pedido.estado == 'preparando' or pedido.estado == 'enviado' or pedido.estado == 'entregado' %}✓{% else %}2{% endif %}
+                            </div>
+                            <span class="text-xs text-gray-400 mt-1 hidden sm:block">Aceptado</span>
+                        </div>
+
+                        <div class="flex-1 h-1 {% if pedido.estado == 'preparando' or pedido.estado == 'enviado' or pedido.estado == 'entregado' %}bg-[#DC2626]{% else %}bg-gray-200{% endif %} mb-4"></div>
+
+                        <!-- Paso 3: Preparando -->
+                        <div class="flex flex-col items-center flex-1">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black
+                                {% if pedido.estado == 'preparando' or pedido.estado == 'enviado' or pedido.estado == 'entregado' %}bg-[#DC2626] text-white{% else %}bg-gray-200 text-gray-400{% endif %}">
+                                {% if pedido.estado == 'enviado' or pedido.estado == 'entregado' %}✓{% else %}3{% endif %}
+                            </div>
+                            <span class="text-xs text-gray-400 mt-1 hidden sm:block">Preparando</span>
+                        </div>
+
+                        <div class="flex-1 h-1 {% if pedido.estado == 'enviado' or pedido.estado == 'entregado' %}bg-[#DC2626]{% else %}bg-gray-200{% endif %} mb-4"></div>
+
+                        <!-- Paso 4: Enviado -->
+                        <div class="flex flex-col items-center flex-1">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black
+                                {% if pedido.estado == 'enviado' or pedido.estado == 'entregado' %}bg-[#DC2626] text-white{% else %}bg-gray-200 text-gray-400{% endif %}">
+                                {% if pedido.estado == 'entregado' %}✓{% else %}4{% endif %}
+                            </div>
+                            <span class="text-xs text-gray-400 mt-1 hidden sm:block">En camino</span>
+                        </div>
+
+                        <div class="flex-1 h-1 {% if pedido.estado == 'entregado' %}bg-[#DC2626]{% else %}bg-gray-200{% endif %} mb-4"></div>
+
+                        <!-- Paso 5: Entregado -->
+                        <div class="flex flex-col items-center flex-1">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black
+                                {% if pedido.estado == 'entregado' %}bg-green-500 text-white{% else %}bg-gray-200 text-gray-400{% endif %}">
+                                {% if pedido.estado == 'entregado' %}✓{% else %}5{% endif %}
+                            </div>
+                            <span class="text-xs text-gray-400 mt-1 hidden sm:block">Entregado</span>
+                        </div>
+
+                    </div>
+                    {% endwith %}
+                    {% endwith %}
+                </div>
+                {% endif %}
+
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}

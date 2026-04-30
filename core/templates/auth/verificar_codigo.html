@@ -20,6 +20,14 @@
                 <p class="text-[#DC2626] font-bold text-sm mt-1" id="emailMostrado">tu@email.com</p>
             </div>
 
+            <!-- ✅ MENSAJE QUE SE AUTO-OCULTA -->
+            <div id="mensajeEnviado" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-4 flex items-center gap-2 transition-opacity duration-500">
+                <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span class="text-sm font-bold">¡Código enviado! Revisa tu bandeja de entrada.</span>
+            </div>
+
             <form id="formVerificar" class="flex flex-col gap-6">
 
                 <!-- 6 CAJAS OTP -->
@@ -87,6 +95,17 @@
 </section>
 
 <script>
+
+// Auto-ocultar mensaje de código enviado
+const mensajeEnviado = document.getElementById('mensajeEnviado');
+if (mensajeEnviado) {
+    setTimeout(() => {
+        mensajeEnviado.style.opacity = '0';
+        setTimeout(() => {
+            mensajeEnviado.style.display = 'none';
+        }, 500); // espera a que termine el fade
+    }, 5000); // desaparece a los 3 segundos
+}
 // OTP inputs
 const otpInputs = document.querySelectorAll('.otp-input');
 otpInputs.forEach((input, index) => {
@@ -124,22 +143,17 @@ document.getElementById('formVerificar').addEventListener('submit', async (e) =>
     const confirmPassword = document.getElementById('confirmPassword').value;
     const mensaje = document.getElementById('mensaje');
 
+    // Validaciones locales
     if (codigo.length !== 6) {
-        mensaje.className = 'p-4 rounded-xl text-sm font-bold bg-red-50 text-red-700 border border-red-200';
-        mensaje.textContent = 'Debes ingresar el código completo de 6 dígitos';
-        mensaje.classList.remove('hidden');
+        mostrarMensaje(mensaje, 'error', 'Debes ingresar el código completo de 6 dígitos');
         return;
     }
     if (newPassword.length < 6) {
-        mensaje.className = 'p-4 rounded-xl text-sm font-bold bg-red-50 text-red-700 border border-red-200';
-        mensaje.textContent = 'La contraseña debe tener al menos 6 caracteres';
-        mensaje.classList.remove('hidden');
+        mostrarMensaje(mensaje, 'error', 'La contraseña debe tener al menos 6 caracteres');
         return;
     }
     if (newPassword !== confirmPassword) {
-        mensaje.className = 'p-4 rounded-xl text-sm font-bold bg-red-50 text-red-700 border border-red-200';
-        mensaje.textContent = 'Las contraseñas no coinciden';
-        mensaje.classList.remove('hidden');
+        mostrarMensaje(mensaje, 'error', 'Las contraseñas no coinciden');
         return;
     }
 
@@ -150,26 +164,54 @@ document.getElementById('formVerificar').addEventListener('submit', async (e) =>
     formData.append('password', newPassword);
     formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
 
-    const response = await fetch("{% url 'verificar_codigo_web' %}", {
-    method: 'POST',
-    body: formData
+    // ✅ fetch correcto — lee JSON de la vista
+    try {
+        const response = await fetch("{% url 'verificar_codigo_web' %}", {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.ok) {
+            mostrarMensaje(mensaje, 'exito', '✅ Contraseña actualizada exitosamente. Redirigiendo...');
+            setTimeout(() => {
+                window.location.href = data.redirect;
+            }, 2000);
+        } else {
+            mostrarMensaje(mensaje, 'error', data.error || 'Código inválido o expirado');
+        }
+
+    } catch (err) {
+        mostrarMensaje(mensaje, 'error', 'Error de conexión. Intenta de nuevo.');
+    }
 });
 
-if (response.redirected) {
-    mensaje.className = 'p-4 rounded-xl text-sm font-bold bg-green-50 text-green-700 border border-green-200';
-    mensaje.textContent = '✅ Contraseña actualizada exitosamente';
-    mensaje.classList.remove('hidden');
-    
-    setTimeout(() => {
-        window.location.href = response.url;
-    }, 2000); 
-} else {
-    mensaje.className = 'p-4 rounded-xl text-sm font-bold bg-red-50 text-red-700 border border-red-200';
-    mensaje.textContent = 'Código inválido o expirado';
-    mensaje.classList.remove('hidden');
+function mostrarMensaje(el, tipo, texto) {
+    el.classList.remove('hidden');
+    el.textContent = texto;
+    if (tipo === 'exito') {
+        el.className = 'p-4 rounded-xl text-sm font-bold bg-green-50 text-green-700 border border-green-200';
+    } else {
+        el.className = 'p-4 rounded-xl text-sm font-bold bg-red-50 text-red-700 border border-red-200';
+    }
 }
-});
 
+function togglePassword(inputId, eyeId) {
+    const input = document.getElementById(inputId);
+    const eye = document.getElementById(eyeId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        eye.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        eye.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+
+// Muestra el email guardado en sesión
+const email = "{{ request.session.email_recuperacion }}";
+document.getElementById('emailMostrado').textContent = email || 'tu@email.com';
 </script>
 
 {% endblock %}
