@@ -146,8 +146,15 @@ def carrito(request):
 def recuperar_contrasena(request):
     return render(request, 'auth/recuperar_contrasena.html')
 
+@login_required
 def historial(request):
-    return render(request, 'pedidos/historial.html')
+    from pedidos.models import Pedido
+    pedidos = Pedido.objects.filter(
+        cliente=request.user
+    ).prefetch_related('detalles__producto').select_related(
+        'restaurante', 'direccion_entrega'
+    ).order_by('-fecha', '-id')
+    return render(request, 'pedidos/historial.html', {'pedidos': pedidos})
 
 def verificar_codigo(request):
     return render(request, 'auth/verificar_codigo.html')
