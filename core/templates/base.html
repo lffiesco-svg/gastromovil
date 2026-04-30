@@ -17,10 +17,10 @@
                 transform: translate(40%, -40%);
                 background-color: #DC2626;
                 color: white;
-                font-size: 9px;
+                font-size: 12px;
                 font-weight: 900;
-                min-width: 15px;
-                height: 15px;
+                min-width: 17px;
+                height: 17px;
                 padding: 0 3px;
                 border-radius: 9999px;
                 display: flex;
@@ -57,7 +57,7 @@
                     </a>
                     <button onclick="abrirModalLogout()" class="flex w-full items-center gap-4 px-6 py-5 text-white hover:bg-[#DC2626]/20 text-lg font-semibold border-t border-[#4a2020]">
                         <i class="fas fa-right-from-bracket text-[#DC2626] text-xl"></i> Cerrar Sesión
-                    </button> 
+                    </button>
                 </div>
             </div>
             {% else %}
@@ -77,9 +77,7 @@
                     <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
                 </svg>
                 {% if carrito_total %}
-                <span data-carrito-badge class="carrito-badge">
-                    {% if carrito_total > 9 %}9+{% else %}{{ carrito_total }}{% endif %}
-                </span>
+                <span data-carrito-badge class="carrito-badge">{{ carrito_total }}</span>
                 {% endif %}
             </a>
         </div>
@@ -120,9 +118,7 @@
                     <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
                 </svg>
                 {% if carrito_total %}
-                <span data-carrito-badge class="carrito-badge">
-                    {% if carrito_total > 9 %}9+{% else %}{{ carrito_total }}{% endif %}
-                </span>
+                <span data-carrito-badge class="carrito-badge">{{ carrito_total }}</span>
                 {% endif %}
             </a>
         </div>
@@ -227,8 +223,7 @@
         </div>
     </div>
 
-    <!-- FIX CACHÉ: cambia ?v=2 a ?v=3, ?v=4, etc. cada vez que modifiques main.js -->
-    <script src="{% static 'js/main.js' %}?v=2"></script>
+    <script src="{% static 'js/main.js' %}?v=3"></script>
     <script>
     function toggleDropdown() {
         const menu = document.getElementById('dropdownMenu');
@@ -240,48 +235,49 @@
             document.getElementById('dropdownMenu').classList.add('hidden');
         }
     });
-    
+
     function abrirModalLogout() {
-    document.getElementById('dropdownMenu').classList.add('hidden');
-    document.getElementById('modal-logout-nav').classList.remove('hidden');
+        document.getElementById('dropdownMenu').classList.add('hidden');
+        document.getElementById('modal-logout-nav').classList.remove('hidden');
     }
 
     function cerrarModalLogout() {
         document.getElementById('modal-logout-nav').classList.add('hidden');
     }
     </script>
-<script>
+
+    <script>
     {% if user.is_authenticated %}
     if (!sessionStorage.getItem('activo')) {
         window.location.href = "{% url 'logout' %}";
     }
     sessionStorage.setItem('activo', '1');
     {% endif %}
-</script>
+    </script>
 
-<!-- MODAL CERRAR SESIÓN -->
-<div id="modal-logout-nav" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
-    <div class="bg-[#2a1010] border border-[#4a2020] rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-5 shadow-2xl">
-        <div class="w-16 h-16 bg-[#DC2626]/20 rounded-full flex items-center justify-center">
-            <i class="fas fa-right-from-bracket text-[#DC2626] text-2xl"></i>
-        </div>
-        <div class="text-center">
-            <h3 class="font-black text-white text-xl mb-1">¿Cerrar sesión?</h3>
-            <p class="text-gray-400 text-sm">Tu sesión se cerrará y tendrás que volver a iniciar sesión.</p>
-        </div>
-        <div class="flex gap-3 w-full">
-            <button onclick="cerrarModalLogout()"
-                class="flex-1 py-3 border-2 border-[#4a2020] text-gray-300 hover:bg-[#4a2020]/30 rounded-xl font-black text-sm transition-colors">
-                Cancelar
-            </button>
-            <a href="{% url 'logout' %}"
-                class="flex-1 py-3 bg-[#DC2626] text-white hover:bg-[#DC2626]/90 rounded-xl font-black text-sm transition-colors text-center">
-                Sí, salir
-            </a>
+    <!-- MODAL CERRAR SESIÓN -->
+    <div id="modal-logout-nav" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+        <div class="bg-[#2a1010] border border-[#4a2020] rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-5 shadow-2xl">
+            <div class="w-16 h-16 bg-[#DC2626]/20 rounded-full flex items-center justify-center">
+                <i class="fas fa-right-from-bracket text-[#DC2626] text-2xl"></i>
+            </div>
+            <div class="text-center">
+                <h3 class="font-black text-white text-xl mb-1">¿Cerrar sesión?</h3>
+                <p class="text-gray-400 text-sm">Tu sesión se cerrará y tendrás que volver a iniciar sesión.</p>
+            </div>
+            <div class="flex gap-3 w-full">
+                <button onclick="cerrarModalLogout()"
+                    class="flex-1 py-3 border-2 border-[#4a2020] text-gray-300 hover:bg-[#4a2020]/30 rounded-xl font-black text-sm transition-colors">
+                    Cancelar
+                </button>
+                <a href="{% url 'logout' %}"
+                    class="flex-1 py-3 bg-[#DC2626] text-white hover:bg-[#DC2626]/90 rounded-xl font-black text-sm transition-colors text-center">
+                    Sí, salir
+                </a>
+            </div>
         </div>
     </div>
-</div>
-    </script>
+
     {% block extra_js %}{% endblock %}
 
     </body>

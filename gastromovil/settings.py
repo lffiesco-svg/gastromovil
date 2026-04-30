@@ -18,16 +18,15 @@ MEDIA_URL = '/media/'
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # tu React en desarrollo
+    'http://localhost:3000',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-# La sesión expira al cerrar el navegador
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 1800  # sesión expira en 30 minutos de inactividad
-SESSION_SAVE_EVERY_REQUEST = True  # guarda la sesión en cada solicitud
+SESSION_COOKIE_AGE = 1800
+SESSION_SAVE_EVERY_REQUEST = True
 
 INSTALLED_APPS = [
     'jazzmin',
@@ -49,12 +48,12 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'chatbot',
     'channels',
-    'django.contrib.sites',        # para entrar con google
-    'allauth',                     # para entrar con google
-    'allauth.account',             # para entrar con google
-    'allauth.socialaccount',       # para entrar con google
-    'allauth.socialaccount.providers.google',  # para entrar con google
-    'contacto',  # para el formulario de contacto
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'contacto',
 ]
 SITE_ID = 2
 SOCIALACCOUNT_LOGIN_ON_GET = True
@@ -91,14 +90,21 @@ ROOT_URLCONF = 'gastromovil.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'core' / 'templates', BASE_DIR / 'restaurantes' / 'templates'],
-        'APP_DIRS': True,
+        'DIRS': [
+            BASE_DIR / 'core' / 'templates',
+            BASE_DIR / 'restaurantes' / 'templates',
+        ],
+        'APP_DIRS': False,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'carrito.context_processors.carrito_total', 
+                'carrito.context_processors.carrito_total',
+            ],
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
             ],
         },
     },
@@ -110,12 +116,12 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
-} 
+}
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'gastromovil',       
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'gastromovil',
         'USER': 'root',
         'PASSWORD': 'rootroot',
         'HOST': 'localhost',
@@ -136,7 +142,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',  # ← agrega esta línea
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
@@ -151,23 +157,21 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static'),
-                    os.path.join(BASE_DIR, 'theme/static'), ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'core/static'),
+    os.path.join(BASE_DIR, 'theme/static'),
+]
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 AUTHENTICATION_BACKENDS = [
-    'usuarios.backends.EmailBackend',  
+    'usuarios.backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 LOGIN_URL = '/usuarios/login'
-#LOGIN_REDIRECT_URL = '/usuarios/perfil/'
-#LOGOUT_REDIRECT_URL = '/usuarios/login/'
 LOGIN_REDIRECT_URL = 'index'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'index'
 
@@ -177,7 +181,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'online',
             'prompt': 'select_account',
-    },
+        },
     }
 }
 
@@ -246,14 +250,12 @@ JAZZMIN_UI_TWEAKS = {
     },
 }
 
-# ✅ Un solo backend SSL para todos los send_mail del proyecto
 EMAIL_BACKEND = 'usuarios.backends.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
-# Cuenta principal (registro, verificación, recuperación)
 EMAIL_HOST_USER = 'johanapalacio763@gmail.com'
 EMAIL_HOST_PASSWORD = 'ecptlzagzepjejar'
 DEFAULT_FROM_EMAIL = 'Gastroweb <ospinacadenaoscar@gmail.com>'
@@ -267,8 +269,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Cuenta para contactenos (solo como variable, no como backend)
 CONTACTO_EMAIL = 'ospinacadenaoscar@gmail.com'
 CONTACTO_EMAIL_PASSWORD = config('CONTACTO_EMAIL_PASSWORD')
-ALLOWED_HOSTS = ['*']
+
 DJANGO_ALLOW_ASYNC_UNSAFE = True

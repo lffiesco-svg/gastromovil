@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Pedido #{{ pedido.id }} - GastroWeb{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-gray-100 px-6 md:px-16 py-12">
+    <div class="max-w-2xl mx-auto">
+
+        <!-- ÉXITO -->
+        <div class="bg-white rounded-2xl p-10 shadow-sm text-center mb-8">
+            <div class="w-20 h-20 bg-[#DC2626]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check text-[#DC2626] text-4xl"></i>
+            </div>
+            <h2 class="text-3xl font-black text-gray-900 mb-2">¡Pedido confirmado!</h2>
+            <p class="text-gray-400 text-sm mb-4">Tu pedido <span class="font-black text-gray-900">#{{ pedido.id }}</span> ha sido recibido y está siendo procesado.</p>
+            <span class="inline-block bg-[#DC2626]/10 text-[#DC2626] font-black text-xs px-5 py-2 rounded-full uppercase tracking-widest">
+                {{ pedido.estado }}
+            </span>
+        </div>
+
+        <!-- DETALLE -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+            <h3 class="font-black text-gray-900 text-lg mb-4 flex items-center gap-2">
+                <i class="fas fa-receipt text-[#DC2626]"></i> Detalle del pedido
+            </h3>
+            <div class="flex flex-col gap-3">
+                {% for detalle in pedido.detalles.all %}
+                <div class="flex justify-between items-center text-sm text-gray-700 border-b border-gray-100 pb-3">
+                    <div>
+                        <p class="font-black text-gray-900">{{ detalle.producto.nombre }}</p>
+                        <p class="text-gray-400 text-xs mt-0.5">x{{ detalle.cantidad }} × ${{ detalle.precio_unitario }}</p>
+                    </div>
+                    <span class="font-black text-gray-900">${{ detalle.subtotal }}</span>
+                </div>
+                {% endfor %}
+
+                <div class="flex justify-between text-sm text-gray-400 pt-1">
+                    <span>Domicilio</span>
+                    <span>$3.000</span>
+                </div>
+                <div class="flex justify-between font-black text-gray-900 text-lg pt-2 border-t border-gray-100">
+                    <span>Total</span>
+                    <span class="text-[#DC2626]">${{ pedido.total }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- INFO -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+            <h3 class="font-black text-gray-900 text-lg mb-4 flex items-center gap-2">
+                <i class="fas fa-info-circle text-[#DC2626]"></i> Información
+            </h3>
+            <div class="flex flex-col gap-3 text-sm">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span class="text-gray-400">Restaurante</span>
+                    <span class="font-black text-gray-900">{{ pedido.restaurante.nombre }}</span>
+                </div>
+                <div class="flex justify-between items-start border-b border-gray-100 pb-3">
+                    <span class="text-gray-400">Notas</span>
+                    <span class="font-bold text-gray-700 text-right max-w-xs">{{ pedido.notas }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-400">Fecha</span>
+                    <span class="font-black text-gray-900">{{ pedido.fecha|date:"d/m/Y" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIEMPO -->
+        <div class="bg-[#DC2626] rounded-2xl p-6 shadow-sm mb-8 flex items-center gap-4">
+            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-clock text-white text-xl"></i>
+            </div>
+            <div>
+                <p class="text-white/70 text-xs">Tiempo estimado de entrega</p>
+                <p class="font-black text-white text-lg">10-15 minutos</p>
+            </div>
+            <div class="ml-auto">
+                <i class="fas fa-motorcycle text-white/50 text-3xl"></i>
+            </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="flex flex-col gap-3">
+            <a href="{% url 'historial' %}" class="w-full bg-white text-gray-700 py-4 rounded-xl font-black text-sm text-center hover:bg-gray-50 transition-colors shadow-sm">
+                <i class="fas fa-list mr-2 text-[#DC2626]"></i> Ver mis pedidos
+            </a>
+            <a href="{% url 'restaurantes' %}" class="w-full bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm text-center hover:bg-[#DC2626]/90 transition-colors">
+                <i class="fas fa-utensils mr-2"></i> Seguir comprando
+            </a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

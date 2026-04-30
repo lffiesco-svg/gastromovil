@@ -52,15 +52,34 @@ def vaciar(request):
 @login_required
 def ver_carrito(request):
     carrito = Carrito(request)
-    items = []
+
+    restaurantes_dict = {}
+    todos_items = []
+
     for pid, item in carrito.carrito.items():
-        subtotal = float(item['precio']) * item['cantidad']
-        items.append({**item, 'producto_id': pid, 'subtotal': int(subtotal)})
+        rest_id = item.get('restaurante_id')
+        rest_nombre = item.get('restaurante_nombre', 'Restaurante')
+        subtotal = int(float(item['precio']) * item['cantidad'])
+        item_completo = {**item, 'producto_id': pid, 'subtotal': subtotal}
+
+        todos_items.append(item_completo)
+
+        if rest_id not in restaurantes_dict:
+            restaurantes_dict[rest_id] = {
+                'restaurante_id': rest_id,
+                'restaurante_nombre': rest_nombre,
+                'items': []
+            }
+        restaurantes_dict[rest_id]['items'].append(item_completo)
+
+    restaurantes = list(restaurantes_dict.values())
     total = carrito.total()
+
     return render(request, 'pedidos/carrito.html', {
-        'items': items,
+        'restaurantes': restaurantes,
+        'items': todos_items,
         'total': int(total),
-        'total_con_domicilio': int(total) + DOMICILIO if items else 0,
+        'total_con_domicilio': int(total) + DOMICILIO if todos_items else 0,
     })
 
 
@@ -81,7 +100,6 @@ def confirmar_pedido(request):
     notas = body.get('notas', '')
     metodo_pago = body.get('metodo_pago', '')
 
-    # Agrupar items por restaurante
     items_por_restaurante = {}
     for pid, item in carrito.carrito.items():
         rest_id = item.get('restaurante_id')
@@ -114,7 +132,6 @@ def confirmar_pedido(request):
                 precio_unitario=float(item['precio']),
             )
 
-        # Notificar al restaurante por WebSocket
         try:
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(

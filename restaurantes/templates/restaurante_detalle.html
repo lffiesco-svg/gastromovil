@@ -167,7 +167,7 @@ function actualizarBadge(cantidad) {
             badge.className = 'carrito-badge';
             link.appendChild(badge);
         }
-        badge.textContent = cantidad > 9 ? '9+' : cantidad;
+        badge.textContent = cantidad;
     });
 }
 
@@ -196,31 +196,9 @@ document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
                     btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
                     btn.disabled = false;
                 }, 1200);
-
-            } else if (data.error === 'restaurante_diferente') {
-                if (confirm(data.mensaje + '\n\n¿Vaciar el carrito y agregar este producto?')) {
-                    const res2 = await fetch(`/carrito/agregar/${id}/forzar/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}',
-                            'X-Requested-With': 'XMLHttpRequest',
-                        },
-                        body: JSON.stringify({ cantidad: 1 }),
-                    });
-                    const data2 = await res2.json();
-                    if (data2.ok) {
-                        actualizarBadge(data2.cantidad_total);
-                        btn.innerHTML = '<i class="fas fa-check"></i> Agregado';
-                        setTimeout(() => {
-                            btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
-                            btn.disabled = false;
-                        }, 1200);
-                    }
-                } else {
-                    btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
-                    btn.disabled = false;
-                }
+            } else {
+                btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
+                btn.disabled = false;
             }
         } catch (err) {
             console.error(err);

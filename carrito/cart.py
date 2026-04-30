@@ -1,4 +1,3 @@
-# carrito/cart.py
 from restaurantes.models import Producto
 
 CART_SESSION_KEY = 'carrito'
