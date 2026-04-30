@@ -95,11 +95,37 @@
                 </label>
                 <div class="relative">
                     <input type="password" name="password1" id="password1" placeholder="••••••••"
+                        oninput="validarPassword()"
                         class="w-full bg-[#1a0a0a] text-white px-4 py-3 rounded-xl outline-none border border-[#4a2020] focus:border-[#DC2626] transition-colors placeholder-gray-600 pr-12">
                     <button type="button" onclick="togglePassword('password1', 'eye1')" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#DC2626] transition-colors">
                         <i id="eye1" class="fas fa-eye"></i>
                     </button>
                 </div>
+
+                <!-- BARRA DE FORTALEZA -->
+                <div class="mt-2 flex gap-1">
+                    <div id="bar1" class="h-1 flex-1 rounded-full bg-[#4a2020] transition-all duration-300"></div>
+                    <div id="bar2" class="h-1 flex-1 rounded-full bg-[#4a2020] transition-all duration-300"></div>
+                    <div id="bar3" class="h-1 flex-1 rounded-full bg-[#4a2020] transition-all duration-300"></div>
+                    <div id="bar4" class="h-1 flex-1 rounded-full bg-[#4a2020] transition-all duration-300"></div>
+                </div>
+                <p id="strength-text" class="text-xs mt-1 text-gray-500"></p>
+
+                <!-- REQUISITOS -->
+                <ul class="mt-3 space-y-1">
+                    <li id="req-length" class="text-xs text-gray-500 flex items-center gap-2">
+                        <i class="fas fa-circle text-[8px]"></i> Mínimo 8 caracteres
+                    </li>
+                    <li id="req-upper" class="text-xs text-gray-500 flex items-center gap-2">
+                        <i class="fas fa-circle text-[8px]"></i> Al menos una mayúscula
+                    </li>
+                    <li id="req-number" class="text-xs text-gray-500 flex items-center gap-2">
+                        <i class="fas fa-circle text-[8px]"></i> Al menos un número
+                    </li>
+                    <li id="req-special" class="text-xs text-gray-500 flex items-center gap-2">
+                        <i class="fas fa-circle text-[8px]"></i> Al menos un carácter especial (!@#$...)
+                    </li>
+                </ul>
             </div>
 
             <!-- CONFIRMAR CONTRASEÑA -->
@@ -141,6 +167,43 @@
     }, 2000);
 </script>
 {% endif %}
+<script>
+function validarPassword() {
+    const val = document.getElementById('password1').value;
 
+    const reglas = {
+        'req-length':  val.length >= 8,
+        'req-upper':   /[A-Z]/.test(val),
+        'req-number':  /[0-9]/.test(val),
+        'req-special': /[!@#$%^&*(),.?":{}|<>_\-]/.test(val),
+    };
+
+    let puntos = 0;
+    for (const [id, cumple] of Object.entries(reglas)) {
+        const el = document.getElementById(id);
+        if (cumple) {
+            puntos++;
+            el.className = 'text-xs text-green-400 flex items-center gap-2';
+            el.querySelector('i').className = 'fas fa-check-circle text-[8px]';
+        } else {
+            el.className = 'text-xs text-gray-500 flex items-center gap-2';
+            el.querySelector('i').className = 'fas fa-circle text-[8px]';
+        }
+    }
+
+    const colores = ['', 'bg-red-500', 'bg-orange-400', 'bg-yellow-400', 'bg-green-500'];
+    const textos  = ['', 'Débil', 'Regular', 'Buena', 'Fuerte'];
+
+    for (let i = 1; i <= 4; i++) {
+        const bar = document.getElementById('bar' + i);
+        bar.className = 'h-1 flex-1 rounded-full transition-all duration-300 ' +
+            (i <= puntos ? colores[puntos] : 'bg-[#4a2020]');
+    }
+
+    const txt = document.getElementById('strength-text');
+    txt.textContent = val.length > 0 ? 'Fortaleza: ' + textos[puntos] : '';
+    txt.className = 'text-xs mt-1 ' + ['', 'text-red-400', 'text-orange-400', 'text-yellow-400', 'text-green-400'][puntos];
+}
+</script>
 <script src="{% static 'js/main.js' %}"></script>
 {% endblock %}

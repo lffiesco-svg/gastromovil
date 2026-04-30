@@ -60,7 +60,7 @@ urlpatterns = [
 
     # ── OTRAS PÁGINAS ─────────────────────────────────────
     path('contacto/', views.contacto, name='contacto'),
-    path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contraseña'),
+    path('recuperar_contrasena/', usuarios_views.enviar_codigo_web, name='recuperar_contrasena'),
     path('mispedidos/', views.historial, name='historial'),
     path('verificar/', views.verificar_codigo, name='verificar_codigo'),
     path('verificar-registro/', usuarios_views.verificar_registro, name='verificar_registro'),
