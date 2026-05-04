@@ -236,27 +236,21 @@
         }
     });
 
-    function abrirModalLogout() {
-        document.getElementById('dropdownMenu').classList.add('hidden');
-        document.getElementById('modal-logout-nav').classList.remove('hidden');
+        function abrirModalLogout() {
+        const dd = document.getElementById('dropdownMenu');
+        if (dd) dd.classList.add('hidden');
+        document.getElementById('modal-logout-nav').style.setProperty('display', 'flex', 'important');
     }
 
     function cerrarModalLogout() {
-        document.getElementById('modal-logout-nav').classList.add('hidden');
+        document.getElementById('modal-logout-nav').style.setProperty('display', 'none', 'important');
     }
     </script>
 
-    <script>
-    {% if user.is_authenticated %}
-    if (!sessionStorage.getItem('activo')) {
-        window.location.href = "{% url 'logout' %}";
-    }
-    sessionStorage.setItem('activo', '1');
-    {% endif %}
-    </script>
+    
 
     <!-- MODAL CERRAR SESIÓN -->
-    <div id="modal-logout-nav" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <div id="modal-logout-nav" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:999; align-items:center; justify-content:center; padding:16px;">
         <div class="bg-[#2a1010] border border-[#4a2020] rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-5 shadow-2xl">
             <div class="w-16 h-16 bg-[#DC2626]/20 rounded-full flex items-center justify-center">
                 <i class="fas fa-right-from-bracket text-[#DC2626] text-2xl"></i>
@@ -270,9 +264,10 @@
                     class="flex-1 py-3 border-2 border-[#4a2020] text-gray-300 hover:bg-[#4a2020]/30 rounded-xl font-black text-sm transition-colors">
                     Cancelar
                 </button>
-                <a href="{% url 'logout' %}"
-                    class="flex-1 py-3 bg-[#DC2626] text-white hover:bg-[#DC2626]/90 rounded-xl font-black text-sm transition-colors text-center">
-                    Sí, salir
+                <a href="{% url 'logout' %}" class="flex-1">
+                    <button class="w-full py-3 bg-[#DC2626] text-white hover:bg-[#DC2626]/90 rounded-xl font-black text-sm transition-colors">
+                        Sí, salir
+                    </button>
                 </a>
             </div>
         </div>
