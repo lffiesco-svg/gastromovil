@@ -21,6 +21,15 @@ class PedidoConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-    # Este método se llama automáticamente cuando llega un mensaje al grupo
     async def notificacion_pedido(self, event):
         await self.send(text_data=json.dumps(event['data']))
+
+    # ── Agrega estos dos métodos ──────────────────────────────
+
+    async def nuevo_pedido(self, event):
+        # Lo llama el signal cuando el cliente hace un pedido
+        await self.send(text_data=json.dumps(event))
+
+    async def pedido_disponible(self, event):
+        # Lo llama el signal cuando el restaurante acepta
+        await self.send(text_data=json.dumps(event))
