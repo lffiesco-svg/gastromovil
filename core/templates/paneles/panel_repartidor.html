@@ -23,9 +23,10 @@
                 </div>
                 <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse ml-2"></span>
             </div>
-            <a href="/usuarios/logout/" class="bg-gray-800 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-gray-900 transition-colors flex items-center gap-2">
+            <button onclick="document.getElementById('modal-salir').style.setProperty('display','flex','important')"
+                class="bg-gray-800 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-gray-900 transition-colors flex items-center gap-2">
                 <i class="fas fa-right-from-bracket"></i> Salir
-            </a>
+            </button> 
         </div>
     </div>
 
@@ -181,6 +182,31 @@
 
     </div>
 </section>
+
+
+<!-- MODAL SALIR -->
+<div id="modal-salir" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:999; align-items:center; justify-content:center; padding:16px;">
+    <div class="bg-white rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-5 shadow-2xl">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+            <i class="fas fa-right-from-bracket text-gray-700 text-2xl"></i>
+        </div>
+        <div class="text-center">
+            <h3 class="font-black text-gray-900 text-xl mb-1">¿Cerrar sesión?</h3>
+            <p class="text-gray-400 text-sm">Tu sesión se cerrará y tendrás que volver a iniciar sesión.</p>
+        </div>
+        <div class="flex gap-3 w-full">
+            <button onclick="document.getElementById('modal-salir').style.setProperty('display','none','important')"
+                class="flex-1 py-3 border-2 border-gray-200 text-gray-600 hover:bg-gray-100 rounded-xl font-black text-sm transition-colors">
+                Cancelar
+            </button>
+            <a href="/usuarios/logout/" class="flex-1">
+                <button class="w-full py-3 bg-gray-800 text-white hover:bg-gray-900 rounded-xl font-black text-sm transition-colors">
+                    Sí, salir
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
 
 <script>
 const csrfToken = '{{ csrf_token }}';
