@@ -152,10 +152,57 @@
     {% endif %}
 
 </section>
+
+{# ── Modal: iniciar sesión requerido ── #}
+<div id="modal-login" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 text-center">
+        <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-lock text-[#DC2626] text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-black text-gray-900 mb-2">Inicia sesión primero</h3>
+        <p class="text-gray-500 text-sm mb-6">Para agregar productos al carrito necesitas tener una cuenta.</p>
+        <div class="flex flex-col gap-3">
+            <a href="{% url 'login' %}"
+               class="w-full bg-[#DC2626] text-white py-3 rounded-xl font-black text-sm hover:bg-[#DC2626]/90 transition-colors">
+                Iniciar sesión
+            </a>
+            <button id="modal-login-cerrar"
+                    class="w-full border border-gray-200 text-gray-600 py-3 rounded-xl font-bold text-sm hover:bg-gray-50 transition-colors">
+                Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
+// ── Helpers ──────────────────────────────────────────────
+const usuarioAutenticado = {{ user.is_authenticated|yesno:"true,false" }};
+
+const modalLogin = document.getElementById('modal-login');
+const btnCerrarModal = document.getElementById('modal-login-cerrar');
+
+function abrirModalLogin() {
+    modalLogin.classList.remove('hidden');
+    modalLogin.classList.add('flex');
+}
+
+function cerrarModalLogin() {
+    modalLogin.classList.add('hidden');
+    modalLogin.classList.remove('flex');
+}
+
+// Cerrar con el botón cancelar
+btnCerrarModal.addEventListener('click', cerrarModalLogin);
+
+// Cerrar haciendo clic fuera del cuadro
+modalLogin.addEventListener('click', function(e) {
+    if (e.target === modalLogin) cerrarModalLogin();
+});
+
+// ── Badge del carrito ─────────────────────────────────────
 function actualizarBadge(cantidad) {
     ['carrito-link-desktop', 'carrito-link-movil'].forEach(id => {
         const link = document.getElementById(id);
@@ -171,8 +218,16 @@ function actualizarBadge(cantidad) {
     });
 }
 
+// ── Botones "Agregar" ─────────────────────────────────────
 document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
     btn.addEventListener('click', async () => {
+
+        // Si no está autenticado, mostrar modal y salir
+        if (!usuarioAutenticado) {
+            abrirModalLogin();
+            return;
+        }
+
         const id = btn.dataset.id;
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
