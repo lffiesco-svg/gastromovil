@@ -80,12 +80,10 @@
                 class="w-full text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase transition-colors border border-red-200">
                 <i class="fas fa-trash mr-2"></i> Eliminar Cuenta
             </button>
-            <a href="{% url 'logout' %}">
-                <button style="background: linear-gradient(to right, #9ca3af, #4b5563);"
-                    class="w-full text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase transition-colors border border-gray-200">
-                    <i class="fas fa-right-from-bracket mr-2"></i> Cerrar Sesión
-                </button>
-            </a>
+            <button onclick="abrirModalLogout()" style="background: linear-gradient(to right, #9ca3af, #4b5563);"
+                class="w-full text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase transition-colors border border-gray-200">
+                <i class="fas fa-right-from-bracket mr-2"></i> Cerrar Sesión
+            </button>
         </div>
 
         <!-- DIRECCIONES -->
@@ -125,7 +123,7 @@
 </section>
 
 <!-- MODAL ELIMINAR CUENTA -->
-<div id="modal-eliminar" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+<div id="modal-eliminar" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:50; align-items:center; justify-content:center; padding:16px;">
     <div class="bg-white rounded-2xl p-8 max-w-md w-full">
         <div class="text-center mb-6">
             <div class="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
@@ -158,5 +156,15 @@
     </script>
     {% endif %}
 {% endfor %}
-<script src="{% static 'js/perfil.js' %}"></script>
+<script src="{% static 'js/perfil.js' %}?v=2"></script>
+
+<script>
+function abrirModalEliminar() {
+    document.getElementById('modal-eliminar').style.setProperty('display', 'flex', 'important');
+}
+function cerrarModalEliminar() {
+    document.getElementById('modal-eliminar').style.setProperty('display', 'none', 'important');
+}
+</script>
+<script src="{% static 'js/perfil.js' %}?v=5"></script>
 {% endblock %}
