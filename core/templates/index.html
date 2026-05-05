@@ -6,7 +6,6 @@
 
 <!-- MENU DE APERTURA -->
 <section class="bg-[#1a0a0a] flex flex-col md:flex-row items-center px-6 md:pl-50 md:pr-24 pt-16 md:pt-24 pb-20 gap-8 md:gap-16">
-    <!-- TEXTO -->
     <div class="flex-1 flex flex-col justify-center">
         <p class="flex items-center gap-3 text-[#DC2626] text-base font-bold tracking-widest uppercase mb-6">
             <span class="inline-block w-9 h-0.5 bg-[#DC2626]"></span>
@@ -23,42 +22,36 @@
         </a>
     </div>
 
-    
-    <!-- CARRUSEL DE IMÁGENES -->
-   <div class="flex-1 flex items-center justify-center w-full max-w-lg">
-    <div class="relative w-full h-80 md:h-[420px] rounded-3xl overflow-hidden shadow-2xl bg-black">
-        <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-100">
-            <img src="{% static 'img/hamburg.png' %}" alt="Plato 1" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
-            <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Hamburguesa Especial</span>
-        </div>
-        
-        <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-0">
-            <img src="{% static 'img/plato4.png' %}" alt="Plato 2" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
-            <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Pizza Artesanal</span>
-        </div>
-
-        <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-0">
-            <img src="{% static 'img/tacomex.png' %}" alt="Plato 3" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
-            <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Tacos Mexicanos</span>
-        </div>
-
-        <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-0">
-            <img src="{% static 'img/picadac.png' %}" alt="Plato 4" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
-            <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Picadas Criollas Huilenses</span>
-        </div>
-
-        <div class="absolute bottom-4 right-5 flex gap-2">
-            <span class="carrusel-dot w-2 h-2 rounded-full bg-white opacity-100 transition-opacity duration-300"></span>
-            <span class="carrusel-dot w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300"></span>
-            <span class="carrusel-dot w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300"></span>
-            <span class="carrusel-dot w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300"></span>
+    <div class="flex-1 flex items-center justify-center w-full max-w-lg">
+        <div class="relative w-full h-80 md:h-[420px] rounded-3xl overflow-hidden shadow-2xl bg-black">
+            <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-100">
+                <img src="{% static 'img/hamburg.png' %}" alt="Plato 1" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
+                <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Hamburguesa Especial</span>
+            </div>
+            <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+                <img src="{% static 'img/plato4.png' %}" alt="Plato 2" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
+                <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Pizza Artesanal</span>
+            </div>
+            <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+                <img src="{% static 'img/tacomex.png' %}" alt="Plato 3" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
+                <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Tacos Mexicanos</span>
+            </div>
+            <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+                <img src="{% static 'img/picadac.png' %}" alt="Plato 4" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
+                <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Picadas Criollas Huilenses</span>
+            </div>
+            <div class="absolute bottom-4 right-5 flex gap-2">
+                <span class="carrusel-dot w-2 h-2 rounded-full bg-white opacity-100 transition-opacity duration-300"></span>
+                <span class="carrusel-dot w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300"></span>
+                <span class="carrusel-dot w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300"></span>
+                <span class="carrusel-dot w-2 h-2 rounded-full bg-white opacity-40 transition-opacity duration-300"></span>
+            </div>
         </div>
     </div>
-</div>
 </section>
 
 {% if messages %}
@@ -69,7 +62,6 @@
         {{ msg }}
     </div>
     {% endfor %}
-
     <script>
         setTimeout(() => {
             const toast = document.getElementById('toast-contacto');
@@ -78,7 +70,7 @@
                 toast.style.opacity = '0';
                 setTimeout(() => toast.remove(), 500);
             }
-        }, 3000); // desaparece en 3 segundos
+        }, 3000);
     </script>
 {% endif %}
 
@@ -87,7 +79,6 @@
         const slides = document.querySelectorAll('.carrusel-slide');
         const dots = document.querySelectorAll('.carrusel-dot');
         let current = 0;
-
         function mostrarSlide(index) {
             slides.forEach((s, i) => {
                 s.classList.toggle('opacity-100', i === index);
@@ -97,7 +88,6 @@
                 d.style.opacity = i === index ? '1' : '0.4';
             });
         }
-
         setInterval(() => {
             current = (current + 1) % slides.length;
             mostrarSlide(current);
@@ -116,9 +106,7 @@
                 Pedir comida a domicilio nunca fue tan fácil. Solo 4 simples pasos.
             </p>
         </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
             <div class="relative text-center group">
                 <div class="hidden lg:block absolute top-10 left-[60%] w-full h-0.5 bg-[#4a2020]">
                     <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-[#DC2626] rounded-full"></div>
@@ -134,7 +122,6 @@
                     <p class="text-gray-400 text-sm leading-relaxed">Explora los menús y selecciona tus platillos favoritos</p>
                 </div>
             </div>
-
             <div class="relative text-center group">
                 <div class="hidden lg:block absolute top-10 left-[60%] w-full h-0.5 bg-[#4a2020]">
                     <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-[#DC2626] rounded-full"></div>
@@ -150,7 +137,6 @@
                     <p class="text-gray-400 text-sm leading-relaxed">Confirma tu pedido y realiza el pago de forma segura</p>
                 </div>
             </div>
-
             <div class="relative text-center group">
                 <div class="hidden lg:block absolute top-10 left-[60%] w-full h-0.5 bg-[#4a2020]">
                     <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-[#DC2626] rounded-full"></div>
@@ -166,7 +152,6 @@
                     <p class="text-gray-400 text-sm leading-relaxed">Un repartidor llevará tu pedido hasta tu puerta</p>
                 </div>
             </div>
-
             <div class="relative text-center group">
                 <div class="relative z-10">
                     <div class="absolute -top-2 -right-2 w-8 h-8 bg-[#DC2626] rounded-full flex items-center justify-center text-white font-black text-sm z-20">4</div>
@@ -179,7 +164,6 @@
                     <p class="text-gray-400 text-sm leading-relaxed">Recibe tu comida caliente y lista para disfrutar</p>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
@@ -190,7 +174,6 @@
         <div class="bg-linear-to-r from-[#CC0000] via-[#FF4500] to-[#FFD60A] rounded-3xl px-6 md:px-10 py-10 relative overflow-hidden">
             <div class="absolute bottom-0 left-0 w-56 h-56 bg-black/20 rounded-full translate-y-1/2 -translate-x-1/4"></div>
             <div class="absolute top-0 right-60 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2"></div>
-
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div class="text-center md:text-left max-w-lg">
                     <h2 class="text-3xl md:text-4xl font-black text-white mb-4">
@@ -199,18 +182,21 @@
                     <p class="text-white/90 mb-8 leading-relaxed text-sm">
                         Nuestra inteligencia artificial aprende tus gustos y te recomienda los mejores platos. Dejate sorprender por sugerencias personalizadas cada vez que entras.
                     </p>
-                    <a href="#" class="inline-flex items-center gap-3 bg-[#0f0000] text-white px-8 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-[#1a0000] transition-colors shadow-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="10" rx="2"/>
-                            <path d="M12 3a2 2 0 0 1 2 2v1H10V5a2 2 0 0 1 2-2z"/>
-                            <path d="M12 6v5"/>
-                            <path d="M8 15h.01M16 15h.01"/>
-                            <path d="M6 11V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/>
+                    <button id="btn-sorprendeme" onclick="sorprendemeIA()" class="inline-flex items-center gap-3 bg-[#0f0000] text-white px-8 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-[#1a0000] transition-colors shadow-lg">
+                      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="2" x2="12" y2="5"/>
+                            <circle cx="12" cy="1.5" r="1" fill="currentColor" stroke="none"/>
+                            <rect x="7" y="5" width="10" height="7" rx="2"/>
+                            <circle cx="10" cy="8.5" r="1" fill="currentColor" stroke="none"/>
+                            <circle cx="14" cy="8.5" r="1" fill="currentColor" stroke="none"/>
+                            <rect x="6" y="13" width="12" height="7" rx="1.5"/>
+                            <circle cx="12" cy="16.5" r="1.2" fill="currentColor" stroke="none"/>
+                            <line x1="6" y1="14.5" x2="3.5" y2="17"/>
+                            <line x1="18" y1="14.5" x2="20.5" y2="17"/>
                         </svg>
-                        Sorprendeme IA
-                    </a>
+                        <span id="btn-sorprendeme-texto">Sorpréndeme IA</span>
+                    </button>
                 </div>
-
                 <div class="relative flex-shrink-0">
                     <div class="w-44 h-44 md:w-56 md:h-56 bg-black/20 rounded-3xl flex flex-col items-center justify-center backdrop-blur-sm border border-white/20">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-20 h-20 text-white mb-2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -225,5 +211,148 @@
         </div>
     </div>
 </section>
+
+<!-- Modal respuesta IA -->
+<div id="modal-sorprendeme" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4" onclick="if(event.target===this) cerrarModalSorprendeme()">
+    <div class="bg-[#1a0a0a] border border-[#DC2626]/30 rounded-3xl shadow-2xl p-5 max-w-sm w-full text-center relative">
+        <div class="w-12 h-12 bg-gradient-to-br from-[#CC0000] to-[#FFD60A] rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/>
+            </svg>
+        </div>
+        <h3 class="text-lg font-black text-white mb-3">✨ La IA recomienda...</h3>
+        <div id="modal-sorprendeme-texto" class="text-gray-300 text-sm leading-relaxed mb-4"></div>
+        <div class="flex flex-col gap-2">
+            <button onclick="sorprendemeIA()" class="w-full bg-gradient-to-r from-[#CC0000] to-[#FF4500] text-white py-2.5 rounded-xl font-black text-sm hover:opacity-90 transition-opacity">
+                🎲 Otra recomendación
+            </button>
+            <button onclick="cerrarModalSorprendeme()" class="w-full border border-gray-700 text-gray-400 py-3.5 rounded-xl font-bold text-base hover:bg-white/5 transition-colors">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function cerrarModalSorprendeme() {
+    const modal = document.getElementById('modal-sorprendeme');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+async function sorprendemeIA() {
+    const usuarioAutenticado = {{ user.is_authenticated|yesno:"true,false" }};
+
+    if (!usuarioAutenticado) {
+        abrirModalLogin();
+        return;
+    }
+
+    const btn = document.getElementById('btn-sorprendeme');
+    const texto = document.getElementById('btn-sorprendeme-texto');
+    const modal = document.getElementById('modal-sorprendeme');
+    const modalTexto = document.getElementById('modal-sorprendeme-texto');
+
+    btn.disabled = true;
+    texto.textContent = '✨ Pensando...';
+
+    try {
+        const res = await fetch('/api/chatbot/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                mensaje: 'Sorpréndeme, recomiéndame un plato del menú.',
+                historial: [],
+            }),
+        });
+
+        const data = await res.json();
+
+        let contenido;
+        try {
+            const json = JSON.parse(data.respuesta);
+            if (json.modo === 'sorpresa') {
+                contenido = `
+                    <div class="text-left">
+                        ${json.imagen ? `<img src="${json.imagen}" alt="${json.nombre}" class="w-full h-40 object-cover rounded-2xl mb-3">` : ''}
+                        <p class="text-yellow-400 font-black text-base mb-1">${json.nombre}</p>
+                        <p class="text-gray-400 text-xs mb-2">📍 ${json.restaurante}</p>
+                        <p class="text-gray-300 text-xs mb-2 leading-relaxed">${json.descripcion || ''}</p>
+                        <p class="text-white/60 text-xs italic mb-3">"${json.razon}"</p>
+                        <div class="flex items-center justify-between bg-white/5 rounded-xl px-3 py-2 mb-3">
+                            <span class="text-[#DC2626] font-black text-lg">$${json.precio}</span>
+                            <button
+                                onclick="agregarAlCarritoDesdeIA(${json.producto_id}, '${json.nombre}')"
+                                class="bg-[#DC2626] text-white px-3 py-1.5 rounded-xl font-bold text-xs hover:bg-[#DC2626]/90 transition-colors flex items-center gap-1">
+                                <i class="fas fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                        <a href="${json.url}" class="block text-center text-xs text-gray-500 hover:text-white transition-colors underline">
+                            Ver en el restaurante →
+                        </a>
+                    </div>
+                `;
+            } else {
+                contenido = data.respuesta;
+            }
+        } catch {
+            contenido = data.respuesta;
+        }
+
+        modalTexto.innerHTML = contenido;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+    } catch (err) {
+        console.error(err);
+        modalTexto.innerHTML = '<p class="text-gray-400">Hubo un error al consultar la IA. Intenta de nuevo.</p>';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    } finally {
+        btn.disabled = false;
+        texto.textContent = 'Sorpréndeme IA';
+    }
+}
+
+async function agregarAlCarritoDesdeIA(id, nombre) {
+    try {
+        const res = await fetch(`/carrito/agregar/${id}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({ cantidad: 1 }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+            ['carrito-link-desktop', 'carrito-link-movil'].forEach(linkId => {
+                const link = document.getElementById(linkId);
+                if (!link) return;
+                let badge = link.querySelector('[data-carrito-badge]');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.setAttribute('data-carrito-badge', '');
+                    badge.className = 'carrito-badge';
+                    link.appendChild(badge);
+                }
+                badge.textContent = data.cantidad_total;
+            });
+            const btns = document.querySelectorAll(`button[onclick*="agregarAlCarritoDesdeIA(${id}"]`);
+            btns.forEach(b => {
+                b.innerHTML = '<i class="fas fa-check"></i> Agregado';
+                b.disabled = true;
+            });
+            setTimeout(() => cerrarModalSorprendeme(), 800);
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+</script>
 
 {% endblock %}
