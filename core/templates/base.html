@@ -29,6 +29,16 @@
                 line-height: 1;
                 pointer-events: none;
             }
+
+            #modal-login-global {
+                position: fixed !important;
+                z-index: 99999 !important;
+            }
+
+            #modal-login-global > div {
+                position: relative;
+                z-index: 100000 !important;
+            }
         </style>
     </head>
     <body class="bg-[#1a0a0a] text-white">
@@ -183,55 +193,56 @@
             </div>
         </div>
     </footer>
-<!-- BOTON IA -->
-<div onclick="toggleChat()" class="fixed bottom-8 right-8 bg-[#DC2626] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg hover:scale-110 transition-transform z-50">
-    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="2" x2="12" y2="5"/>
-        <circle cx="12" cy="1.5" r="1" fill="currentColor" stroke="none"/>
-        <rect x="7" y="5" width="10" height="7" rx="2"/>
-        <circle cx="10" cy="8.5" r="1" fill="currentColor" stroke="none"/>
-        <circle cx="14" cy="8.5" r="1" fill="currentColor" stroke="none"/>
-        <rect x="6" y="13" width="12" height="7" rx="1.5"/>
-        <circle cx="12" cy="16.5" r="1.2" fill="currentColor" stroke="none"/>
-        <line x1="6" y1="14.5" x2="3.5" y2="17"/>
-        <line x1="18" y1="14.5" x2="20.5" y2="17"/>
-    </svg>
-</div>
 
-<!-- CHAT IA -->
-<div id="iaChat" class="fixed bottom-28 right-8 w-80 bg-white rounded-2xl shadow-2xl z-50 hidden flex-col overflow-hidden">
-    <div class="bg-[#DC2626] text-white px-5 py-4 flex justify-between items-center font-bold">
-        <span class="flex items-center gap-2">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="2" x2="12" y2="5"/>
-                <circle cx="12" cy="1.5" r="1" fill="currentColor" stroke="none"/>
-                <rect x="7" y="5" width="10" height="7" rx="2"/>
-                <circle cx="10" cy="8.5" r="1" fill="currentColor" stroke="none"/>
-                <circle cx="14" cy="8.5" r="1" fill="currentColor" stroke="none"/>
-                <rect x="6" y="13" width="12" height="7" rx="1.5"/>
-                <circle cx="12" cy="16.5" r="1.2" fill="currentColor" stroke="none"/>
-                <line x1="6" y1="14.5" x2="3.5" y2="17"/>
-                <line x1="18" y1="14.5" x2="20.5" y2="17"/>
-            </svg>
-            Asistente GastroWeb
-        </span>
-        <button onclick="toggleChat()" class="bg-black/10 hover:bg-black/20 w-7 h-7 rounded-full flex items-center justify-center">
-            <i class="fas fa-xmark"></i>
-        </button>
+    <!-- BOTON IA -->
+    <div onclick="toggleChat()" class="fixed bottom-8 right-8 bg-[#DC2626] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg hover:scale-110 transition-transform z-50">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="2" x2="12" y2="5"/>
+            <circle cx="12" cy="1.5" r="1" fill="currentColor" stroke="none"/>
+            <rect x="7" y="5" width="10" height="7" rx="2"/>
+            <circle cx="10" cy="8.5" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="14" cy="8.5" r="1" fill="currentColor" stroke="none"/>
+            <rect x="6" y="13" width="12" height="7" rx="1.5"/>
+            <circle cx="12" cy="16.5" r="1.2" fill="currentColor" stroke="none"/>
+            <line x1="6" y1="14.5" x2="3.5" y2="17"/>
+            <line x1="18" y1="14.5" x2="20.5" y2="17"/>
+        </svg>
     </div>
-    <div id="iaMessages" class="p-5 h-64 overflow-y-auto flex flex-col gap-3 bg-gray-50">
-        <div class="bg-white p-3 rounded-2xl rounded-bl-sm text-sm text-gray-700 shadow-sm max-w-xs">¡Hola! ¿En qué puedo ayudarte hoy? 🍔</div>
+
+    <!-- CHAT IA -->
+    <div id="iaChat" class="fixed bottom-28 right-8 w-80 bg-white rounded-2xl shadow-2xl z-50 hidden flex-col overflow-hidden">
+        <div class="bg-[#DC2626] text-white px-5 py-4 flex justify-between items-center font-bold">
+            <span class="flex items-center gap-2">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="2" x2="12" y2="5"/>
+                    <circle cx="12" cy="1.5" r="1" fill="currentColor" stroke="none"/>
+                    <rect x="7" y="5" width="10" height="7" rx="2"/>
+                    <circle cx="10" cy="8.5" r="1" fill="currentColor" stroke="none"/>
+                    <circle cx="14" cy="8.5" r="1" fill="currentColor" stroke="none"/>
+                    <rect x="6" y="13" width="12" height="7" rx="1.5"/>
+                    <circle cx="12" cy="16.5" r="1.2" fill="currentColor" stroke="none"/>
+                    <line x1="6" y1="14.5" x2="3.5" y2="17"/>
+                    <line x1="18" y1="14.5" x2="20.5" y2="17"/>
+                </svg>
+                Asistente GastroWeb
+            </span>
+            <button onclick="toggleChat()" class="bg-black/10 hover:bg-black/20 w-7 h-7 rounded-full flex items-center justify-center">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+        <div id="iaMessages" class="p-5 h-64 overflow-y-auto flex flex-col gap-3 bg-gray-50">
+            <div class="bg-white p-3 rounded-2xl rounded-bl-sm text-sm text-gray-700 shadow-sm max-w-xs">¡Hola! ¿En qué puedo ayudarte hoy? 🍔</div>
+        </div>
+        <div class="flex p-4 gap-3 border-t border-gray-100 bg-white">
+            <input id="iaInput" type="text" placeholder="Escribe tu pregunta..." class="flex-1 px-4 py-2 border-2 border-gray-100 text-black rounded-full text-sm outline-none focus:border-[#DC2626]">
+            <button onclick="sendIA()" class="bg-[#DC2626] text-white w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
     </div>
-    <div class="flex p-4 gap-3 border-t border-gray-100 bg-white">
-        <input id="iaInput" type="text" placeholder="Escribe tu pregunta..." class="flex-1 px-4 py-2 border-2 border-gray-100 text-black rounded-full text-sm outline-none focus:border-[#DC2626]">
-        <button onclick="sendIA()" class="bg-[#DC2626] text-white w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
-            <i class="fas fa-paper-plane"></i>
-        </button>
-    </div>
-</div>
 
     <!-- MODAL LOGIN GLOBAL -->
-    <div id="modal-login-global" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/50 backdrop-blur-sm" onclick="if(event.target===this) cerrarModalLogin()">
+    <div id="modal-login-global" class="hidden items-center justify-center" style="background-color: rgba(0,0,0,0.75); backdrop-filter: blur(6px);" onclick="if(event.target===this) cerrarModalLogin()">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 text-center">
             <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-lock text-[#DC2626] text-2xl"></i>
@@ -298,22 +309,25 @@
 
     function abrirModalLogin() {
         const m = document.getElementById('modal-login-global');
+        document.body.appendChild(m);
+        m.style.position = 'fixed';
+        m.style.inset = '0';
+        m.style.display = 'flex';
+        m.style.alignItems = 'center';
+        m.style.justifyContent = 'center';
+        m.style.zIndex = '99999';
         m.classList.remove('hidden');
-        m.classList.add('flex');
     }
 
     function cerrarModalLogin() {
         const m = document.getElementById('modal-login-global');
+        m.style.display = 'none';
         m.classList.add('hidden');
-        m.classList.remove('flex');
     }
     </script>
 
     <script>
     {% if user.is_authenticated %}
-    if (!sessionStorage.getItem('activo')) {
-        window.location.href = "{% url 'logout' %}";
-    }
     sessionStorage.setItem('activo', '1');
     {% endif %}
     </script>
