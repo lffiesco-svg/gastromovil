@@ -298,13 +298,14 @@
         }
     });
 
-    function abrirModalLogout() {
-        document.getElementById('dropdownMenu').classList.add('hidden');
-        document.getElementById('modal-logout-nav').classList.remove('hidden');
+        function abrirModalLogout() {
+        const dd = document.getElementById('dropdownMenu');
+        if (dd) dd.classList.add('hidden');
+        document.getElementById('modal-logout-nav').style.setProperty('display', 'flex', 'important');
     }
 
     function cerrarModalLogout() {
-        document.getElementById('modal-logout-nav').classList.add('hidden');
+        document.getElementById('modal-logout-nav').style.setProperty('display', 'none', 'important');
     }
 
     function abrirModalLogin() {
