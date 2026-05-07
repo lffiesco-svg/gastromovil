@@ -187,6 +187,7 @@ def api_todas_ubicaciones(request):
     return Response(data) 
 # Quita el decorador temporalmente para probar
 # Quita el decorador temporalmente para probar
+@login_required
 def compartir_ubicacion(request):
     return render(request, 'repartidores/compartir_ubicacion.html')
 

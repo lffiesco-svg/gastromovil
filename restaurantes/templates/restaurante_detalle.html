@@ -156,6 +156,8 @@
 
 {% block extra_js %}
 <script>
+const usuarioAutenticado = {{ user.is_authenticated|yesno:"true,false" }};
+
 function actualizarBadge(cantidad) {
     ['carrito-link-desktop', 'carrito-link-movil'].forEach(id => {
         const link = document.getElementById(id);
@@ -173,6 +175,11 @@ function actualizarBadge(cantidad) {
 
 document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
     btn.addEventListener('click', async () => {
+        if (!usuarioAutenticado) {
+            abrirModalLogin();
+            return;
+        }
+
         const id = btn.dataset.id;
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
@@ -208,6 +215,7 @@ document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
     });
 });
 </script>
+
 <script>
 function scrollToCategoria(id) {
     const target = document.getElementById(id);

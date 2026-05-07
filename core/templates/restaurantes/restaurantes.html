@@ -37,23 +37,25 @@
     <h2 class="text-5xl font-black text-white mb-12">Elige tu antojo <span class="text-[#DC2626]">favorito</span></h2>
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {% for restaurante in restaurantes %}
-        <div class="bg-[#2a1010] rounded-2xl overflow-hidden border-2 border-[#4a2020] hover:border-[#DC2626] hover:-translate-y-2 transition-all w-full md:w-92">
-            <div class="relative">
-                {% if restaurante.imagen %}
-                    <img src="{{ restaurante.imagen.url }}" alt="{{ restaurante.nombre }}" class="w-full h-84 object-contain bg-[#1a0a0a]">
-                {% else %}
-                    <div class="w-full h-full bg-[#1a0a0a] flex items-center justify-center py-10">
-                        <i class="fas fa-utensils text-5xl text-[#4a2020]"></i>
-                    </div>
-                {% endif %}
-            </div>
+
+        <div class="restaurant-card bg-[#2a1010] rounded-2xl overflow-hidden border-2 border-[#4a2020] hover:border-[#DC2626] transition-all flex flex-col">
+            {% if restaurante.imagen and restaurante.imagen.name %}
+                <div class="card-img">
+                    <img src="{{ restaurante.imagen.url }}" alt="{{ restaurante.nombre }}">
+                </div>
+            {% else %}
+                <div class="card-img bg-[#1a0a0a] flex items-center justify-center">
+                    <i class="fas fa-utensils text-5xl text-[#4a2020]"></i>
+                </div>
+            {% endif %}
+
             <div class="px-4 py-4 text-center flex flex-col flex-1 justify-between">
                 <div>
                     <h3 class="text-white font-black text-lg mb-1 leading-tight">{{ restaurante.nombre }}</h3>
                     <p class="text-[#DC2626] text-xs font-semibold mb-4">{{ restaurante.direccion }}</p>
                 </div>
                 <a href="{% url 'pagina_restaurante' restaurante.pk %}"
-                    class="block w-full bg-[#DC2626] text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-[#DC2626]/90 transition-colors text-center">
+                   class="block w-full bg-[#DC2626] text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-[#DC2626]/90 transition-colors text-center">
                     Ir al menú
                 </a>
             </div>

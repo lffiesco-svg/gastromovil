@@ -35,16 +35,18 @@ def construir_contexto_productos(productos, categoria=None, restaurante=None):
     lineas = []
     for p in filtrados:
         restaurante_id = p['categoria__restaurante__id']
-        producto_id = p['id']
         categoria_id = p['categoria__id']
         url = f"{FRONTEND_BASE_URL}/restaurantes/restaurante/{restaurante_id}/#cat-{categoria_id}"
         descripcion = f" | Descripcion: {p['descripcion']}" if p.get('descripcion') else ""
+        imagen = p.get('imagen') or ''
+        imagen_url = f"http://localhost:8000/media/{imagen}" if imagen else ''
         lineas.append(
-            f"- {p['nombre']} | ${p['precio']}"
+            f"- ID:{p['id']} | {p['nombre']} | ${p['precio']}"
             f" | Categoria: {p['categoria__nombre'] or 'Sin categoria'}"
             f" | Restaurante: {p['categoria__restaurante__nombre'] or 'Sin restaurante'}"
             f"{descripcion}"
             f" | URL: {url}"
+            f" | IMAGEN: {imagen_url}"
         )
 
     return "\n".join(lineas)
@@ -75,3 +77,18 @@ Pregunta del usuario: {mensaje_usuario}"""
     except Exception as e:
         print(f"[ERROR Groq]: {e}")
         return "Error al procesar tu consulta. Intenta de nuevo mas tarde."
+
+
+def responder_razon(producto):
+    """Le pide al LLM una frase corta y apetitosa sobre el producto."""
+    nombre = producto['nombre']
+    descripcion = producto.get('descripcion') or ''
+    restaurante = producto['categoria__restaurante__nombre'] or ''
+
+    prompt = f"En máximo 20 palabras, dime por qué debería pedir '{nombre}' ({descripcion}) del restaurante {restaurante}. Solo la frase, sin comillas."
+
+    try:
+        respuesta = llm.invoke([HumanMessage(content=prompt)])
+        return respuesta.content.strip()
+    except:
+        return "¡Una opción deliciosa que no te puedes perder!"
