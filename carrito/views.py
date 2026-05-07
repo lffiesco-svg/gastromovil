@@ -5,6 +5,8 @@ from django.views.decorators.http import require_POST
 from django.shortcuts import render, get_object_or_404
 from restaurantes.models import Producto, Restaurante
 from .cart import Carrito
+from usuarios.models import Direccion
+from decouple import config
 
 DOMICILIO = 3000
 
@@ -89,6 +91,9 @@ def confirmar_pedido(request):
     from pedidos.models import Pedido, DetallePedido
     from channels.layers import get_channel_layer
     from asgiref.sync import async_to_sync
+    import urllib.request as urlreq
+    import urllib.parse
+    import urllib.request as urlreq
 
     carrito = Carrito(request)
     if not carrito.carrito:
@@ -96,10 +101,24 @@ def confirmar_pedido(request):
 
     body = json.loads(request.body)
     direccion = body.get('direccion', '')
-    barrio = body.get('barrio', '')
-    notas = body.get('notas', '')
+    barrio    = body.get('barrio', '')
+    notas     = body.get('metodo_pago', '')
     metodo_pago = body.get('metodo_pago', '')
 
+# ── Geocodificar con Google Maps ──────────────────────────────
+    GOOGLE_API_KEY = config('GOOGLE_API_KEY')
+    lat, lng = None, None
+    try:
+        query = urllib.parse.quote(f"{direccion}, {barrio}, Garzón, Huila, Colombia")
+        url = f"https://maps.googleapis.com/maps/api/geocode/json?address={query}&key={GOOGLE_API_KEY}"
+        with urlreq.urlopen(url, timeout=5) as r:
+            geo = json.loads(r.read())
+        if geo['status'] == 'OK':
+            loc = geo['results'][0]['geometry']['location']
+            lat, lng = loc['lat'], loc['lng']
+    except Exception as e:
+        print(f"Error geocodificando: {e}")
+    # ─────────────────────────────────────────────────────────────
     items_por_restaurante = {}
     for pid, item in carrito.carrito.items():
         rest_id = item.get('restaurante_id')
@@ -115,12 +134,26 @@ def confirmar_pedido(request):
             float(item['precio']) * item['cantidad'] for _, item in items
         )
 
+        # Crear o buscar la dirección — ahora con coordenadas
+        direccion_obj, creada = Direccion.objects.get_or_create(
+            usuario=request.user,
+            calle=direccion,
+            barrio=barrio,
+            defaults={'referencia': notas, 'latitud': lat, 'longitud': lng}
+        )
+        # Si ya existía pero no tenía coordenadas, actualizarlas
+        if not creada and lat and (direccion_obj.latitud is None):
+            direccion_obj.latitud  = lat
+            direccion_obj.longitud = lng
+            direccion_obj.save()
+
         pedido = Pedido.objects.create(
             cliente=request.user,
             restaurante=restaurante,
             estado='pendiente',
             total=total_restaurante + DOMICILIO,
-            notas=f"Dirección: {direccion}, Barrio: {barrio}. {notas} | Pago: {metodo_pago}",
+            notas=f"{notas} | Pago: {metodo_pago}",
+            direccion_entrega=direccion_obj,
         )
 
         for pid, item in items:
