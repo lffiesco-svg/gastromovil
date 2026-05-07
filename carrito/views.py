@@ -1,4 +1,5 @@
 import json
+import re
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -7,6 +8,22 @@ from restaurantes.models import Producto, Restaurante
 from .cart import Carrito
 
 DOMICILIO = 3000
+
+BARRIOS_GARZON = {
+    'centro', 'bello horizonte', 'villa del rio', 'la paz', 'el jardin',
+    'san jose', 'la esperanza', 'el recreo', 'las americas', 'el bosque',
+    'villa cafe', 'santa barbara', 'el porvenir', 'los angeles', 'la union',
+    'villa lucia', 'el paraiso', 'la colombia', 'nuevo horizonte', 'villa del prado',
+    'el progreso', 'la aurora', 'san martin', 'villa del carmen', 'la floresta',
+    'el eden', 'la victoria', 'san pedro', 'villa nueva', 'el rosario',
+    'la primavera', 'alto de la cruz', 'la independencia', 'villa hermosa',
+    'el mirador', 'san francisco', 'la esmeralda', 'el triunfo', 'el refugio',
+    'villa del sol', 'la trinidad', 'las palmas', 'el prado', 'la serena',
+    'villa alegre', 'santa cecilia', 'el retiro', 'la ceiba',
+}
+
+def barrio_valido(barrio):
+    return barrio.lower().strip() in BARRIOS_GARZON
 
 
 @login_required
@@ -95,10 +112,31 @@ def confirmar_pedido(request):
         return JsonResponse({'ok': False, 'error': 'El carrito está vacío'})
 
     body = json.loads(request.body)
-    direccion = body.get('direccion', '')
-    barrio = body.get('barrio', '')
+    direccion = body.get('direccion', '').strip()
+    barrio = body.get('barrio', '').strip()
     notas = body.get('notas', '')
     metodo_pago = body.get('metodo_pago', '')
+
+    # ── VALIDACIONES BACKEND ──────────────────────────────────
+    if not direccion or not barrio:
+        return JsonResponse({'ok': False, 'error': 'Completa la dirección y el barrio.'})
+
+    if len(direccion) < 5:
+        return JsonResponse({'ok': False, 'error': 'La dirección es muy corta.'})
+
+    if not re.search(r'\d', direccion):
+        return JsonResponse({'ok': False, 'error': 'La dirección debe incluir un número. Ej: Calle 5 # 10-20'})
+
+    if not re.search(r'[a-zA-ZáéíóúÁÉÍÓÚñÑ]', direccion):
+        return JsonResponse({'ok': False, 'error': 'La dirección debe contener letras y números.'})
+
+    if not barrio_valido(barrio):
+        return JsonResponse({'ok': False, 'error': 'El barrio ingresado no es válido. Verifica el nombre de tu barrio en Garzón.'})
+
+    metodos_validos = ['efectivo', 'nequi', 'daviplata']
+    if metodo_pago not in metodos_validos:
+        return JsonResponse({'ok': False, 'error': 'Método de pago inválido.'})
+    # ─────────────────────────────────────────────────────────
 
     items_por_restaurante = {}
     for pid, item in carrito.carrito.items():
