@@ -277,20 +277,17 @@ def listar_pedidos_api(request):
 def pedidos_activos_api(request):
     pedidos = Pedido.objects.filter(
         restaurante__propietario=request.user,
-        estado__in=['pendiente', 'aceptado', 'preparando']
+        estado__in=['pendiente', 'aceptado', 'preparando', 'enviado']  # ← agrega 'enviado'
     ).select_related('cliente', 'direccion_entrega').prefetch_related('detalles__producto').order_by('-fecha')
 
     data = [{
         'id': p.id,
-        'cliente': p.cliente.get_full_name() or p.cliente.username,
+        'cliente_nombre': p.cliente.get_full_name() or p.cliente.username,  # ← era 'cliente'
         'total': str(p.total),
         'estado': p.estado,
-        'direccion': str(p.direccion_entrega) if p.direccion_entrega else 'Sin dirección',
+        'detalles_count': p.detalles.count(),  # ← agrega esto
+        'direccion_entrega': str(p.direccion_entrega) if p.direccion_entrega else 'Sin dirección',  # ← era 'direccion'
         'notas': p.notas,
-        'productos': [{
-            'nombre': d.producto.nombre,
-            'cantidad': d.cantidad,
-        } for d in p.detalles.all()]
     } for p in pedidos]
     return Response(data)
 
@@ -303,23 +300,48 @@ def cambiar_estado_api(request, pk):
 
     estados_validos = [e[0] for e in Pedido.ESTADOS]
     if nuevo_estado not in estados_validos:
-        return Response({'error': 'Estado inválido'}, status=400)
+        return Response({'ok': False, 'error': 'Estado inválido'}, status=400)
 
     pedido.estado = nuevo_estado
     pedido.save()
 
     channel_layer = get_channel_layer()
+
+    # Notificar al cliente
+    mensajes_estado = {
+        'aceptado': '✅ ¡Tu pedido fue aceptado! El restaurante lo está preparando.',
+        'preparando': '👨‍🍳 Tu pedido está siendo preparado.',
+        'enviado': '🛵 ¡Tu pedido está en camino!',
+        'entregado': '🎉 ¡Tu pedido fue entregado!',
+        'cancelado': '❌ Tu pedido fue cancelado.',
+    }
+
     async_to_sync(channel_layer.group_send)(
         f'cliente_{pedido.cliente.id}',
         {
             'type': 'notificacion_pedido',
             'data': {
                 'tipo': 'cambio_estado',
-                'mensaje': f'Tu pedido #{pedido.id} está: {pedido.get_estado_display()}',
+                'mensaje': mensajes_estado.get(nuevo_estado, f'Tu pedido #{pedido.id} está: {pedido.get_estado_display()}'),
                 'pedido_id': pedido.id,
-                'estado': pedido.estado,
+                'estado': nuevo_estado,
             }
         }
     )
-    return Response({'mensaje': f'Estado actualizado a {pedido.get_estado_display()}'})
+# Si se marca enviado, notificar repartidores disponibles
+    if nuevo_estado == 'enviado':
+        from repartidores.models import Repartidor
+        repartidor = Repartidor.objects.filter(estado='disponible', activo=True).first()
+        if repartidor:
+            async_to_sync(channel_layer.group_send)(
+                f'repartidor_{repartidor.usuario.id}',
+                {
+                    'type': 'pedido_disponible',
+                    'tipo': 'pedido_disponible',
+                    'pedido_id': pedido.id,
+                    'restaurante': pedido.restaurante.nombre,
+                    'direccion': str(pedido.direccion_entrega),
+                }
+            )
 
+    return Response({'ok': True, 'estado': nuevo_estado})

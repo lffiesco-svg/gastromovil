@@ -24,6 +24,18 @@ class UbicacionConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
+
+        # Si es notificación de entrega, la reenvía al grupo y sale
+        if data.get('tipo') == 'pedido_entregado':
+            await self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'ubicacion_actualizada',
+                    'tipo': 'pedido_entregado',
+                }
+            )
+            return
+
         latitud = data.get('latitud')
         longitud = data.get('longitud')
 
@@ -40,8 +52,9 @@ class UbicacionConsumer(AsyncWebsocketConsumer):
 
     async def ubicacion_actualizada(self, event):
         await self.send(text_data=json.dumps({
-            'latitud': event['latitud'],
-            'longitud': event['longitud'],
+            'tipo': event.get('tipo', 'ubicacion'),
+            'latitud': event.get('latitud'),
+            'longitud': event.get('longitud'),
         }))
 
     @database_sync_to_async
@@ -63,10 +76,10 @@ class RepartidorConsumer(AsyncWebsocketConsumer):
         self.repartidor_id = self.scope['url_route']['kwargs']['repartidor_id']
         self.group_name = f'repartidor_{self.repartidor_id}'
 
-        await self.channel_layer.group_add(
-            self.group_name,
-            self.channel_name
-        )
+        await self.channel_layer.group_add(self.group_name, self.channel_name)
+
+        if await self.esta_disponible():
+            await self.channel_layer.group_add("repartidores_disponibles", self.channel_name)
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -77,3 +90,15 @@ class RepartidorConsumer(AsyncWebsocketConsumer):
 
     async def notificacion_pedido(self, event):
         await self.send(text_data=json.dumps(event['data']))
+
+        
+    async def pedido_disponible(self, event):
+        await self.send(text_data=json.dumps(event))
+
+    @database_sync_to_async
+    def esta_disponible(self):
+        from .models import Repartidor
+        return Repartidor.objects.filter(
+            usuario_id=self.repartidor_id,
+            estado='disponible'
+        ).exists()

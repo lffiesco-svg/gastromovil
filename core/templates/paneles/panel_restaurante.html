@@ -31,34 +31,34 @@
 
     <!-- ESTADISTICAS -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-linear-to-br from-[#DC2626] to-[#FF4500] rounded-2xl p-6 text-white shadow-lg shadow-red-900/20">
+        <div class="bg-gradient-to-br from-[#DC2626] to-[#FF4500] rounded-2xl p-6 text-white shadow-lg shadow-red-900/20">
             <div class="flex justify-between items-center mb-3">
                 <div class="bg-white/20 p-2.5 rounded-xl"><i class="fas fa-shopping-bag text-xl"></i></div>
-                <span class="text-4xl font-black">0</span>
+                <span class="text-4xl font-black" id="stat-pedidos">0</span>
             </div>
             <p class="font-black">Pedidos hoy</p>
             <p class="text-white/70 text-xs mt-1">Nuevos pedidos</p>
         </div>
-        <div class="bg-linear-to-br from-yellow-500 to-yellow-600 rounded-2xl p-6 text-white shadow-lg shadow-yellow-900/20">
+        <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl p-6 text-white shadow-lg shadow-yellow-900/20">
             <div class="flex justify-between items-center mb-3">
                 <div class="bg-white/20 p-2.5 rounded-xl"><i class="fas fa-fire text-xl"></i></div>
-                <span class="text-4xl font-black">0</span>
+                <span class="text-4xl font-black" id="stat-preparando">0</span>
             </div>
             <p class="font-black">En preparación</p>
             <p class="text-white/70 text-xs mt-1">Cocinando ahora</p>
         </div>
-        <div class="bg-linear-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg shadow-green-900/20">
+        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg shadow-green-900/20">
             <div class="flex justify-between items-center mb-3">
                 <div class="bg-white/20 p-2.5 rounded-xl"><i class="fas fa-check text-xl"></i></div>
-                <span class="text-4xl font-black">0</span>
+                <span class="text-4xl font-black" id="stat-completados">0</span>
             </div>
             <p class="font-black">Completados</p>
             <p class="text-white/70 text-xs mt-1">Entregados hoy</p>
         </div>
-        <div class="bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-900/20">
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-900/20">
             <div class="flex justify-between items-center mb-3">
                 <div class="bg-white/20 p-2.5 rounded-xl"><i class="fas fa-dollar-sign text-xl"></i></div>
-                <span class="text-4xl font-black">$0</span>
+                <span class="text-4xl font-black" id="stat-ventas">$0</span>
             </div>
             <p class="font-black">Ventas hoy</p>
             <p class="text-white/70 text-xs mt-1">Total del día</p>
@@ -85,66 +85,10 @@
         <!-- TAB PEDIDOS -->
         <div id="content-pedidos" class="p-6">
             <h3 class="font-black text-gray-900 text-xl mb-6">Pedidos Activos</h3>
-            <div class="flex flex-col gap-4">
-                <div class="border-2 border-[#DC2626] rounded-2xl overflow-hidden">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-5 gap-4">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-shopping-bag text-[#DC2626] text-2xl"></i>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h3 class="font-black text-gray-900 text-lg">Pedido #001</h3>
-                                    <span class="bg-[#DC2626] text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                                        <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>Nuevo
-                                    </span>
-                                </div>
-                                <p class="text-gray-500 text-sm">2 productos · Cliente: Juan</p>
-                                <p class="text-[#DC2626] font-black">$42.000</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="bg-green-500 text-white px-4 py-2 rounded-xl font-black text-sm hover:bg-green-600 transition-colors flex items-center gap-2">
-                                <i class="fas fa-check"></i> Aceptar
-                            </button>
-                            <button class="bg-red-100 text-red-600 px-4 py-2 rounded-xl font-black text-sm hover:bg-red-200 transition-colors flex items-center gap-2">
-                                <i class="fas fa-times"></i> Rechazar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="border-t border-gray-100 px-5 py-3 bg-gray-50">
-                        <p class="text-gray-500 text-sm flex items-center gap-2">
-                            <i class="fas fa-map-marker-alt text-[#DC2626]"></i>Entregar en: Calle 5 # 10-20, Garzón
-                        </p>
-                    </div>
-                </div>
-                <div class="border border-yellow-300 bg-yellow-50 rounded-2xl overflow-hidden">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-5 gap-4">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-fire text-yellow-500 text-2xl"></i>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h3 class="font-black text-gray-900 text-lg">Pedido #002</h3>
-                                    <span class="bg-yellow-400 text-white text-xs font-bold px-3 py-1 rounded-full">Preparando</span>
-                                </div>
-                                <p class="text-gray-500 text-sm">3 productos · Cliente: María</p>
-                                <p class="text-yellow-600 font-black">$35.000</p>
-                            </div>
-                        </div>
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded-xl font-black text-sm hover:bg-blue-600 transition-colors flex items-center gap-2">
-                            <i class="fas fa-motorcycle"></i> Listo para enviar
-                        </button>
-                    </div>
-                    <div class="border-t border-yellow-200 px-5 py-3">
-                        <p class="text-gray-500 text-sm flex items-center gap-2">
-                            <i class="fas fa-clock text-yellow-500"></i>Tiempo estimado: 15 min
-                        </p>
-                    </div>
-                </div>
+            <div id="lista-pedidos" class="flex flex-col gap-4">
                 <div class="text-center py-8 text-gray-400">
-                    <p class="text-sm">No hay más pedidos activos</p>
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                    <p class="text-sm">Cargando pedidos...</p>
                 </div>
             </div>
         </div>
@@ -195,28 +139,19 @@
                         class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400 h-24 resize-none"></textarea>
                 </div>
                 <div>
-                <div class="flex justify-between items-center mb-2">
-                    <label class="text-gray-400 text-xs font-bold uppercase tracking-wider">Categoría</label>
-                    <button type="button" onclick="toggleNuevaCategoria()" class="text-xs text-[#DC2626] font-bold hover:underline">
-                        + Nueva categoría
-                    </button>
-                </div>
-                <!-- formulario inline para crear categoría -->
-                <div id="form-nueva-categoria" class="hidden flex gap-2 mb-2">
-                    <input id="nueva-cat-nombre" type="text" placeholder="Ej: Postres"
-                        class="flex-1 bg-gray-50 text-gray-800 px-3 py-2 rounded-xl border border-gray-200 focus:border-[#DC2626] outline-none text-sm">
-                    <button type="button" onclick="crearCategoriaInline()"
-                        class="bg-[#DC2626] text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-[#DC2626]/90">
-                        Crear
-                    </button>
-                    <button type="button" onclick="toggleNuevaCategoria()"
-                        class="px-3 py-2 border border-gray-200 text-gray-500 rounded-xl text-sm hover:bg-gray-50">
-                        ✕
-                    </button>
-                </div>
-                <select id="select-categoria" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
-                    <option value="">Selecciona categoría</option>
-                </select>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider">Categoría</label>
+                        <button type="button" onclick="toggleNuevaCategoria()" class="text-xs text-[#DC2626] font-bold hover:underline">+ Nueva categoría</button>
+                    </div>
+                    <div id="form-nueva-categoria" class="hidden flex gap-2 mb-2">
+                        <input id="nueva-cat-nombre" type="text" placeholder="Ej: Postres"
+                            class="flex-1 bg-gray-50 text-gray-800 px-3 py-2 rounded-xl border border-gray-200 focus:border-[#DC2626] outline-none text-sm">
+                        <button type="button" onclick="crearCategoriaInline()" class="bg-[#DC2626] text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-[#DC2626]/90">Crear</button>
+                        <button type="button" onclick="toggleNuevaCategoria()" class="px-3 py-2 border border-gray-200 text-gray-500 rounded-xl text-sm hover:bg-gray-50">✕</button>
+                    </div>
+                    <select id="select-categoria" class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors cursor-pointer">
+                        <option value="">Selecciona categoría</option>
+                    </select>
                 </div>
                 <div>
                     <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Imagen</label>
@@ -236,9 +171,7 @@
                     <button onclick="crearProducto()" class="flex-1 bg-[#DC2626] text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:bg-[#DC2626]/90 transition-colors">
                         <i class="fas fa-plus mr-2"></i> Crear Producto
                     </button>
-                    <button onclick="showTab('menu')" class="px-6 py-4 border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl font-black text-sm transition-colors">
-                        Cancelar
-                    </button>
+                    <button onclick="showTab('menu')" class="px-6 py-4 border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl font-black text-sm transition-colors">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -277,9 +210,8 @@
             <div id="lista-categorias"></div>
         </div>
 
-    </div><!-- cierre bg-white tabs -->
+    </div>
 
-    <!-- TOAST FUERA DE LOS TABS -->
     <div id="toast" class="fixed bottom-6 right-6 px-5 py-3 rounded-xl font-bold text-white shadow-lg opacity-0 z-50 transition-all"></div>
 
     <!-- MODAL CERRAR SESIÓN -->
@@ -294,13 +226,8 @@
             </div>
             <div class="flex gap-3 w-full">
                 <button onclick="document.getElementById('modal-logout').classList.add('hidden')"
-                    class="flex-1 py-3 border-2 border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl font-black text-sm transition-colors">
-                    Cancelar
-                </button>
-                <a href="/usuarios/logout/"
-                    class="flex-1 py-3 bg-[#DC2626] text-white hover:bg-[#DC2626]/90 rounded-xl font-black text-sm transition-colors text-center">
-                    Sí, salir
-                </a>
+                    class="flex-1 py-3 border-2 border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl font-black text-sm transition-colors">Cancelar</button>
+                <a href="/usuarios/logout/" class="flex-1 py-3 bg-[#DC2626] text-white hover:bg-[#DC2626]/90 rounded-xl font-black text-sm transition-colors text-center">Sí, salir</a>
             </div>
         </div>
     </div>
@@ -366,6 +293,95 @@ async function api(url, method = 'GET', body = null) {
     }
     const res = await fetch(url, opts);
     return res.json();
+}
+
+// ── WEBSOCKET RESTAURANTE ─────────────────────────────────────
+const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+const wsRestaurante = new WebSocket(`${wsProtocol}//${window.location.host}/ws/pedidos/restaurante/${RESTAURANTE_ID}/`);
+wsRestaurante.onopen = () => console.log('🟢 WebSocket restaurante conectado');
+wsRestaurante.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.tipo === 'nuevo_pedido') {
+        mostrarToast(`🛎️ Nuevo pedido de ${data.cliente}`);
+        cargarPedidos();
+    }
+};
+wsRestaurante.onerror = (e) => console.error('❌ WebSocket error:', e);
+
+// ── PEDIDOS REALES ────────────────────────────────────────────
+async function cargarPedidos() {
+    const data = await api(`/api/pedidos/activos/`);
+    const contenedor = document.getElementById('lista-pedidos');
+
+    const activos = data.filter(p => ['pendiente', 'aceptado', 'preparando'].includes(p.estado));
+    const entregados = data.filter(p => p.estado === 'entregado');
+    const preparando = data.filter(p => p.estado === 'preparando');
+    const ventas = entregados.reduce((acc, p) => acc + parseFloat(p.total || 0), 0);
+
+    document.getElementById('stat-pedidos').textContent = data.length;
+    document.getElementById('stat-preparando').textContent = preparando.length;
+    document.getElementById('stat-completados').textContent = entregados.length;
+    document.getElementById('stat-ventas').textContent = '$' + ventas.toLocaleString('es-CO');
+
+    if (activos.length === 0) {
+        contenedor.innerHTML = `<div class="text-center py-8 text-gray-400"><i class="fas fa-shopping-bag text-4xl mb-3 text-gray-200"></i><p class="text-sm">No hay pedidos activos</p></div>`;
+        return;
+    }
+
+    contenedor.innerHTML = activos.map(p => {
+        const esNuevo = p.estado === 'pendiente';
+        return `
+        <div class="border-2 ${esNuevo ? 'border-[#DC2626]' : 'border-yellow-300 bg-yellow-50'} rounded-2xl overflow-hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-5 gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 ${esNuevo ? 'bg-red-50' : 'bg-yellow-100'} rounded-xl flex items-center justify-center">
+                        <i class="fas ${esNuevo ? 'fa-shopping-bag text-[#DC2626]' : 'fa-fire text-yellow-500'} text-2xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <h3 class="font-black text-gray-900 text-lg">Pedido #${String(p.id).padStart(3,'0')}</h3>
+                            <span class="text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 ${esNuevo ? 'bg-[#DC2626] text-white' : 'bg-yellow-400 text-white'}">
+                                ${esNuevo ? '<span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> Nuevo' : 'Preparando'}
+                            </span>
+                        </div>
+                        <p class="text-gray-500 text-sm">${p.detalles_count ?? 0} productos · Cliente: ${p.cliente_nombre ?? ''}</p>
+                        <p class="${esNuevo ? 'text-[#DC2626]' : 'text-yellow-600'} font-black">$${Number(p.total).toLocaleString('es-CO')}</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    ${esNuevo ? `
+                        <button onclick="accionPedido(${p.id}, 'aceptado')" class="bg-green-500 text-white px-4 py-2 rounded-xl font-black text-sm hover:bg-green-600 transition-colors flex items-center gap-2">
+                            <i class="fas fa-check"></i> Aceptar
+                        </button>
+                        <button onclick="accionPedido(${p.id}, 'cancelado')" class="bg-red-100 text-red-600 px-4 py-2 rounded-xl font-black text-sm hover:bg-red-200 transition-colors flex items-center gap-2">
+                            <i class="fas fa-times"></i> Rechazar
+                        </button>
+                    ` : `
+                        <button onclick="accionPedido(${p.id}, 'enviado')" class="bg-blue-500 text-white px-4 py-2 rounded-xl font-black text-sm hover:bg-blue-600 transition-colors flex items-center gap-2">
+                            <i class="fas fa-motorcycle"></i> Listo para enviar
+                        </button>
+                    `}
+                </div>
+            </div>
+            <div class="border-t ${esNuevo ? 'border-gray-100 bg-gray-50' : 'border-yellow-200'} px-5 py-3">
+                <p class="text-gray-500 text-sm flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt text-[#DC2626]"></i>
+                    Entregar en: ${p.direccion_entrega ?? ''}
+                </p>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+async function accionPedido(pedidoId, nuevoEstado) {
+    const data = await api(`/api/pedidos/${pedidoId}/estado/`, 'POST', { estado: nuevoEstado });
+    if (data.ok) {
+        const msgs = { aceptado: '✅ Pedido aceptado', cancelado: '❌ Pedido rechazado', enviado: '🛵 Pedido enviado al repartidor' };
+        mostrarToast(msgs[nuevoEstado] || '✅ Listo');
+        cargarPedidos();
+    } else {
+        mostrarToast('❌ Error al actualizar el pedido', true);
+    }
 }
 
 function showTab(tab) {
@@ -448,7 +464,7 @@ async function cargarCategoriasSelect() {
     const data = await api(`/api/categorias/`);
     const mias = data.filter(c => Number(c.restaurante) === Number(RESTAURANTE_ID));
     const select = document.getElementById('select-categoria');
-    select.innerHTML = `<option value="">Selecciona categoría</option>` + 
+    select.innerHTML = `<option value="">Selecciona categoría</option>` +
         mias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
 }
 
@@ -507,9 +523,7 @@ async function abrirEditar(id) {
     document.getElementById('modal-editar').classList.remove('hidden');
 }
 
-function cerrarEditar() {
-    document.getElementById('modal-editar').classList.add('hidden');
-}
+function cerrarEditar() { document.getElementById('modal-editar').classList.add('hidden'); }
 
 async function guardarEdicion() {
     const id = document.getElementById('edit-id').value;
@@ -546,20 +560,6 @@ async function cargarCategorias() {
             </div>`).join('');
 }
 
-async function crearCategoria() {
-    const nombre = document.getElementById('cat-nombre').value.trim();
-    if (!nombre) return mostrarToast('❌ Escribe un nombre', true);
-    const res = await fetch('/api/categorias/crear/', {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
-        body: JSON.stringify({ nombre, restaurante: RESTAURANTE_ID }),
-    });
-    const data = await res.json();
-    if (data.mensaje) { mostrarToast('✅ Categoría creada'); document.getElementById('cat-nombre').value = ''; cargarCategorias(); }
-    else mostrarToast('❌ Error al crear', true);
-}
-
 async function eliminarCategoria(id) {
     if (!confirm('¿Eliminar esta categoría?')) return;
     await api(`/api/categorias/${id}/eliminar/`, 'DELETE');
@@ -578,9 +578,7 @@ async function editarCategoria(id) {
 function toggleNuevaCategoria() {
     const form = document.getElementById('form-nueva-categoria');
     form.classList.toggle('hidden');
-    if (!form.classList.contains('hidden')) {
-        document.getElementById('nueva-cat-nombre').focus();
-    }
+    if (!form.classList.contains('hidden')) document.getElementById('nueva-cat-nombre').focus();
 }
 
 async function crearCategoriaInline() {
@@ -597,21 +595,18 @@ async function crearCategoriaInline() {
         mostrarToast('✅ Categoría creada');
         document.getElementById('nueva-cat-nombre').value = '';
         toggleNuevaCategoria();
-        cargarCategoriasSelect(); // recarga el select con la nueva categoría
+        cargarCategoriasSelect();
     } else {
         mostrarToast('❌ Error al crear', true);
     }
 }
 
-function confirmarSalir() {
-    if (confirm('¿Cerrar sesión?')) {
-        window.location.href = '/usuarios/logout/';
-    }
-}
-
-cargarProductos();
-cargarCategorias();
-cargarCategoriasSelect();
+document.addEventListener('DOMContentLoaded', () => {
+    cargarPedidos();
+    cargarProductos();
+    cargarCategorias();
+    cargarCategoriasSelect();
+});
 </script>
 
 {% endblock %}

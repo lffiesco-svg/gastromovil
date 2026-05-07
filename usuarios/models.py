@@ -32,6 +32,8 @@ class Direccion(models.Model):
     barrio = models.CharField(max_length=100)
     referencia = models.CharField(max_length=200, blank=True)
     es_principal = models.BooleanField(default=False)
+    latitud = models.FloatField(null=True, blank=True)   # ← NUEVO
+    longitud = models.FloatField(null=True, blank=True)  # ← NUEVO
 
     def __str__(self):
         return f"{self.calle}, {self.barrio}"
