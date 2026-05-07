@@ -219,6 +219,11 @@ def panel_restaurante(request):
 
 # ── CONTACTO ─────────────────────────────────────────────────
 
+PALABRAS_PROHIBIDAS = [
+    "mierda","puta","hijueputa","gonorrea","malparido","idiota",
+    "pendejo","cabron","puto","zorra","verga","fuck","shit","bitch"
+]
+
 def contacto(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre', '').strip()
