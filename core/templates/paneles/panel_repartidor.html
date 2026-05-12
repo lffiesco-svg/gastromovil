@@ -177,7 +177,7 @@
                                     <button id="btn-iniciar-{{ pedido.id }}" onclick="iniciarCompartir({{ pedido.id }})" class="flex-1 bg-[#DC2626] text-white py-3 rounded-xl font-black text-sm hover:bg-red-700 transition-colors">
                                         <i class="fas fa-location-arrow mr-2"></i> Iniciar rastreo
                                     </button>
-                                    <button id="btn-detener-{{ pedido.id }}" onclick="detenerCompartir({{ pedido.id }})" class="flex-1 bg-gray-700 text-white py-3 rounded-xl font-black text-sm hover:bg-gray-800 transition-colors hidden">
+                                    <button id="btn-detener-{{ pedido.id }}" onclick="detenerCompartir({{ pedido.id }})" class="flex-1 bg-[#DC2626] text-white py-3 rounded-xl font-black text-sm hover:bg-gray-800 transition-colors hidden">
                                         <i class="fas fa-stop mr-2"></i> Detener
                                     </button>
                                 </div>
@@ -314,11 +314,11 @@ async function iniciarMapa(pedidoId, calleDestino, barrioDestino, latGuardada, l
     }).addTo(mapa);
 
     const iconoDestino = L.divIcon({
-        html: `<div style="background:#DC2626;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.4);color:white;font-weight:bold;font-size:13px;">D</div>`,
+        html: `<div style="background:#DC2626;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.4);color:red;font-weight:bold;font-size:13px;">🛵</div>`,
         className: '', iconSize: [36, 36], iconAnchor: [18, 18],
     });
     const iconoRepartidor = L.divIcon({
-        html: `<div style="background:#2563EB;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.4);color:white;font-weight:bold;font-size:13px;">R</div>`,
+        html: `<div style="background:#2563EB;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.4);color:white;font-weight:bold;font-size:13px;">📍</div>`,
         className: '', iconSize: [36, 36], iconAnchor: [18, 18],
     });
 

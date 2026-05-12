@@ -29,6 +29,28 @@
                 line-height: 1;
                 pointer-events: none;
             }
+
+            /* Navbar siempre por encima de todo */
+            nav {
+                isolation: isolate;
+                z-index: 9999 !important;
+                position: sticky !important;
+            }
+
+            /* Evita que imágenes y mapas se salgan de su contenedor */
+            img {
+                z-index: 0;
+                position: relative;
+            }
+
+            /* Leaflet map z-index controlado */
+            .leaflet-pane {
+                z-index: 1 !important;
+            }
+            .leaflet-top,
+            .leaflet-bottom {
+                z-index: 2 !important;
+            }
         </style>
     </head>
     <body class="bg-[#1a0a0a] text-white">
@@ -225,6 +247,7 @@
 
     <script src="{% static 'js/main.js' %}?v=3"></script>
     <script>
+        
     function toggleDropdown() {
         const menu = document.getElementById('dropdownMenu');
         menu.classList.toggle('hidden');
