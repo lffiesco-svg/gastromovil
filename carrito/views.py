@@ -21,7 +21,7 @@ BARRIOS_GARZON = {
     'la primavera', 'alto de la cruz', 'la independencia', 'villa hermosa',
     'el mirador', 'san francisco', 'la esmeralda', 'el triunfo', 'el refugio',
     'villa del sol', 'la trinidad', 'las palmas', 'el prado', 'la serena',
-    'villa alegre', 'santa cecilia', 'el retiro', 'la ceiba',
+    'villa alegre', 'santa cecilia', 'el retiro', 'la ceiba', 'nazaret'
 }
 
 def barrio_valido(barrio):

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load l10n %}
 {% block navbar %}{% endblock %} 
 {% block title %}Panel Repartidor - GastroWeb{% endblock %}
 {% block content %}
@@ -128,7 +129,7 @@
                         </div>
                         <div class="flex gap-2 flex-wrap">
                             <!-- ✅ Pasa coordenadas guardadas si existen, si no null -->
-                            <button onclick="toggleMapa('mapa-{{ pedido.id }}', {{ pedido.id }}, '{{ pedido.direccion_entrega.calle|escapejs }}', '{{ pedido.direccion_entrega.barrio|escapejs }}', {{ pedido.direccion_entrega.latitud|default:'null' }}, {{ pedido.direccion_entrega.longitud|default:'null' }})" class="bg-blue-500 text-white px-5 py-2 rounded-xl font-black text-sm hover:bg-blue-600 transition-colors flex items-center gap-2">
+                            <button onclick="toggleMapa('mapa-{{ pedido.id }}', {{ pedido.id }}, '{{ pedido.direccion_entrega.calle|escapejs }}', '{{ pedido.direccion_entrega.barrio|escapejs }}', {{ pedido.direccion_entrega.latitud|unlocalize }}, {{ pedido.direccion_entrega.longitud|unlocalize }})" class="bg-blue-500 text-white px-5 py-2 rounded-xl font-black text-sm hover:bg-blue-600 transition-colors flex items-center gap-2">
                                 <i class="fas fa-map-marker-alt"></i> Ver ruta
                             </button>
                             <button onclick="marcarEntregado({{ pedido.id }})" class="bg-green-500 text-white px-5 py-2 rounded-xl font-black text-sm hover:bg-green-600 transition-colors flex items-center gap-2">
@@ -337,11 +338,11 @@ async function iniciarMapa(pedidoId, calleDestino, barrioDestino, latGuardada, l
     }).addTo(mapa);
 
     const iconoDestino = L.divIcon({
-        html: `<div style="background:#DC2626;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.4);color:red;font-weight:bold;font-size:13px;">🛵</div>`,
+        html: `<div style="background:#2563EB;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.4);color:red;font-weight:bold;font-size:13px;">📍</div>`,
         className: '', iconSize: [36, 36], iconAnchor: [18, 18],
     });
     const iconoRepartidor = L.divIcon({
-        html: `<div style="background:#2563EB;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.4);color:white;font-weight:bold;font-size:13px;">📍</div>`,
+        html: `<div style="background:#DC2626;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.4);color:white;font-weight:bold;font-size:13px;">🛵</div>`,
         className: '', iconSize: [36, 36], iconAnchor: [18, 18],
     });
 
@@ -519,5 +520,9 @@ function showTab(tab) {
     activeBtn.classList.remove('text-gray-500');
 }
 </script>
+{% block extra_js %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% endblock %}
 
 {% endblock %}
