@@ -31,14 +31,26 @@
                 pointer-events: none;
             }
 
-            #modal-login-global {
-                position: fixed !important;
-                z-index: 99999 !important;
+            /* Navbar siempre por encima de todo */
+            nav {
+                isolation: isolate;
+                z-index: 9999 !important;
+                position: sticky !important;
             }
 
-            #modal-login-global > div {
+            /* Evita que imágenes y mapas se salgan de su contenedor */
+            img {
+                z-index: 0;
                 position: relative;
-                z-index: 100000 !important;
+            }
+
+            /* Leaflet map z-index controlado */
+            .leaflet-pane {
+                z-index: 1 !important;
+            }
+            .leaflet-top,
+            .leaflet-bottom {
+                z-index: 2 !important;
             }
         </style>
     </head>
