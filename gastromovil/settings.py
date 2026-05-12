@@ -31,7 +31,6 @@ SESSION_SAVE_EVERY_REQUEST = True
 INSTALLED_APPS = [
     'daphne',
     'jazzmin',
-    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,7 +48,6 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'chatbot',
-    'channels',
     'django.contrib.sites',
     'allauth',
     'allauth.account',

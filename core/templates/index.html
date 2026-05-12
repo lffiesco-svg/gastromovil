@@ -23,7 +23,8 @@
     </div>
 
     <div class="flex-1 flex items-center justify-center w-full max-w-lg">
-        <div class="relative w-full h-80 md:h-[420px] rounded-3xl overflow-hidden shadow-2xl bg-black z-0">
+        <!-- FIX: quitado z-0 para no crear stacking context innecesario -->
+        <div class="relative w-full h-80 md:h-[420px] rounded-3xl overflow-hidden shadow-2xl bg-black">
             <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-100">
                 <img src="{% static 'img/hamburg.png' %}" alt="Plato 1" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
@@ -57,7 +58,7 @@
 {% if messages %}
     {% for msg in messages %}
     <div id="toast-contacto"
-         class="fixed top-6 right-6 z-50 bg-green-500 text-white px-6 py-4 rounded-2xl shadow-xl font-bold text-sm flex items-center gap-3">
+         class="fixed top-6 right-6 z-[9999] bg-green-500 text-white px-6 py-4 rounded-2xl shadow-xl font-bold text-sm flex items-center gap-3">
         <i class="fas fa-check-circle text-xl"></i>
         {{ msg }}
     </div>
@@ -212,8 +213,8 @@
     </div>
 </section>
 
-<!-- Modal respuesta IA -->
-<div id="modal-sorprendeme" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4" onclick="if(event.target===this) cerrarModalSorprendeme()">
+<!-- Modal respuesta IA — FIX: z-[9999] en vez de z-50 -->
+<div id="modal-sorprendeme" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4" onclick="if(event.target===this) cerrarModalSorprendeme()">
     <div class="bg-[#1a0a0a] border border-[#DC2626]/30 rounded-3xl shadow-2xl p-5 max-w-sm w-full text-center relative">
         <div class="w-12 h-12 bg-gradient-to-br from-[#CC0000] to-[#FFD60A] rounded-2xl flex items-center justify-center mx-auto mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
