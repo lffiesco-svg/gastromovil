@@ -37,7 +37,7 @@
 </div>
 
 <script>
-    const repartidorId = 2;
+    const repartidorId = {{ request.user.id }};
     const wsUrl = `ws://${window.location.host}/ws/ubicacion/${repartidorId}/`;
     let socket = null;
     let watchId = null;

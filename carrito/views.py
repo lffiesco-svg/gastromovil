@@ -1,12 +1,31 @@
 import json
+import re
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, get_object_or_404
 from restaurantes.models import Producto, Restaurante
 from .cart import Carrito
+from usuarios.models import Direccion
+from decouple import config
 
 DOMICILIO = 3000
+
+BARRIOS_GARZON = {
+    'centro', 'bello horizonte', 'villa del rio', 'la paz', 'el jardin',
+    'san jose', 'la esperanza', 'el recreo', 'las americas', 'el bosque',
+    'villa cafe', 'santa barbara', 'el porvenir', 'los angeles', 'la union',
+    'villa lucia', 'el paraiso', 'la colombia', 'nuevo horizonte', 'villa del prado',
+    'el progreso', 'la aurora', 'san martin', 'villa del carmen', 'la floresta',
+    'el eden', 'la victoria', 'san pedro', 'villa nueva', 'el rosario',
+    'la primavera', 'alto de la cruz', 'la independencia', 'villa hermosa',
+    'el mirador', 'san francisco', 'la esmeralda', 'el triunfo', 'el refugio',
+    'villa del sol', 'la trinidad', 'las palmas', 'el prado', 'la serena',
+    'villa alegre', 'santa cecilia', 'el retiro', 'la ceiba',
+}
+
+def barrio_valido(barrio):
+    return barrio.lower().strip() in BARRIOS_GARZON
 
 
 @login_required
@@ -89,16 +108,54 @@ def confirmar_pedido(request):
     from pedidos.models import Pedido, DetallePedido
     from channels.layers import get_channel_layer
     from asgiref.sync import async_to_sync
+    import urllib.request as urlreq
+    import urllib.parse
 
     carrito = Carrito(request)
     if not carrito.carrito:
         return JsonResponse({'ok': False, 'error': 'El carrito está vacío'})
 
     body = json.loads(request.body)
-    direccion = body.get('direccion', '')
-    barrio = body.get('barrio', '')
+    direccion = body.get('direccion', '').strip()
+    barrio = body.get('barrio', '').strip()
     notas = body.get('notas', '')
     metodo_pago = body.get('metodo_pago', '')
+
+    # ── VALIDACIONES BACKEND ──────────────────────────────────
+    if not direccion or not barrio:
+        return JsonResponse({'ok': False, 'error': 'Completa la dirección y el barrio.'})
+
+    if len(direccion) < 5:
+        return JsonResponse({'ok': False, 'error': 'La dirección es muy corta.'})
+
+    if not re.search(r'\d', direccion):
+        return JsonResponse({'ok': False, 'error': 'La dirección debe incluir un número. Ej: Calle 5 # 10-20'})
+
+    if not re.search(r'[a-zA-ZáéíóúÁÉÍÓÚñÑ]', direccion):
+        return JsonResponse({'ok': False, 'error': 'La dirección debe contener letras y números.'})
+
+    if not barrio_valido(barrio):
+        return JsonResponse({'ok': False, 'error': 'El barrio ingresado no es válido. Verifica el nombre de tu barrio en Garzón.'})
+
+    metodos_validos = ['efectivo', 'nequi', 'daviplata']
+    if metodo_pago not in metodos_validos:
+        return JsonResponse({'ok': False, 'error': 'Método de pago inválido.'})
+    # ─────────────────────────────────────────────────────────
+
+    # ── GEOCODIFICAR CON GOOGLE MAPS ──────────────────────────
+    GOOGLE_API_KEY = config('GOOGLE_API_KEY')
+    lat, lng = None, None
+    try:
+        query = urllib.parse.quote(f"{direccion}, {barrio}, Garzón, Huila, Colombia")
+        url = f"https://maps.googleapis.com/maps/api/geocode/json?address={query}&key={GOOGLE_API_KEY}"
+        with urlreq.urlopen(url, timeout=5) as r:
+            geo = json.loads(r.read())
+        if geo['status'] == 'OK':
+            loc = geo['results'][0]['geometry']['location']
+            lat, lng = loc['lat'], loc['lng']
+    except Exception as e:
+        print(f"Error geocodificando: {e}")
+    # ─────────────────────────────────────────────────────────
 
     items_por_restaurante = {}
     for pid, item in carrito.carrito.items():
@@ -115,12 +172,24 @@ def confirmar_pedido(request):
             float(item['precio']) * item['cantidad'] for _, item in items
         )
 
+        direccion_obj, creada = Direccion.objects.get_or_create(
+            usuario=request.user,
+            calle=direccion,
+            barrio=barrio,
+            defaults={'referencia': notas, 'latitud': lat, 'longitud': lng}
+        )
+        if not creada and lat and (direccion_obj.latitud is None):
+            direccion_obj.latitud = lat
+            direccion_obj.longitud = lng
+            direccion_obj.save()
+
         pedido = Pedido.objects.create(
             cliente=request.user,
             restaurante=restaurante,
             estado='pendiente',
             total=total_restaurante + DOMICILIO,
-            notas=f"Dirección: {direccion}, Barrio: {barrio}. {notas} | Pago: {metodo_pago}",
+            notas=f"{notas} | Pago: {metodo_pago}",
+            direccion_entrega=direccion_obj,
         )
 
         for pid, item in items:

@@ -132,11 +132,11 @@
                     <div class="flex flex-col gap-4">
                         <div>
                             <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Dirección</label>
-                            <input type="text" id="direccion" placeholder="Ej: Calle 5 # 10-20" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                            <input type="text" id="direccion" placeholder="Ej: Calle 5 # 10-20" maxlenght="80" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s#\-\.]+" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
                         </div>
                         <div>
                             <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Barrio</label>
-                            <input type="text" id="barrio" placeholder="Ej: Centro" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
+                            <input type="text" id="barrio" placeholder="Ej: Centro" maxlenght="40" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
                         </div>
                         <div>
                             <label class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">Indicaciones adicionales</label>
@@ -241,6 +241,14 @@
 <script>
 const CSRF = '{{ csrf_token }}';
 
+document.getElementById('direccion').addEventListener('input', function() {
+    this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s#\-\.]/g, '');
+});
+
+document.getElementById('barrio').addEventListener('input', function() {
+    this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+});
+
 document.querySelectorAll('.btn-sumar').forEach(btn => {
     btn.addEventListener('click', async () => {
         const res = await fetch(`/carrito/agregar/${btn.dataset.id}/`, {
@@ -290,6 +298,26 @@ if (btnVaciarConfirmar) {
     });
 }
 
+function swalError(titulo, texto) {
+    return Swal.fire({
+        title: titulo,
+        text: texto,
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#DC2626',
+        background: '#2a1010',
+        color: '#ffffff',
+        iconColor: '#DC2626',
+        borderRadius: '24px',
+    });
+}
+
+// Detecta si un texto parece teclado aleatorio
+// (más de 4 consonantes seguidas sin vocales = basura)
+function pareceAleatorio(texto) {
+    return /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/.test(texto);
+}
+
 const btnPagar = document.getElementById('btn-pagar');
 if (btnPagar) {
     btnPagar.addEventListener('click', async () => {
@@ -298,7 +326,32 @@ if (btnPagar) {
         const notas = document.getElementById('notas').value.trim();
         const metodo = document.getElementById('metodo-pago').value;
 
-        if (!direccion || !barrio) return alert('Por favor completa la dirección y el barrio.');
+        if (!direccion || !barrio) {
+            swalError('Campos incompletos', 'Por favor completa la dirección y el barrio.');
+            return;
+        }
+
+        if (direccion.length < 5) {
+            swalError('Dirección muy corta', 'Ingresa una dirección más completa. Ej: Calle 5 # 10-20');
+            return;
+        }
+
+        // La dirección debe tener al menos un número (toda dirección real lo tiene)
+        if (!/\d/.test(direccion)) {
+            swalError('Dirección inválida', 'La dirección debe incluir un número. Ej: Calle 5 # 10-20');
+            return;
+        }
+
+        if (barrio.length < 3) {
+            swalError('Barrio inválido', 'El barrio debe tener al menos 3 caracteres.');
+            return;
+        }
+
+        if (pareceAleatorio(direccion) || pareceAleatorio(barrio)) {
+            swalError('Datos inválidos', 'Por favor ingresa una dirección y barrio reales.');
+            return;
+        }
+
         if (!metodo) {
             document.getElementById('modal-sin-pago').classList.remove('hidden');
             return;
@@ -316,7 +369,17 @@ if (btnPagar) {
         if (data.ok) {
             window.location.href = `/pedidos/${data.pedido_id}/`;
         } else {
-            alert(data.error || 'Error al crear el pedido.');
+            Swal.fire({
+                title: 'Error',
+                text: data.error || 'Error al crear el pedido.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#DC2626',
+                background: '#2a1010',
+                color: '#ffffff',
+                iconColor: '#DC2626',
+                borderRadius: '24px',
+            });
             btnPagar.disabled = false;
             btnPagar.innerHTML = '<i class="fas fa-bag-shopping mr-2"></i> Pagar Ahora';
         }

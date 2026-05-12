@@ -10,7 +10,6 @@
         <div class="bg-white rounded-2xl shadow-md p-8">
             <h2 class="font-black text-2xl text-gray-900 mb-6">Envíanos un mensaje</h2>
 
-            <!-- Mensajes de éxito / error -->
             {% if messages %}
                 {% for msg in messages %}
                 <div data-mensaje class="mb-5 px-4 py-3 rounded-xl font-semibold text-sm
@@ -24,7 +23,7 @@
                     {{ msg }}
                 </div>
                 {% endfor %}
-            {% endif %} 
+            {% endif %}
 
             <form method="post" action="{% url 'contacto' %}">
                 {% csrf_token %}
@@ -38,7 +37,7 @@
                                 value="{{ form_data.nombre|default:'' }}"
                                 placeholder="Tu nombre completo"
                                 class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400">
-                        </div>
+                    </div>
 
                     <div>
                         <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">
@@ -76,7 +75,7 @@
                         <label class="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 block">
                             Mensaje <span class="text-red-500">*</span>
                         </label>
-                        <textarea name="mensaje" required
+                        <textarea name="mensaje" id="mensaje" required
                                     placeholder="Describe tu consulta en detalle..."
                                     class="w-full bg-gray-50 text-gray-800 px-4 py-3 rounded-xl outline-none border border-gray-200 focus:border-[#DC2626] transition-colors placeholder-gray-400 h-32 resize-none">{{ form_data.mensaje|default:'' }}</textarea>
                     </div>
@@ -109,7 +108,6 @@
             <!-- INFORMACION DE CONTACTO -->
             <div class="bg-white rounded-2xl shadow-md p-8 flex flex-col gap-6">
                 <h2 class="font-black text-2xl text-gray-900">Información de contacto</h2>
-
                 <div class="flex items-start gap-4">
                     <div class="p-3 bg-red-100 rounded-xl">
                         <i class="fas fa-map-marker-alt text-[#DC2626] text-xl"></i>
@@ -119,7 +117,6 @@
                         <p class="text-gray-500 text-sm">Garzón, Huila, Colombia</p>
                     </div>
                 </div>
-
                 <div class="flex items-start gap-4">
                     <div class="p-3 bg-green-100 rounded-xl">
                         <i class="fas fa-phone text-green-600 text-xl"></i>
@@ -130,7 +127,6 @@
                         <p class="text-gray-500 text-sm">WhatsApp: +57 320 846 0726</p>
                     </div>
                 </div>
-
                 <div class="flex items-start gap-4">
                     <div class="p-3 bg-purple-100 rounded-xl">
                         <i class="fas fa-envelope text-purple-600 text-xl"></i>
@@ -140,7 +136,6 @@
                         <p class="text-gray-500 text-sm">gastromovil3063679@gmail.com</p>
                     </div>
                 </div>
-
                 <div class="flex items-start gap-4">
                     <div class="p-3 bg-red-100 rounded-xl">
                         <i class="fas fa-clock text-[#DC2626] text-xl"></i>
@@ -154,45 +149,45 @@
                 </div>
             </div>
 
-           <!-- REDES SOCIALES -->
-<div class="bg-white rounded-2xl shadow-md p-8">
-    <h2 class="font-black text-xl text-gray-900 mb-6">Síguenos en redes sociales</h2>
-    <div class="grid grid-cols-2 gap-4">
+            <!-- REDES SOCIALES -->
+            <div class="bg-white rounded-2xl shadow-md p-8">
+                <h2 class="font-black text-xl text-gray-900 mb-6">Síguenos en redes sociales</h2>
+                <div class="grid grid-cols-2 gap-4">
 
-        <a href="#" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all">
-            <i class="fab fa-facebook-f text-blue-600 text-xl"></i>
-            <div>
-                <p class="font-bold text-gray-800 text-sm">Facebook</p>
-                <p class="text-gray-400 text-xs">@gastroweb</p>
+                    <a href="#" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all">
+                        <i class="fab fa-facebook-f text-blue-600 text-xl"></i>
+                        <div>
+                            <p class="font-bold text-gray-800 text-sm">Facebook</p>
+                            <p class="text-gray-400 text-xs">@gastroweb</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-pink-400 hover:bg-pink-50 transition-all">
+                        <i class="fab fa-instagram text-pink-600 text-xl"></i>
+                        <div>
+                            <p class="font-bold text-gray-800 text-sm">Instagram</p>
+                            <p class="text-gray-400 text-xs">@gastroweb</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-black hover:bg-gray-100 transition-all">
+                        <i class="fab fa-x-twitter text-gray-900 text-xl"></i>
+                        <div>
+                            <p class="font-bold text-gray-800 text-sm">X</p>
+                            <p class="text-gray-400 text-xs">@gastroweb</p>
+                        </div>
+                    </a>
+
+                    <a href="https://wa.me/573208460726" target="_blank" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all">
+                        <i class="fab fa-whatsapp text-green-500 text-xl"></i>
+                        <div>
+                            <p class="font-bold text-gray-800 text-sm">WhatsApp</p>
+                            <p class="text-gray-400 text-xs">+57 320 846 0726</p>
+                        </div>
+                    </a>
+
+                </div>
             </div>
-        </a>
-
-        <a href="#" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-pink-400 hover:bg-pink-50 transition-all">
-            <i class="fab fa-instagram text-pink-600 text-xl"></i>
-            <div>
-                <p class="font-bold text-gray-800 text-sm">Instagram</p>
-                <p class="text-gray-400 text-xs">@gastroweb</p>
-            </div>
-        </a>
-
-        <a href="#" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all">
-            <i class="fab fa-x-twitter text-gray-900 text-xl"></i>
-            <div>
-                <p class="font-bold text-gray-800 text-sm">X</p>
-                <p class="text-gray-400 text-xs">@gastroweb</p>
-            </div>
-        </a>
-
-        <a href="https://wa.me/573208460726" target="_blank" class="flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all">
-            <i class="fab fa-whatsapp text-green-500 text-xl"></i>
-            <div>
-                <p class="font-bold text-gray-800 text-sm">WhatsApp</p>
-                <p class="text-gray-400 text-xs">+57 320 846 0726</p>
-            </div>
-        </a>
-
-    </div>
-</div>
 
             <!-- POR QUE ELEGIRNOS -->
             <div class="bg-red-50 rounded-2xl shadow-md p-8">
@@ -221,6 +216,25 @@
     </div>
 </section>
 
+<!-- MODAL GROSERÍAS -->
+<div id="modal-groseria" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(0,0,0,0.55);">
+    <div style="background:white; border-radius:1.25rem; padding:2.5rem; max-width:26rem; width:90%; text-align:center; box-shadow:0 25px 50px rgba(0,0,0,0.25);">
+        <div style="display:flex; justify-content:center; margin-bottom:1.25rem;">
+            <div style="background:#FEE2E2; border-radius:9999px; padding:1.25rem;">
+                <i class="fas fa-ban" style="color:#DC2626; font-size:2.5rem;"></i>
+            </div>
+        </div>
+        <h3 style="font-size:1.5rem; font-weight:900; color:#111827; margin:0 0 0.5rem;">Mensaje no enviado</h3>
+        <p style="color:#6B7280; font-size:0.9rem; line-height:1.6; margin:0 0 1.5rem;">
+            Tu mensaje contiene lenguaje inapropiado o groserías.<br>
+            Por favor usa un lenguaje respetuoso para poder enviarlo.
+        </p>
+        <button id="btn-cerrar-modal" type="button"
+                style="width:100%; background:#DC2626; color:white; padding:0.9rem; border-radius:0.75rem; font-weight:900; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; border:none; cursor:pointer;">
+            Entendido, voy a corregirlo
+        </button>
+    </div>
+</div>
 
 {% block extra_js %}
 <script>
@@ -230,9 +244,42 @@
             el.style.opacity = '0';
             setTimeout(() => el.remove(), 500);
         });
-    }, 4000); 
+    }, 4000);
+
+    const PALABRAS_PROHIBIDAS = [
+        "mierda","puta","hijueputa","hijuepucha","marica","gonorrea",
+        "malparido","malparida","idiota","imbecil","estupido","pendejo",
+        "pendeja","cabron","joder","puto","perra","zorra","culo","verga",
+        "fuck","shit","careverga","estupida","bastard","crap","tonta","tonto"
+    ];
+
+    function contieneGroseria(texto) {
+        const lower = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return PALABRAS_PROHIBIDAS.some(p => {
+            const pn = p.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return new RegExp("\\b" + pn + "\\b", "i").test(lower);
+        });
+    }
+
+    const modal = document.getElementById("modal-groseria");
+
+    function cerrarModal() {
+        modal.style.display = "none";
+        document.getElementById("mensaje").focus();
+    }
+
+    document.getElementById("btn-cerrar-modal").addEventListener("click", cerrarModal);
+
+    modal.addEventListener("click", function(e) {
+        if (e.target === this) cerrarModal();
+    });
+
+    document.querySelector("form").addEventListener("submit", function(e) {
+        if (contieneGroseria(document.getElementById("mensaje").value)) {
+            e.preventDefault();
+            modal.style.display = "flex";
+        }
+    });
 </script>
-
 {% endblock %}
-
-{% endblock %} 
+{% endblock %}
