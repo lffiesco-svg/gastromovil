@@ -29,6 +29,7 @@ SESSION_COOKIE_AGE = 1800
 SESSION_SAVE_EVERY_REQUEST = True
 
 INSTALLED_APPS = [
+    'daphne',
     'jazzmin',
     'daphne',
     'django.contrib.admin',
