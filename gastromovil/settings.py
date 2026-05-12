@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'contacto',
 ]
-SITE_ID = 2
+SITE_ID = 1
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 SOCIALACCOUNT_ADAPTER = 'gastromovil.adapters.CustomSocialAccountAdapter'

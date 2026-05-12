@@ -5,7 +5,8 @@ from restaurantes.models import Restaurante, Categoria, Producto
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.conf import settings
-
+from django.core.mail import EmailMultiAlternatives
+from usuarios.email_template import get_email_html, parrafo, nota
 
 def index(request):
     return render(request, 'index.html')
@@ -217,6 +218,12 @@ def panel_restaurante(request):
     })
 
 # ── CONTACTO ─────────────────────────────────────────────────
+
+PALABRAS_PROHIBIDAS = [
+    "mierda","puta","hijueputa","gonorrea","malparido","idiota",
+    "pendejo","cabron","puto","zorra","verga","fuck","shit","bitch"
+]
+
 def contacto(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre', '').strip()
@@ -234,31 +241,53 @@ def contacto(request):
             messages.error(request, 'Debes aceptar la política de privacidad.')
             return render(request, 'informacion/contacto.html', {'form_data': request.POST})
 
-        asunto = f'[GastroWeb] Consulta de {nombre} — {tipo}'
-        cuerpo = f"""
-Nueva consulta desde GastroWeb:
-
-👤 Nombre:   {nombre}
-📧 Correo:   {email}
-📞 Teléfono: {telefono or 'No indicado'}
-📋 Tipo:     {tipo}
-
-💬 Mensaje:
-{mensaje}
-        """.strip()
-
         try:
-            send_mail(
-                subject=asunto,
-                message=cuerpo,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.CONTACTO_EMAIL],
-                fail_silently=False,
+            html = get_email_html(
+                titulo='Nueva consulta de contacto',
+                contenido_central=
+                    parrafo(f'Has recibido una nueva consulta desde el formulario de <strong>GastroWeb</strong>.') +
+                    f"""
+                    <table width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0; border-radius:10px; overflow:hidden; border:1px solid #eeeeee;">
+                        <tr bgcolor="#fff5f5">
+                            <td style="padding:12px 20px; font-size:13px; color:#888; font-family:Arial,sans-serif; width:130px;">👤 Nombre</td>
+                            <td style="padding:12px 20px; font-size:14px; color:#333; font-family:Arial,sans-serif; font-weight:bold;">{nombre}</td>
+                        </tr>
+                        <tr bgcolor="#ffffff">
+                            <td style="padding:12px 20px; font-size:13px; color:#888; font-family:Arial,sans-serif;">📧 Correo</td>
+                            <td style="padding:12px 20px; font-size:14px; color:#333; font-family:Arial,sans-serif;">{email}</td>
+                        </tr>
+                        <tr bgcolor="#fff5f5">
+                            <td style="padding:12px 20px; font-size:13px; color:#888; font-family:Arial,sans-serif;">📞 Teléfono</td>
+                            <td style="padding:12px 20px; font-size:14px; color:#333; font-family:Arial,sans-serif;">{telefono or 'No indicado'}</td>
+                        </tr>
+                        <tr bgcolor="#ffffff">
+                            <td style="padding:12px 20px; font-size:13px; color:#888; font-family:Arial,sans-serif;">📋 Tipo</td>
+                            <td style="padding:12px 20px; font-size:14px; color:#333; font-family:Arial,sans-serif;">{tipo}</td>
+                        </tr>
+                        <tr bgcolor="#fff5f5">
+                            <td style="padding:12px 20px; font-size:13px; color:#888; font-family:Arial,sans-serif; vertical-align:top;">💬 Mensaje</td>
+                            <td style="padding:12px 20px; font-size:14px; color:#333; font-family:Arial,sans-serif; line-height:1.6;">{mensaje}</td>
+                        </tr>
+                    </table>
+                    """ +
+                    nota('Este mensaje fue enviado desde el formulario de contacto de GastroWeb.')
             )
+
+            email_msg = EmailMultiAlternatives(
+                subject=f'[GastroWeb] Consulta de {nombre} — {tipo}',
+                body=f'Nueva consulta de {nombre} ({email}): {mensaje}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[settings.CONTACTO_EMAIL],
+            )
+            email_msg.attach_alternative(html, "text/html")
+            email_msg.send(fail_silently=False)
+
             messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
-            return redirect('index')
+
         except Exception as e:
             print(f'[ERROR email contacto]: {e}')
             messages.error(request, 'Hubo un error al enviar el mensaje. Intenta de nuevo.')
+
+        return redirect('contacto')
 
     return render(request, 'informacion/contacto.html')
