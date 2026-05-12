@@ -290,12 +290,6 @@
 
     <script src="{% static 'js/main.js' %}?v=3"></script>
     <script>
-    // Overlay transparente para cerrar el dropdown al hacer clic afuera
-    const _overlayDD = document.createElement('div');
-    _overlayDD.style.cssText = 'display:none;position:fixed;inset:0;z-index:2147483646;';
-    _overlayDD.addEventListener('click', cerrarDropdown);
-    document.body.appendChild(_overlayDD);
-
     function toggleDropdown() {
         const menu = document.getElementById('dropdownMenu');
         if (menu.classList.contains('hidden')) {
