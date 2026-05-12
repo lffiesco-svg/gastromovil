@@ -293,9 +293,39 @@
         </div>
     </div>
 
+    <!-- MODAL INACTIVIDAD -->
+    <div id="modal-inactividad" class="hidden fixed inset-0 bg-black/70 z-[99999] flex items-center justify-center p-4" style="backdrop-filter: blur(6px);">
+        <div class="bg-[#2a1010] border border-[#4a2020] rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-5 shadow-2xl">
+            <div class="w-16 h-16 bg-[#DC2626]/20 rounded-full flex items-center justify-center">
+                <i class="fas fa-clock text-[#DC2626] text-2xl"></i>
+            </div>
+            <div class="text-center">
+                <h3 class="font-black text-white text-xl mb-1">¿Sigues ahí?</h3>
+                <p class="text-gray-400 text-sm">Tu sesión se cerrará por inactividad en <span id="cuenta-regresiva" class="text-[#DC2626] font-black">60</span> segundos.</p>
+            </div>
+            <div class="flex gap-3 w-full">
+                <button onclick="seguirActivo()"
+                    class="flex-1 py-3 bg-[#DC2626] text-white hover:bg-[#DC2626]/90 rounded-xl font-black text-sm transition-colors">
+                    Sí, seguir
+                </button>
+                <a href="{% url 'logout' %}"
+                    class="flex-1 py-3 border-2 border-[#4a2020] text-gray-300 hover:bg-[#4a2020]/30 rounded-xl font-black text-sm transition-colors text-center">
+                    Salir
+                </a>
+            </div>
+        </div>
+    </div>
+
     <script src="{% static 'js/main.js' %}?v=3"></script>
     <script>
-        
+
+    // Overlay transparente para cerrar el dropdown al hacer clic afuera
+    const _overlayDD = document.createElement('div');
+    _overlayDD.style.cssText = 'display:none;position:fixed;inset:0;z-index:2147483646;';
+    _overlayDD.addEventListener('click', cerrarDropdown);
+    document.body.appendChild(_overlayDD);
+
+
     function toggleDropdown() {
     const menu = document.getElementById('dropdownMenu');
     if (menu.classList.contains('hidden')) {
@@ -350,11 +380,69 @@ document.addEventListener('click', function(e) {
     }
     </script>
 
-    <script>
     {% if user.is_authenticated %}
-    sessionStorage.setItem('activo', '1');
-    {% endif %}
+    <script>
+    // =============================================
+    // CIERRE DE SESIÓN POR INACTIVIDAD - 15 MIN
+    // =============================================
+    const TIEMPO_INACTIVIDAD = 15 * 60 * 1000;
+    const TIEMPO_AVISO = 60;
+
+    let timerInactividad;
+    let timerCuentaRegresiva;
+    let segundosRestantes = TIEMPO_AVISO;
+    let throttleTimer = null;
+
+    function resetearTimer() {
+        clearTimeout(timerInactividad);
+        clearInterval(timerCuentaRegresiva);
+        ocultarModalInactividad();
+        timerInactividad = setTimeout(mostrarModalInactividad, TIEMPO_INACTIVIDAD);
+    }
+
+    function mostrarModalInactividad() {
+        segundosRestantes = TIEMPO_AVISO;
+        document.getElementById('cuenta-regresiva').textContent = segundosRestantes;
+        document.getElementById('modal-inactividad').style.display = 'flex';
+        document.getElementById('modal-inactividad').classList.remove('hidden');
+
+        timerCuentaRegresiva = setInterval(function() {
+            segundosRestantes--;
+            document.getElementById('cuenta-regresiva').textContent = segundosRestantes;
+            if (segundosRestantes <= 0) {
+                clearInterval(timerCuentaRegresiva);
+                window.location.href = "{% url 'logout' %}";
+            }
+        }, 1000);
+    }
+
+    function ocultarModalInactividad() {
+        document.getElementById('modal-inactividad').style.display = 'none';
+        document.getElementById('modal-inactividad').classList.add('hidden');
+    }
+
+    function seguirActivo() {
+        clearInterval(timerCuentaRegresiva);
+        ocultarModalInactividad();
+        resetearTimer();
+    }
+
+    function actividadUsuario() {
+        if (!throttleTimer) {
+            throttleTimer = setTimeout(function() {
+                resetearTimer();
+                throttleTimer = null;
+            }, 1000);
+        }
+    }
+
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function(evento) {
+        document.addEventListener(evento, actividadUsuario);
+    });
+
+    resetearTimer();
     </script>
+    {% endif %}
 
     {% block extra_js %}{% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
