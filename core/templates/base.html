@@ -176,7 +176,7 @@
             </div>
         </div>
         <div class="border-t border-gray-300 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-gray-500 text-sm">© 2024 GastroWeb. Todos los derechos reservados.</p>
+            <p class="text-gray-500 text-sm">© 2026 GastroWeb. Todos los derechos reservados.</p>
             <div class="flex gap-3">
                 <a href="#" class="bg-gray-800 hover:bg-[#1877F2] text-white w-9 h-9 rounded-lg flex items-center justify-center transition-colors">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 6.685 6.685 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
@@ -285,6 +285,29 @@
         </div>
     </div>
 
+    <!-- MODAL INACTIVIDAD -->
+    <div id="modal-inactividad" class="hidden fixed inset-0 bg-black/70 z-[99999] flex items-center justify-center p-4" style="backdrop-filter: blur(6px);">
+        <div class="bg-[#2a1010] border border-[#4a2020] rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-5 shadow-2xl">
+            <div class="w-16 h-16 bg-[#DC2626]/20 rounded-full flex items-center justify-center">
+                <i class="fas fa-clock text-[#DC2626] text-2xl"></i>
+            </div>
+            <div class="text-center">
+                <h3 class="font-black text-white text-xl mb-1">¿Sigues ahí?</h3>
+                <p class="text-gray-400 text-sm">Tu sesión se cerrará por inactividad en <span id="cuenta-regresiva" class="text-[#DC2626] font-black">60</span> segundos.</p>
+            </div>
+            <div class="flex gap-3 w-full">
+                <button onclick="seguirActivo()"
+                    class="flex-1 py-3 bg-[#DC2626] text-white hover:bg-[#DC2626]/90 rounded-xl font-black text-sm transition-colors">
+                    Sí, seguir
+                </button>
+                <a href="{% url 'logout' %}"
+                    class="flex-1 py-3 border-2 border-[#4a2020] text-gray-300 hover:bg-[#4a2020]/30 rounded-xl font-black text-sm transition-colors text-center">
+                    Salir
+                </a>
+            </div>
+        </div>
+    </div>
+
     <script src="{% static 'js/main.js' %}?v=3"></script>
     <script>
     function toggleDropdown() {
@@ -298,7 +321,7 @@
         }
     });
 
-        function abrirModalLogout() {
+    function abrirModalLogout() {
         const dd = document.getElementById('dropdownMenu');
         if (dd) dd.classList.add('hidden');
         document.getElementById('modal-logout-nav').style.setProperty('display', 'flex', 'important');
@@ -327,11 +350,71 @@
     }
     </script>
 
-    <script>
     {% if user.is_authenticated %}
-    sessionStorage.setItem('activo', '1');
-    {% endif %}
+    <script>
+    // =============================================
+    // CIERRE DE SESIÓN POR INACTIVIDAD - 15 MIN
+    // =============================================
+    const TIEMPO_INACTIVIDAD = 15 * 60 * 1000; // 15 minutos en milisegundos
+    const TIEMPO_AVISO = 60;                    // segundos de aviso antes de cerrar
+
+    let timerInactividad;
+    let timerCuentaRegresiva;
+    let segundosRestantes = TIEMPO_AVISO;
+    let throttleTimer = null;
+
+    function resetearTimer() {
+        clearTimeout(timerInactividad);
+        clearInterval(timerCuentaRegresiva);
+        ocultarModalInactividad();
+        timerInactividad = setTimeout(mostrarModalInactividad, TIEMPO_INACTIVIDAD);
+    }
+
+    function mostrarModalInactividad() {
+        segundosRestantes = TIEMPO_AVISO;
+        document.getElementById('cuenta-regresiva').textContent = segundosRestantes;
+        document.getElementById('modal-inactividad').style.display = 'flex';
+        document.getElementById('modal-inactividad').classList.remove('hidden');
+
+        timerCuentaRegresiva = setInterval(function() {
+            segundosRestantes--;
+            document.getElementById('cuenta-regresiva').textContent = segundosRestantes;
+            if (segundosRestantes <= 0) {
+                clearInterval(timerCuentaRegresiva);
+                window.location.href = "{% url 'logout' %}";
+            }
+        }, 1000);
+    }
+
+    function ocultarModalInactividad() {
+        document.getElementById('modal-inactividad').style.display = 'none';
+        document.getElementById('modal-inactividad').classList.add('hidden');
+    }
+
+    function seguirActivo() {
+        clearInterval(timerCuentaRegresiva);
+        ocultarModalInactividad();
+        resetearTimer();
+    }
+
+    // Throttle: evita que mousemove resetee el timer cientos de veces por segundo
+    function actividadUsuario() {
+        if (!throttleTimer) {
+            throttleTimer = setTimeout(function() {
+                resetearTimer();
+                throttleTimer = null;
+            }, 1000); // solo resetea 1 vez por segundo máximo
+        }
+    }
+
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function(evento) {
+        document.addEventListener(evento, actividadUsuario);
+    });
+
+    // Arrancar el timer al cargar la página
+    resetearTimer();
     </script>
+    {% endif %}
 
     {% block extra_js %}{% endblock %}
 
