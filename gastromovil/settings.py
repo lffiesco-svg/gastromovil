@@ -30,6 +30,7 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 INSTALLED_APPS = [
     'jazzmin',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'contacto',
+    
 ]
 SITE_ID = 1
 SOCIALACCOUNT_LOGIN_ON_GET = True
