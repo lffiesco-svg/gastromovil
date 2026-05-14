@@ -29,8 +29,8 @@ SESSION_COOKIE_AGE = 1800
 SESSION_SAVE_EVERY_REQUEST = True
 
 INSTALLED_APPS = [
-    'jazzmin',
     'daphne',
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'chatbot',
-    'channels',
     'django.contrib.sites',
     'allauth',
     'allauth.account',

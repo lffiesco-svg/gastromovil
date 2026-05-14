@@ -3,15 +3,20 @@
 {% block title %}Restaurantes - GastroWeb{% endblock %}
 {% block content %}
 <style>
+  .cards-grid {
+    overflow: visible !important;
+  }
   .restaurant-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease, z-index 0s;
-    z-index: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
+    z-index: 1;
+    isolation: isolate;
   }
   .restaurant-card:hover {
     transform: scale(1.15);
-    z-index: 50;
+    z-index: 100 !important;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+    isolation: auto;
   }
   .restaurant-card:hover .card-img {
     height: 200px;
@@ -35,9 +40,8 @@
         Nuestros restaurantes
     </p>
     <h2 class="text-5xl font-black text-white mb-12">Elige tu antojo <span class="text-[#DC2626]">favorito</span></h2>
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+    <div class="cards-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {% for restaurante in restaurantes %}
-
         <div class="restaurant-card bg-[#2a1010] rounded-2xl overflow-hidden border-2 border-[#4a2020] hover:border-[#DC2626] transition-all flex flex-col">
             {% if restaurante.imagen and restaurante.imagen.name %}
                 <div class="card-img">

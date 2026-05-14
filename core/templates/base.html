@@ -31,26 +31,19 @@
                 pointer-events: none;
             }
 
-            /* Navbar siempre por encima de todo */
-            nav {
-                isolation: isolate;
-                z-index: 9999 !important;
-                position: sticky !important;
+            #modal-login-global {
+                position: fixed !important;
+                z-index: 99999 !important;
             }
 
-            /* Evita que imágenes y mapas se salgan de su contenedor */
-            img {
-                z-index: 0;
+            #modal-login-global > div {
                 position: relative;
+                z-index: 100000 !important;
             }
 
-            /* Leaflet map z-index controlado */
-            .leaflet-pane {
-                z-index: 1 !important;
-            }
-            .leaflet-top,
-            .leaflet-bottom {
-                z-index: 2 !important;
+            #dropdownMenu {
+                position: fixed !important;
+                z-index: 2147483647 !important;
             }
 
             .restaurant-card {
@@ -70,7 +63,8 @@
     </head>
     <body class="bg-[#1a0a0a] text-white">
 {% block navbar %}
-    <nav class="bg-[#2a1010] sticky top-0 z-[9999] px-6 md:px-16 py-4 flex justify-between items-center">
+    <!-- FIX: quitado overflow-visible del nav -->
+    <nav class="bg-[#2a1010] sticky top-0 z-[99999] px-6 md:px-16 py-4 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <img src="{% static 'img/Logo.jpeg' %}" alt="GastroMovil" class="w-11 h-11 rounded-full object-cover">
             <span class="text-white font-bold text-xl">Gastro<strong class="text-[#DC2626]">Web</strong></span>
@@ -88,14 +82,6 @@
                 <button onclick="toggleDropdown()" class="w-9 h-9 rounded-full bg-[#DC2626] flex items-center justify-center text-white font-black text-sm hover:scale-105 transition-transform">
                     {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
                 </button>
-                <div id="dropdownMenu" class="hidden absolute right-0 mt-3 min-w-[280px] bg-[#2a1010] border border-[#4a2020] rounded-2xl shadow-xl z-50">
-                    <a href="{% url 'perfil' %}" class="flex w-full items-center gap-4 px-6 py-5 text-white hover:bg-[#DC2626]/20 text-lg font-semibold">
-                        <i class="fas fa-user-pen text-[#DC2626] text-xl"></i> Editar Perfil
-                    </a>
-                    <button onclick="abrirModalLogout()" class="flex w-full items-center gap-4 px-6 py-5 text-white hover:bg-[#DC2626]/20 text-lg font-semibold border-t border-[#4a2020]">
-                        <i class="fas fa-right-from-bracket text-[#DC2626] text-xl"></i> Cerrar Sesión
-                    </button>
-                </div>
             </div>
             {% else %}
             <a href="{% url 'login' %}" class="relative group p-2 hover:bg-[#DC2626]/10 rounded-xl transition-all duration-300">
@@ -124,6 +110,18 @@
         </button>
     </nav>
 {% endblock %}
+
+    <!-- DROPDOWN MENU — fuera del nav para evitar problemas de stacking context -->
+    {% if user.is_authenticated %}
+    <div id="dropdownMenu" class="hidden min-w-[280px] bg-[#2a1010] border border-[#4a2020] rounded-2xl shadow-xl">
+        <a href="{% url 'perfil' %}" class="flex w-full items-center gap-4 px-6 py-5 text-white hover:bg-[#DC2626]/20 text-lg font-semibold">
+            <i class="fas fa-user-pen text-[#DC2626] text-xl"></i> Editar Perfil
+        </a>
+        <button onclick="abrirModalLogout()" class="flex w-full items-center gap-4 px-6 py-5 text-white hover:bg-[#DC2626]/20 text-lg font-semibold border-t border-[#4a2020]">
+            <i class="fas fa-right-from-bracket text-[#DC2626] text-xl"></i> Cerrar Sesión
+        </button>
+    </div>
+    {% endif %}
 
     <!-- MENU MOVIL -->
     <div id="menuMovil" class="hidden bg-[#2a1010] px-6 py-4 flex-col gap-4 md:hidden">
@@ -214,8 +212,8 @@
         </div>
     </footer>
 
-    <!-- BOTON IA -->
-    <div onclick="toggleChat()" class="fixed bottom-8 right-8 bg-[#DC2626] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg hover:scale-110 transition-transform z-50">
+    <!-- BOTON IA — FIX: z-[9999] en vez de z-50 -->
+    <div onclick="toggleChat()" class="fixed bottom-8 right-8 bg-[#DC2626] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg hover:scale-110 transition-transform z-[9999]">
         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="2" x2="12" y2="5"/>
             <circle cx="12" cy="1.5" r="1" fill="currentColor" stroke="none"/>
@@ -229,8 +227,8 @@
         </svg>
     </div>
 
-    <!-- CHAT IA -->
-    <div id="iaChat" class="fixed bottom-28 right-8 w-80 bg-white rounded-2xl shadow-2xl z-50 hidden flex-col overflow-hidden">
+    <!-- CHAT IA — FIX: z-[9999] en vez de z-50 -->
+    <div id="iaChat" class="fixed bottom-28 right-8 w-80 bg-white rounded-2xl shadow-2xl z-[9999] hidden flex-col overflow-hidden">
         <div class="bg-[#DC2626] text-white px-5 py-4 flex justify-between items-center font-bold">
             <span class="flex items-center gap-2">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -283,7 +281,7 @@
     </div>
 
     <!-- MODAL CERRAR SESIÓN -->
-    <div id="modal-logout-nav" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4" style="z-index: 2147483647 !important;">
+    <div id="modal-logout-nav" class="hidden fixed inset-0 bg-black/60 z-[99999] flex items-center justify-center p-4">
         <div class="bg-[#2a1010] border border-[#4a2020] rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-5 shadow-2xl">
             <div class="w-16 h-16 bg-[#DC2626]/20 rounded-full flex items-center justify-center">
                 <i class="fas fa-right-from-bracket text-[#DC2626] text-2xl"></i>
@@ -330,42 +328,39 @@
 
     <script src="{% static 'js/main.js' %}?v=3"></script>
     <script>
-
     // Overlay transparente para cerrar el dropdown al hacer clic afuera
     const _overlayDD = document.createElement('div');
     _overlayDD.style.cssText = 'display:none;position:fixed;inset:0;z-index:2147483646;';
     _overlayDD.addEventListener('click', cerrarDropdown);
     document.body.appendChild(_overlayDD);
 
-
     function toggleDropdown() {
-    const menu = document.getElementById('dropdownMenu');
-    if (menu.classList.contains('hidden')) {
+        const menu = document.getElementById('dropdownMenu');
+        if (menu.classList.contains('hidden')) {
+            abrirDropdown();
+        } else {
+            cerrarDropdown();
+        }
+    }
+
+    function abrirDropdown() {
+        const menu = document.getElementById('dropdownMenu');
         const btn = document.querySelector('#userDropdown button');
         const rect = btn.getBoundingClientRect();
-        document.body.appendChild(menu);
-        menu.style.position = 'fixed';
         menu.style.top = (rect.bottom + 8) + 'px';
         menu.style.right = (window.innerWidth - rect.right) + 'px';
-        menu.style.left = 'auto';
-        menu.style.zIndex = '2147483647';
         menu.classList.remove('hidden');
-    } else {
-        menu.classList.add('hidden');
+        _overlayDD.style.display = 'block';
     }
-}
 
-document.addEventListener('click', function(e) {
-    const dropdown = document.getElementById('userDropdown');
-    const menu = document.getElementById('dropdownMenu');
-    if (dropdown && !dropdown.contains(e.target) && !menu.contains(e.target)) {
-        menu.classList.add('hidden');
+    function cerrarDropdown() {
+        const menu = document.getElementById('dropdownMenu');
+        if (menu) menu.classList.add('hidden');
+        _overlayDD.style.display = 'none';
     }
-});
 
-        function abrirModalLogout() {
-        const dd = document.getElementById('dropdownMenu');
-        if (dd) dd.classList.add('hidden');
+    function abrirModalLogout() {
+        cerrarDropdown();
         document.getElementById('modal-logout-nav').style.setProperty('display', 'flex', 'important');
     }
 
@@ -457,6 +452,6 @@ document.addEventListener('click', function(e) {
     {% endif %}
 
     {% block extra_js %}{% endblock %}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </body>
 </html>
