@@ -4,8 +4,7 @@
 
 {% block content %}
 
-<!-- MENU DE APERTURA -->
-<section class="bg-[#1a0a0a] flex flex-col md:flex-row items-center px-6 md:pl-50 md:pr-24 pt-16 md:pt-24 pb-20 gap-8 md:gap-16 relative z-0">
+<section style="isolation: isolate;" class="bg-[#1a0a0a] flex flex-col md:flex-row items-center px-6 md:pl-50 md:pr-24 pt-16 md:pt-24 pb-20 gap-8 md:gap-16">
     <div class="flex-1 flex flex-col justify-center">
         <p class="flex items-center gap-3 text-[#DC2626] text-base font-bold tracking-widest uppercase mb-6">
             <span class="inline-block w-9 h-0.5 bg-[#DC2626]"></span>
@@ -23,26 +22,25 @@
     </div>
 
     <div class="flex-1 flex items-center justify-center w-full max-w-lg">
-        <!-- FIX: quitado z-0 para no crear stacking context innecesario -->
         <div class="relative w-full h-80 md:h-[420px] rounded-3xl overflow-hidden shadow-2xl bg-black">
             <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-100">
                 <img src="{% static 'img/hamburg.png' %}" alt="Plato 1" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
+                <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);"></div>
                 <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Hamburguesa Especial</span>
             </div>
             <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-0">
                 <img src="{% static 'img/plato4.png' %}" alt="Plato 2" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
+                <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);"></div>
                 <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Pizza Artesanal</span>
             </div>
             <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-0">
                 <img src="{% static 'img/tacomex.png' %}" alt="Plato 3" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
+                <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);"></div>
                 <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Tacos Mexicanos</span>
             </div>
             <div class="carrusel-slide absolute inset-0 transition-opacity duration-700 opacity-0">
                 <img src="{% static 'img/picadac.png' %}" alt="Plato 4" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
+                <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);"></div>
                 <span class="absolute bottom-5 left-5 text-white font-bold text-lg">Picadas Criollas Huilenses</span>
             </div>
             <div class="absolute bottom-4 right-5 flex gap-2">
@@ -57,8 +55,7 @@
 
 {% if messages %}
     {% for msg in messages %}
-    <div id="toast-contacto"
-         class="fixed top-6 right-6 z-[9999] bg-green-500 text-white px-6 py-4 rounded-2xl shadow-xl font-bold text-sm flex items-center gap-3">
+    <div id="toast-contacto" class="fixed top-6 right-6 z-[9999] bg-green-500 text-white px-6 py-4 rounded-2xl shadow-xl font-bold text-sm flex items-center gap-3">
         <i class="fas fa-check-circle text-xl"></i>
         {{ msg }}
     </div>
@@ -66,11 +63,7 @@
     <script>
         setTimeout(() => {
             const toast = document.getElementById('toast-contacto');
-            if (toast) {
-                toast.style.transition = 'opacity 0.5s';
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 500);
-            }
+            if (toast) { toast.style.transition = 'opacity 0.5s'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }
         }, 3000);
     </script>
 {% endif %}
@@ -81,31 +74,19 @@
         const dots = document.querySelectorAll('.carrusel-dot');
         let current = 0;
         function mostrarSlide(index) {
-            slides.forEach((s, i) => {
-                s.classList.toggle('opacity-100', i === index);
-                s.classList.toggle('opacity-0', i !== index);
-            });
-            dots.forEach((d, i) => {
-                d.style.opacity = i === index ? '1' : '0.4';
-            });
+            slides.forEach((s, i) => { s.classList.toggle('opacity-100', i === index); s.classList.toggle('opacity-0', i !== index); });
+            dots.forEach((d, i) => { d.style.opacity = i === index ? '1' : '0.4'; });
         }
-        setInterval(() => {
-            current = (current + 1) % slides.length;
-            mostrarSlide(current);
-        }, 4000);
+        setInterval(() => { current = (current + 1) % slides.length; mostrarSlide(current); }, 4000);
     });
 </script>
 
 <!-- COMO FUNCIONA -->
-<section class="bg-[#2a1010] py-16 px-6 md:px-16">
+<section style="isolation: isolate;" class="bg-[#2a1010] py-16 px-6 md:px-16">
     <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-black text-white mb-4">
-                ¿Cómo <span class="text-[#DC2626]">Funciona</span>?
-            </h2>
-            <p class="text-gray-400 max-w-xl mx-auto">
-                Pedir comida a domicilio nunca fue tan fácil. Solo 4 simples pasos.
-            </p>
+            <h2 class="text-3xl md:text-4xl font-black text-white mb-4">¿Cómo <span class="text-[#DC2626]">Funciona</span>?</h2>
+            <p class="text-gray-400 max-w-xl mx-auto">Pedir comida a domicilio nunca fue tan fácil. Solo 4 simples pasos.</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div class="relative text-center group">
@@ -115,9 +96,7 @@
                 <div class="relative z-10">
                     <div class="absolute -top-2 -right-2 w-8 h-8 bg-[#DC2626] rounded-full flex items-center justify-center text-white font-black text-sm z-20">1</div>
                     <div class="w-20 h-20 mx-auto bg-[#1a0a0a] rounded-2xl flex items-center justify-center mb-5 border-2 border-[#4a2020] group-hover:border-[#DC2626] transition-colors">
-                        <svg class="w-9 h-9 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
-                        </svg>
+                        <svg class="w-9 h-9 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
                     </div>
                     <h3 class="font-black text-white text-lg mb-2">Elige tu comida</h3>
                     <p class="text-gray-400 text-sm leading-relaxed">Explora los menús y selecciona tus platillos favoritos</p>
@@ -130,9 +109,7 @@
                 <div class="relative z-10">
                     <div class="absolute -top-2 -right-2 w-8 h-8 bg-[#DC2626] rounded-full flex items-center justify-center text-white font-black text-sm z-20">2</div>
                     <div class="w-20 h-20 mx-auto bg-[#1a0a0a] rounded-2xl flex items-center justify-center mb-5 border-2 border-[#4a2020] group-hover:border-[#DC2626] transition-colors">
-                        <svg class="w-9 h-9 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
-                        </svg>
+                        <svg class="w-9 h-9 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                     </div>
                     <h3 class="font-black text-white text-lg mb-2">Pide tu domicilio</h3>
                     <p class="text-gray-400 text-sm leading-relaxed">Confirma tu pedido y realiza el pago de forma segura</p>
@@ -145,9 +122,7 @@
                 <div class="relative z-10">
                     <div class="absolute -top-2 -right-2 w-8 h-8 bg-[#DC2626] rounded-full flex items-center justify-center text-white font-black text-sm z-20">3</div>
                     <div class="w-20 h-20 mx-auto bg-[#1a0a0a] rounded-2xl flex items-center justify-center mb-5 border-2 border-[#4a2020] group-hover:border-[#DC2626] transition-colors">
-                        <svg class="w-9 h-9 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
-                        </svg>
+                        <svg class="w-9 h-9 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>
                     </div>
                     <h3 class="font-black text-white text-lg mb-2">Hacemos la entrega</h3>
                     <p class="text-gray-400 text-sm leading-relaxed">Un repartidor llevará tu pedido hasta tu puerta</p>
@@ -157,9 +132,7 @@
                 <div class="relative z-10">
                     <div class="absolute -top-2 -right-2 w-8 h-8 bg-[#DC2626] rounded-full flex items-center justify-center text-white font-black text-sm z-20">4</div>
                     <div class="w-20 h-20 mx-auto bg-[#1a0a0a] rounded-2xl flex items-center justify-center mb-5 border-2 border-[#4a2020] group-hover:border-[#DC2626] transition-colors">
-                        <svg class="w-9 h-9 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/>
-                        </svg>
+                        <svg class="w-9 h-9 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>
                     </div>
                     <h3 class="font-black text-white text-lg mb-2">¡Disfruta!</h3>
                     <p class="text-gray-400 text-sm leading-relaxed">Recibe tu comida caliente y lista para disfrutar</p>
@@ -169,31 +142,26 @@
     </div>
 </section>
 
-<!-- CTA IA -->
-<section class="bg-[#0f0000] py-10 px-6 md:px-16">
+<!-- CTA IA — gradiente via style inline para evitar problemas con Tailwind v4 -->
+<section style="isolation: isolate;" class="bg-[#0f0000] py-10 px-6 md:px-16">
     <div class="max-w-6xl mx-auto">
-        <div class="bg-linear-to-r from-[#CC0000] via-[#FF4500] to-[#FFD60A] rounded-3xl px-6 md:px-10 py-10 relative overflow-hidden">
+        <div class="rounded-3xl px-6 md:px-10 py-10 relative overflow-hidden" style="background: linear-gradient(to right, #CC0000, #FF4500, #FFD60A);">
             <div class="absolute bottom-0 left-0 w-56 h-56 bg-black/20 rounded-full translate-y-1/2 -translate-x-1/4"></div>
             <div class="absolute top-0 right-60 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2"></div>
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div class="text-center md:text-left max-w-lg">
-                    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">
-                        La IA sabe lo que te gusta
-                    </h2>
+                    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">La IA sabe lo que te gusta</h2>
                     <p class="text-white/90 mb-8 leading-relaxed text-sm">
                         Nuestra inteligencia artificial aprende tus gustos y te recomienda los mejores platos. Dejate sorprender por sugerencias personalizadas cada vez que entras.
                     </p>
                     <button id="btn-sorprendeme" onclick="sorprendemeIA()" class="inline-flex items-center gap-3 bg-[#0f0000] text-white px-8 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-[#1a0000] transition-colors shadow-lg">
-                      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="2" x2="12" y2="5"/>
-                            <circle cx="12" cy="1.5" r="1" fill="currentColor" stroke="none"/>
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="2" x2="12" y2="5"/><circle cx="12" cy="1.5" r="1" fill="currentColor" stroke="none"/>
                             <rect x="7" y="5" width="10" height="7" rx="2"/>
-                            <circle cx="10" cy="8.5" r="1" fill="currentColor" stroke="none"/>
-                            <circle cx="14" cy="8.5" r="1" fill="currentColor" stroke="none"/>
+                            <circle cx="10" cy="8.5" r="1" fill="currentColor" stroke="none"/><circle cx="14" cy="8.5" r="1" fill="currentColor" stroke="none"/>
                             <rect x="6" y="13" width="12" height="7" rx="1.5"/>
                             <circle cx="12" cy="16.5" r="1.2" fill="currentColor" stroke="none"/>
-                            <line x1="6" y1="14.5" x2="3.5" y2="17"/>
-                            <line x1="18" y1="14.5" x2="20.5" y2="17"/>
+                            <line x1="6" y1="14.5" x2="3.5" y2="17"/><line x1="18" y1="14.5" x2="20.5" y2="17"/>
                         </svg>
                         <span id="btn-sorprendeme-texto">Sorpréndeme IA</span>
                     </button>
@@ -202,8 +170,7 @@
                     <div class="w-44 h-44 md:w-56 md:h-56 bg-black/20 rounded-3xl flex flex-col items-center justify-center backdrop-blur-sm border border-white/20">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-20 h-20 text-white mb-2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/>
-                            <path d="M20 2v4"/><path d="M22 4h-4"/>
-                            <circle cx="4" cy="20" r="2"/>
+                            <path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>
                         </svg>
                         <span class="text-white font-bold text-sm">IA Activa</span>
                     </div>
@@ -213,10 +180,10 @@
     </div>
 </section>
 
-<!-- Modal respuesta IA — FIX: z-[9999] en vez de z-50 -->
+<!-- Modal respuesta IA -->
 <div id="modal-sorprendeme" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4" onclick="if(event.target===this) cerrarModalSorprendeme()">
     <div class="bg-[#1a0a0a] border border-[#DC2626]/30 rounded-3xl shadow-2xl p-5 max-w-sm w-full text-center relative">
-        <div class="w-12 h-12 bg-gradient-to-br from-[#CC0000] to-[#FFD60A] rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(to bottom right, #CC0000, #FFD60A);">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/>
             </svg>
@@ -224,12 +191,8 @@
         <h3 class="text-lg font-black text-white mb-3">✨ La IA recomienda...</h3>
         <div id="modal-sorprendeme-texto" class="text-gray-300 text-sm leading-relaxed mb-4"></div>
         <div class="flex flex-col gap-2">
-            <button onclick="sorprendemeIA()" class="w-full bg-gradient-to-r from-[#CC0000] to-[#FF4500] text-white py-2.5 rounded-xl font-black text-sm hover:opacity-90 transition-opacity">
-                🎲 Otra recomendación
-            </button>
-            <button onclick="cerrarModalSorprendeme()" class="w-full border border-gray-700 text-gray-400 py-3.5 rounded-xl font-bold text-base hover:bg-white/5 transition-colors">
-                Cerrar
-            </button>
+            <button onclick="sorprendemeIA()" class="w-full text-white py-2.5 rounded-xl font-black text-sm hover:opacity-90 transition-opacity" style="background: linear-gradient(to right, #CC0000, #FF4500);">🎲 Otra recomendación</button>
+            <button onclick="cerrarModalSorprendeme()" class="w-full border border-gray-700 text-gray-400 py-3.5 rounded-xl font-bold text-base hover:bg-white/5 transition-colors">Cerrar</button>
         </div>
     </div>
 </div>
@@ -243,11 +206,7 @@ function cerrarModalSorprendeme() {
 
 async function sorprendemeIA() {
     const usuarioAutenticado = {{ user.is_authenticated|yesno:"true,false" }};
-
-    if (!usuarioAutenticado) {
-        abrirModalLogin();
-        return;
-    }
+    if (!usuarioAutenticado) { abrirModalLogin(); return; }
 
     const btn = document.getElementById('btn-sorprendeme');
     const texto = document.getElementById('btn-sorprendeme-texto');
@@ -260,18 +219,10 @@ async function sorprendemeIA() {
     try {
         const res = await fetch('/api/chatbot/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}',
-            },
-            body: JSON.stringify({
-                mensaje: 'Sorpréndeme, recomiéndame un plato del menú.',
-                historial: [],
-            }),
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+            body: JSON.stringify({ mensaje: 'Sorpréndeme, recomiéndame un plato del menú.', historial: [] }),
         });
-
         const data = await res.json();
-
         let contenido;
         try {
             const json = JSON.parse(data.respuesta);
@@ -285,28 +236,18 @@ async function sorprendemeIA() {
                         <p class="text-white/60 text-xs italic mb-3">"${json.razon}"</p>
                         <div class="flex items-center justify-between bg-white/5 rounded-xl px-3 py-2 mb-3">
                             <span class="text-[#DC2626] font-black text-lg">$${json.precio}</span>
-                            <button
-                                onclick="agregarAlCarritoDesdeIA(${json.producto_id}, '${json.nombre}')"
+                            <button onclick="agregarAlCarritoDesdeIA(${json.producto_id}, '${json.nombre}')"
                                 class="bg-[#DC2626] text-white px-3 py-1.5 rounded-xl font-bold text-xs hover:bg-[#DC2626]/90 transition-colors flex items-center gap-1">
                                 <i class="fas fa-plus"></i> Agregar
                             </button>
                         </div>
-                        <a href="${json.url}" class="block text-center text-xs text-gray-500 hover:text-white transition-colors underline">
-                            Ver en el restaurante →
-                        </a>
-                    </div>
-                `;
-            } else {
-                contenido = data.respuesta;
-            }
-        } catch {
-            contenido = data.respuesta;
-        }
-
+                        <a href="${json.url}" class="block text-center text-xs text-gray-500 hover:text-white transition-colors underline">Ver en el restaurante →</a>
+                    </div>`;
+            } else { contenido = data.respuesta; }
+        } catch { contenido = data.respuesta; }
         modalTexto.innerHTML = contenido;
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-
     } catch (err) {
         console.error(err);
         modalTexto.innerHTML = '<p class="text-gray-400">Hubo un error al consultar la IA. Intenta de nuevo.</p>';
@@ -322,11 +263,7 @@ async function agregarAlCarritoDesdeIA(id, nombre) {
     try {
         const res = await fetch(`/carrito/agregar/${id}/`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}', 'X-Requested-With': 'XMLHttpRequest' },
             body: JSON.stringify({ cantidad: 1 }),
         });
         const data = await res.json();
@@ -335,24 +272,13 @@ async function agregarAlCarritoDesdeIA(id, nombre) {
                 const link = document.getElementById(linkId);
                 if (!link) return;
                 let badge = link.querySelector('[data-carrito-badge]');
-                if (!badge) {
-                    badge = document.createElement('span');
-                    badge.setAttribute('data-carrito-badge', '');
-                    badge.className = 'carrito-badge';
-                    link.appendChild(badge);
-                }
+                if (!badge) { badge = document.createElement('span'); badge.setAttribute('data-carrito-badge', ''); badge.className = 'carrito-badge'; link.appendChild(badge); }
                 badge.textContent = data.cantidad_total;
             });
-            const btns = document.querySelectorAll(`button[onclick*="agregarAlCarritoDesdeIA(${id}"]`);
-            btns.forEach(b => {
-                b.innerHTML = '<i class="fas fa-check"></i> Agregado';
-                b.disabled = true;
-            });
+            document.querySelectorAll(`button[onclick*="agregarAlCarritoDesdeIA(${id}"]`).forEach(b => { b.innerHTML = '<i class="fas fa-check"></i> Agregado'; b.disabled = true; });
             setTimeout(() => cerrarModalSorprendeme(), 800);
         }
-    } catch (err) {
-        console.error(err);
-    }
+    } catch (err) { console.error(err); }
 }
 </script>
 
