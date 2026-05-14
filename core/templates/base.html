@@ -45,6 +45,20 @@
                 position: fixed !important;
                 z-index: 2147483647 !important;
             }
+
+            .restaurant-card {
+                isolation: auto !important;
+            }
+
+            #dropdownMenu {
+                position: fixed !important;
+                z-index: 2147483647 !important;
+                isolation: isolate;
+            }
+
+            #modal-logout-nav {
+                isolation: isolate;
+            }
         </style>
     </head>
     <body class="bg-[#1a0a0a] text-white">
