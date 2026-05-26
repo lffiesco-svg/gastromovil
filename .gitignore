@@ -1,6 +1,7 @@
 # ========================
 # ENTORNO VIRTUAL
 # ========================
+theme/static/
 venv/
 env/
 .venv/
