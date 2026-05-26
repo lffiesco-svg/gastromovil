@@ -21,6 +21,7 @@ function toggleMenu() {
         menu.classList.remove('flex');
     }
 }
+
 function toggleUserMenu() {
     const menu = document.getElementById('userMenu');
     menu.classList.toggle('hidden');
@@ -46,12 +47,29 @@ function getCSRF() {
 const chatHistorial = [];
 
 // ENVIAR MENSAJE A LA IA REAL
+let esperandoRespuesta = false;
+
 function sendIA() {
+    if (esperandoRespuesta) return; // 🔒 Bloquea si está esperando respuesta
+
     const input = document.getElementById('iaInput');
     const messages = document.getElementById('iaMessages');
+    const btn = document.querySelector('#iaChat button[onclick="sendIA()"]');
     const text = input.value.trim();
 
     if (!text) return;
+
+    // 🔒 Bloquear input y botón
+    esperandoRespuesta = true;
+    input.setAttribute('readonly', true);        // ← bloquea escritura
+    input.disabled = true;
+    input.value = '';
+    input.placeholder = 'Esperando respuesta...';
+    if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        btn.classList.remove('hover:scale-110');
+    }
 
     // Mostrar mensaje del usuario
     const userMsg = document.createElement('div');
@@ -59,10 +77,9 @@ function sendIA() {
     userMsg.textContent = text;
     messages.appendChild(userMsg);
 
-    input.value = '';
     messages.scrollTop = messages.scrollHeight;
 
-    // Indicador de escritura (loader)
+    // Indicador de escritura
     const typingMsg = document.createElement('div');
     typingMsg.className = 'bg-white p-3 rounded-2xl rounded-bl-sm text-sm text-gray-400 shadow-sm max-w-xs italic';
     typingMsg.textContent = 'Escribiendo...';
@@ -70,10 +87,8 @@ function sendIA() {
     messages.appendChild(typingMsg);
     messages.scrollTop = messages.scrollHeight;
 
-    // Agregar mensaje al historial antes de enviarlo
     chatHistorial.push({ role: 'user', content: text });
 
-    // Enviar al backend como JSON
     fetch("/api/chatbot/", {
         method: "POST",
         headers: {
@@ -82,7 +97,7 @@ function sendIA() {
         },
         body: JSON.stringify({
             mensaje: text,
-            historial: chatHistorial.slice(-6) // Enviar últimos 6 mensajes de contexto
+            historial: chatHistorial.slice(-6)
         })
     })
     .then(res => {
@@ -96,14 +111,13 @@ function sendIA() {
 
         const botMsg = document.createElement('div');
         botMsg.className = 'bg-white p-3 rounded-2xl rounded-bl-sm text-sm text-gray-700 shadow-sm max-w-[85%]';
-        botMsg.innerHTML = data.respuesta; // ← tu cambio
+        botMsg.innerHTML = data.respuesta;
         messages.appendChild(botMsg);
         messages.scrollTop = messages.scrollHeight;
 
         chatHistorial.push({ role: 'assistant', content: data.respuesta });
     })
     .catch(err => {
-        // Remover indicador de escritura
         document.getElementById('typing-indicator')?.remove();
 
         const errorMsg = document.createElement('div');
@@ -112,10 +126,21 @@ function sendIA() {
         messages.appendChild(errorMsg);
         messages.scrollTop = messages.scrollHeight;
 
-        // Remover el último mensaje del historial si hubo error
         chatHistorial.pop();
-
         console.error("[Chatbot error]:", err);
+    })
+    .finally(() => {
+        // 🔓 Desbloquear siempre al terminar (éxito o error)
+        esperandoRespuesta = false;
+        input.removeAttribute('readonly');           // ← reactiva escritura
+        input.disabled = false;
+        input.placeholder = 'Escribe tu pregunta...';
+        if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.classList.add('hover:scale-110');
+        }
+        input.focus();
     });
 }
 
@@ -126,13 +151,13 @@ document.addEventListener("DOMContentLoaded", function () {
         iaInput.addEventListener("keydown", function (e) {
             if (e.key === "Enter") {
                 e.preventDefault();
-                sendIA();
+                if (!esperandoRespuesta) sendIA(); // ✅ Verifica el bloqueo antes de enviar
             }
         });
     }
 });
 
- // OJO CONTRASEÑA
+// OJO CONTRASEÑA
 function togglePassword(inputId, eyeId) {
     const input = document.getElementById(inputId);
     const eye = document.getElementById(eyeId);

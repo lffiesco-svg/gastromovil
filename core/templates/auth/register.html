@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block chatbot %}{% endblock %}
 {% block title %}Registro - GastroWeb{% endblock %}
 {% block content %}
 
@@ -205,5 +206,4 @@ function validarPassword() {
     txt.className = 'text-xs mt-1 ' + ['', 'text-red-400', 'text-orange-400', 'text-yellow-400', 'text-green-400'][puntos];
 }
 </script>
-<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}
