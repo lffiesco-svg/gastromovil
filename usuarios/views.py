@@ -239,7 +239,7 @@ def direccion_eliminar(request, pk):
     if request.method == 'POST':
         direccion.delete()
         messages.success(request, 'Direccion eliminada')
-        return redirect('lista_direcciones')
+        return redirect('perfil')
     return render(request, 'usuarios/confirmar_eliminar.html', {'objeto': direccion})
 
 #CALIFICACIONES

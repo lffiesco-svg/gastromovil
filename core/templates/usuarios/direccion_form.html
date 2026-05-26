@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block chatbot %}{% endblock %}
+{% block title %}{{ accion }} Dirección - GastroWeb{% endblock %}
+{% block content %}
+
+<section class="min-h-screen bg-[#1a0a0a] px-6 md:px-16 py-12">
+    <div class="max-w-2xl mx-auto bg-[#2a1010] rounded-3xl border border-[#4a2020] shadow-xl p-10">
+
+        <!-- ENCABEZADO -->
+        <div class="flex items-center gap-4 mb-8">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl"
+                style="background: linear-gradient(to right, #ef4444, #b91c1c);">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div>
+                <h2 class="text-3xl font-black text-white">{{ accion }} Dirección</h2>
+                <p class="text-gray-400 text-sm">Actualiza los datos de tu dirección de entrega</p>
+            </div>
+        </div>
+
+        <hr class="mb-8 border-[#4a2020]">
+
+        <!-- MENSAJES -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="{% if message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700{% else %}bg-red-100 border border-red-400 text-red-700{% endif %} rounded-xl p-4 mb-5 text-sm font-semibold">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- FORMULARIO -->
+        <form method="POST">
+            {% csrf_token %}
+            <div class="flex flex-col gap-5">
+
+                {% for field in form %}
+                <div>
+                    <label class="text-white text-xs font-bold uppercase tracking-wider mb-2 block">
+                        {{ field.label }}
+                    </label>
+                    {% if field.field.widget.input_type == 'checkbox' %}
+                        <div class="flex items-center gap-3">
+                            {{ field }}
+                            <span class="text-gray-300 text-sm">{{ field.label }}</span>
+                        </div>
+                    {% else %}
+                        <div class="relative">
+                            {{ field }}
+                        </div>
+                    {% endif %}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <!-- BOTONES -->
+            <div class="mt-8 flex flex-col gap-3">
+                <button type="submit"
+                    style="background: linear-gradient(to right, #ef4444, #b91c1c);"
+                    class="w-full text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase hover:opacity-90 transition-opacity">
+                    <i class="fas fa-floppy-disk mr-2"></i> Guardar Dirección
+                </button>
+                <a href="{% url 'perfil' %}"
+                    class="w-full text-center text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase transition-colors border border-[#4a2020] hover:bg-[#4a2020]">
+                    <i class="fas fa-arrow-left mr-2"></i> Volver al Perfil
+                </a>
+            </div>
+        </form>
+
+    </div>
+</section>
+
+<style>
+input[type="text"],
+input[type="tel"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    background-color: #1a0a0a !important;
+    color: white !important;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #4a2020;
+    outline: none;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+    -webkit-box-shadow: 0 0 0 1000px #1a0a0a inset !important;
+    box-shadow: 0 0 0 1000px #1a0a0a inset !important;
+    -webkit-text-fill-color: white !important;
+}
+input[type="text"]:focus,
+input[type="tel"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #ef4444;
+}
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #ef4444;
+    cursor: pointer;
+}
+select option {
+    background-color: #1a0a0a;
+    color: white;
+}
+</style>
+
+{% endblock %}
