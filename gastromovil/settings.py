@@ -4,6 +4,7 @@ pymysql.version_info = (2, 2, 1, "final", 0)
 pymysql.install_as_MySQLdb()
 from pathlib import Path
 import os
+import platform
 from dotenv import load_dotenv
 from decouple import config
 load_dotenv()
@@ -116,6 +117,8 @@ CHANNEL_LAYERS = {
     },
 }
 
+USE_DB_SSL = config('USE_DB_SSL', default='False') == 'True'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -125,8 +128,10 @@ DATABASES = {
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT', default='3306'),
         'OPTIONS': {
-            'ssl': {'ca': '/etc/ssl/certs/ca-certificates.crt'}
-        },
+            'ssl': {
+                'ca': certifi.where() if platform.system() == 'Windows' else '/etc/ssl/certs/ca-certificates.crt'
+            }
+        } if USE_DB_SSL else {},
     }
 }
 
