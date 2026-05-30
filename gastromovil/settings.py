@@ -128,9 +128,7 @@ DATABASES = {
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT', default='3306'),
         'OPTIONS': {
-            'ssl': {
-                'ca': certifi.where() if platform.system() == 'Windows' else '/etc/ssl/certs/ca-certificates.crt'
-            }
+            'ssl': {'ca': certifi.where(), 'check_hostname': False}
         } if USE_DB_SSL else {},
     }
 }
@@ -266,7 +264,7 @@ ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=ce
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
-    'https://*.koyeb.app',
+    'https://*.onrender.com',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
