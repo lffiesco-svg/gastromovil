@@ -10,14 +10,12 @@ load_dotenv()
 import ssl
 import certifi
 
-
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['*']
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
@@ -54,8 +52,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'contacto',
-    
 ]
+
 SITE_ID = 1
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
@@ -70,8 +68,7 @@ SOCIALACCOUNT_EMAIL_REQUIRED = False
 UNIQUE_EMAIL = False
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
-
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -122,17 +119,16 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'gastromovil',
-        'USER': 'root',
-        'PASSWORD': 'rootroot',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', default='3306'),
+        'OPTIONS': {
+            'ssl': {'ca': '/etc/ssl/certs/ca-certificates.crt'}
+        },
     }
 }
-
-print("USER:", 'root')
-print("PASSWORD:", 'rootroot')
-print("HOST:", 'localhost')
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -256,9 +252,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-
 EMAIL_HOST_USER = 'johanapalacio763@gmail.com'
-EMAIL_HOST_PASSWORD = 'ecptlzagzepjejar'
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'Gastroweb <ospinacadenaoscar@gmail.com>'
 
 ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
@@ -266,8 +261,7 @@ ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=ce
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
-    'http://127.0.0.1:8001',
-    'http://localhost:8001',
+    'https://*.koyeb.app',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
