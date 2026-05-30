@@ -74,6 +74,7 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -273,3 +274,5 @@ CONTACTO_EMAIL = 'ospinacadenaoscar@gmail.com'
 CONTACTO_EMAIL_PASSWORD = config('CONTACTO_EMAIL_PASSWORD')
 
 DJANGO_ALLOW_ASYNC_UNSAFE = True
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
