@@ -253,7 +253,7 @@ JAZZMIN_UI_TWEAKS = {
 
 EMAIL_BACKEND = 'usuarios.backends.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+EMAIL_PORT = 465
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'johanapalacio763@gmail.com'
