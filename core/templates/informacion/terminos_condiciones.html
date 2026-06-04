@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block chatbot %}{% endblock %}
+{% block title %}Términos y Condiciones - GastroWeb{% endblock %}
+{% block footer %}{% endblock %}
+{% block navbar %}
+<nav id="main-nav" class="px-6 md:px-16 py-4 flex justify-between items-center">
+    <button onclick="history.back()" class="text-white hover:text-[#DC2626] transition-colors p-2 rounded-xl hover:bg-[#DC2626]/10">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+    </button>
+    <div class="flex items-center gap-3">
+        <img src="{% static 'img/Logo.jpeg' %}" alt="GastroWeb" class="w-11 h-11 rounded-full object-cover">
+        <span class="text-white font-bold text-xl">Gastro<strong class="text-[#DC2626]">Web</strong></span>
+    </div>
+    <!-- Espaciador para centrar el logo -->
+    <div class="w-10"></div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 860px; margin: 40px auto; padding: 0 20px 60px;">
+
+  <!-- ENCABEZADO -->
+  <div style="text-align: center; margin-bottom: 40px;">
+    <h1 style="font-size: 2rem; font-weight: 800; color: #DC2626; margin-bottom: 6px;">GastroWeb</h1>
+    <h2 style="font-size: 1.3rem; font-weight: 600; color: white; margin-bottom: 6px;">Términos y Condiciones de Uso</h2>
+    <p style="color: #888; font-size: 0.9rem; font-style: italic;">Aplicación de pedidos a domicilio</p>
+    <p style="color: #aaa; font-size: 0.85rem;">Última actualización: junio de 2025</p>
+    <hr style="margin: 24px auto; border: none; border-top: 2px solid #f0f0f0; max-width: 200px;">
+  </div>
+
+  <!-- SECCIÓN 1 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">1. Aceptación de los Términos</h3>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      Al descargar, instalar o utilizar la aplicación móvil o plataforma web de GastroWeb (en adelante, la <strong>"Plataforma"</strong>), usted acepta de manera expresa e incondicional los presentes Términos y Condiciones de Uso, así como nuestra Política de Privacidad. Si no está de acuerdo con alguno de los términos aquí descritos, le pedimos que se abstenga de utilizar nuestros servicios.
+    </p>
+    <p style="color: white; line-height: 1.8;">
+      GastroWeb se reserva el derecho de modificar estos términos en cualquier momento. Las modificaciones entrarán en vigencia desde el momento de su publicación en la Plataforma, y el uso continuado de los servicios implica la aceptación de los cambios.
+    </p>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 2 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">2. Descripción del Servicio</h3>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      GastroWeb es una aplicación de pedidos a domicilio que conecta a los usuarios con establecimientos gastronómicos disponibles en su zona. A través de la Plataforma, los usuarios pueden:
+    </p>
+    <ul style="color: white; line-height: 2; padding-left: 24px; margin-bottom: 12px;">
+      <li>Explorar el menú de los restaurantes o food trucks afiliados.</li>
+      <li>Realizar pedidos de comida y bebidas para entrega a domicilio.</li>
+      <li>Hacer seguimiento del estado de su pedido en tiempo real.</li>
+      <li>Comunicarse con el domiciliario asignado a su entrega.</li>
+    </ul>
+    <p style="color: white; line-height: 1.8;">
+      GastroWeb actúa como intermediario entre el usuario y los establecimientos aliados. La preparación de los alimentos es responsabilidad exclusiva de cada establecimiento.
+    </p>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 3 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">3. Registro y Cuenta de Usuario</h3>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      Para utilizar los servicios de GastroWeb es necesario crear una cuenta. Al hacerlo, el usuario declara que:
+    </p>
+    <ul style="color: white; line-height: 2; padding-left: 24px; margin-bottom: 12px;">
+      <li>Es mayor de 18 años o cuenta con la autorización de un representante legal.</li>
+      <li>La información suministrada durante el registro es veraz, completa y actualizada.</li>
+      <li>Es el único responsable de mantener la confidencialidad de sus credenciales de acceso.</li>
+      <li>Notificará a GastroWeb de inmediato en caso de uso no autorizado de su cuenta.</li>
+    </ul>
+    <p style="color: white; line-height: 1.8;">
+      GastroWeb se reserva el derecho de suspender o cancelar cuentas que incumplan estos términos, que contengan información falsa o que sean utilizadas de manera fraudulenta.
+    </p>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 4 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">4. Realización de Pedidos y Pagos</h3>
+
+    <h4 style="font-size: 1rem; font-weight: 600; color: #DC2626; margin: 16px 0 8px;">4.1 Proceso de Pedido</h4>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      Una vez que el usuario selecciona los productos y confirma su pedido, la solicitud es enviada al establecimiento correspondiente para su preparación. Los pedidos confirmados no pueden cancelarse salvo en los casos contemplados en la sección de Cancelaciones.
+    </p>
+
+    <h4 style="font-size: 1rem; font-weight: 600; color: #DC2626; margin: 16px 0 8px;">4.2 Modalidad de Pago</h4>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      Actualmente, GastroWeb opera exclusivamente con <strong>pagos en efectivo</strong>. El valor del pedido, incluidos los cargos de domicilio aplicables, deberá ser cancelado directamente al domiciliario en el momento de la entrega.
+    </p>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      GastroWeb no procesa, almacena ni gestiona pagos electrónicos ni datos de tarjetas bancarias. Todos los intercambios de dinero se realizan de forma física entre el usuario y el repartidor.
+    </p>
+
+    <h4 style="font-size: 1rem; font-weight: 600; color: #DC2626; margin: 16px 0 8px;">4.3 Cargos de Domicilio</h4>
+    <p style="color: white; line-height: 1.8;">
+      El costo del servicio de entrega varía según la distancia, la zona de cobertura y el establecimiento. Dicho cargo será informado al usuario antes de confirmar el pedido y forma parte del total a pagar en efectivo.
+    </p>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 5 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">5. Servicio de Entrega</h3>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      GastroWeb se esfuerza por garantizar tiempos de entrega razonables; sin embargo, los tiempos estimados son referenciales y pueden verse afectados por condiciones externas como tráfico, clima, alta demanda u otras situaciones fuera de nuestro control.
+    </p>
+    <ul style="color: white; line-height: 2; padding-left: 24px;">
+      <li>El usuario debe proporcionar una dirección de entrega clara, completa y correcta.</li>
+      <li>En caso de que el domiciliario no pueda acceder al punto de entrega por causas imputables al usuario (dirección incorrecta, no contestar llamadas, etc.), el pedido podrá darse por entregado sin lugar a devolución.</li>
+      <li>El domiciliario tiene la facultad de contactar al usuario para coordinar la entrega. Se recomienda tener el teléfono disponible durante el proceso.</li>
+    </ul>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 6 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">6. Cancelaciones y Devoluciones</h3>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      Dado que los productos son de naturaleza alimentaria y se preparan a pedido, GastroWeb no garantiza devoluciones de dinero una vez confirmado el pedido. No obstante, se gestionarán reclamaciones en los siguientes casos:
+    </p>
+    <ul style="color: white; line-height: 2; padding-left: 24px; margin-bottom: 12px;">
+      <li><strong>Pedido incorrecto:</strong> el establecimiento entregó productos diferentes a los solicitados.</li>
+      <li><strong>Producto en mal estado:</strong> el alimento llegó en condiciones inadecuadas de higiene o temperatura.</li>
+      <li><strong>Pedido no entregado:</strong> el usuario no recibió el pedido y existen pruebas de ello.</li>
+    </ul>
+    <p style="color: white; line-height: 1.8;">
+      Para interponer una reclamación, el usuario deberá comunicarse con el equipo de soporte de GastroWeb dentro de las 24 horas siguientes a la entrega, aportando evidencia fotográfica si aplica.
+    </p>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 7 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">7. Obligaciones y Conducta del Usuario</h3>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      El usuario se compromete a utilizar la Plataforma de forma responsable y conforme a la ley colombiana. Queda expresamente prohibido:
+    </p>
+    <ul style="color: white; line-height: 2; padding-left: 24px;">
+      <li>Suministrar información falsa o engañosa al momento de registrarse o realizar pedidos.</li>
+      <li>Usar la Plataforma con fines fraudulentos o para actividades ilícitas.</li>
+      <li>Interferir con el funcionamiento técnico de la aplicación.</li>
+      <li>Acosar, amenazar o agredir verbalmente a domiciliarios o personal de GastroWeb.</li>
+      <li>Hacer uso indebido de los canales de soporte o atención al cliente.</li>
+    </ul>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 8 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">8. Limitación de Responsabilidad</h3>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      GastroWeb actúa como plataforma intermediaria y, en consecuencia:
+    </p>
+    <ul style="color: white; line-height: 2; padding-left: 24px; margin-bottom: 12px;">
+      <li>No se hace responsable por la calidad, inocuidad, composición o etiquetado de los alimentos preparados por los establecimientos aliados.</li>
+      <li>No garantiza la disponibilidad ininterrumpida de la Plataforma ni la ausencia de errores técnicos.</li>
+      <li>No responde por daños indirectos, perjuicios económicos ni pérdida de datos derivados del uso de la aplicación.</li>
+    </ul>
+    <p style="color: white; line-height: 1.8;">
+      La responsabilidad de GastroWeb frente al usuario, en caso de probarse una falla directamente imputable a la Plataforma, se limitará al valor del pedido afectado.
+    </p>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 9 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">9. Protección de Datos Personales</h3>
+    <p style="color: white; line-height: 1.8; margin-bottom: 12px;">
+      GastroWeb trata los datos personales de sus usuarios conforme a la <strong>Ley 1581 de 2012</strong> (Ley de Protección de Datos Personales de Colombia) y demás normas aplicables. Los datos recopilados serán utilizados exclusivamente para:
+    </p>
+    <ul style="color: white; line-height: 2; padding-left: 24px; margin-bottom: 12px;">
+      <li>Gestionar el registro y la cuenta del usuario.</li>
+      <li>Procesar y coordinar los pedidos realizados.</li>
+      <li>Mejorar la experiencia de uso de la Plataforma.</li>
+      <li>Enviar comunicaciones relacionadas con el servicio, previa autorización del usuario.</li>
+    </ul>
+    <p style="color: white; line-height: 1.8;">
+      Los usuarios tienen derecho a conocer, actualizar, corregir y suprimir sus datos personales en cualquier momento, enviando su solicitud a través de los canales de atención oficiales de GastroWeb. Los datos no serán vendidos ni cedidos a terceros sin consentimiento expreso del titular.
+    </p>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 10 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">10. Propiedad Intelectual</h3>
+    <p style="color: white; line-height: 1.8;">
+      Todos los derechos de propiedad intelectual sobre la Plataforma, incluyendo el nombre GastroWeb, el logotipo, el diseño, el código fuente, los contenidos y demás elementos, son propiedad exclusiva de GastroWeb o de sus licenciantes. Queda prohibida su reproducción, distribución, modificación o uso comercial sin autorización escrita previa.
+    </p>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 11 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">11. Modificaciones al Servicio</h3>
+    <p style="color: white; line-height: 1.8;">
+      GastroWeb se reserva el derecho de modificar, suspender o descontinuar cualquier aspecto de la Plataforma en cualquier momento, sin previo aviso y sin que ello genere responsabilidad alguna frente a los usuarios. Se notificará sobre cambios significativos a través de la aplicación o por los medios de contacto registrados.
+    </p>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 12 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">12. Legislación Aplicable y Jurisdicción</h3>
+    <p style="color: white; line-height: 1.8;">
+      Los presentes Términos y Condiciones se rigen por las leyes de la República de Colombia. Para la resolución de cualquier controversia derivada del uso de la Plataforma, las partes se someten a la jurisdicción de los jueces y tribunales competentes de la ciudad de Bogotá D.C., Colombia, renunciando a cualquier otro fuero que pudiera corresponderles.
+    </p>
+  </section>
+
+  <hr style="border: none; border-top: 1px solid #f0f0f0; margin-bottom: 36px;">
+
+  <!-- SECCIÓN 13 -->
+  <section style="margin-bottom: 36px;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 10px;">13. Contacto y Soporte</h3>
+    <p style="color: white; line-height: 1.8;">
+      Si tiene preguntas, comentarios o reclamos relacionados con estos Términos y Condiciones o con el uso de la Plataforma, puede contactarnos a través de los canales oficiales habilitados en la aplicación o visitando nuestra página de
+      <a href="{% url 'contacto' %}" style="color: #DC2626; text-decoration: underline;">contacto</a>.
+      Nuestro equipo de atención al cliente estará disponible para atenderle en el menor tiempo posible.
+    </p>
+  </section>
+
+  <!-- PIE -->
+  <hr style="border: none; border-top: 2px solid #f0f0f0; margin-bottom: 24px;">
+  <p style="text-align: center; color: #bbb; font-size: 0.82rem; font-style: italic;">
+    © 2025 GastroWeb — Todos los derechos reservados.<br>
+    Este documento fue redactado conforme a la legislación colombiana vigente.
+  </p>
+
+</div>
+{% endblock %}
