@@ -27,7 +27,7 @@ urlpatterns = [
 
     # ── AUTH / ALLAUTH ────────────────────────────────────
     path('accounts/', include('allauth.urls')),
-    path('login/', views.login_view, name='login'),
+    path('login/', usuarios_views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
 
     # ── APPS ──────────────────────────────────────────────
@@ -66,6 +66,7 @@ urlpatterns = [
     path('verificar-registro/', usuarios_views.verificar_registro, name='verificar_registro'),
     path('enviar-codigo/', usuarios_views.enviar_codigo_web, name='enviar_codigo_web'),
     path('test-notificacion/', pedidos_views.test_notificacion, name='test_notificacion'),
+    path('terminos-y-condiciones/', views.terminos_condiciones, name='terminos_condiciones'),
 
     # ── API JWT ───────────────────────────────────────────
     path('api/login/', TokenObtainPairView.as_view(), name='token_login'),

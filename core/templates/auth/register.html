@@ -2,6 +2,7 @@
 {% load static %}
 {% block chatbot %}{% endblock %}
 {% block title %}Registro - GastroWeb{% endblock %}
+{% block footer %}{% endblock %}
 {% block content %}
 
 <section class="bg-[#1a0a0a] min-h-screen flex items-center justify-center px-6 py-16">
@@ -147,7 +148,7 @@
             <div class="flex items-start gap-3">
                 <input type="checkbox" id="terminos" name="terminos" class="mt-1 w-4 h-4 accent-[#DC2626] cursor-pointer">
                 <label for="terminos" class="text-gray-400 text-sm cursor-pointer">
-                    Acepto los <a href="#" class="text-[#DC2626] hover:underline font-bold">términos y condiciones</a>
+                    Acepto los <a href="{% url 'terminos_condiciones' %}" class=" text-[#DC2626] hover:underline font-bold">términos y condiciones</a>
                 </label>
             </div>
 
