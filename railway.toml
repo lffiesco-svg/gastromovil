@@ -1,2 +1,2 @@
-Set-Content railway.toml '[deploy]
-startCommand = "python manage.py migrate && daphne -b 0.0.0.0 -p $PORT gastromovil.asgi:application"'
+[deploy]
+startCommand = "python manage.py migrate && daphne -b 0.0.0.0 -p $PORT gastromovil.asgi:application"
