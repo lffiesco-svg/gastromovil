@@ -276,3 +276,5 @@ CONTACTO_EMAIL_PASSWORD = config('CONTACTO_EMAIL_PASSWORD')
 DJANGO_ALLOW_ASYNC_UNSAFE = True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+RESEND_API_KEY = config('RESEND_API_KEY')
