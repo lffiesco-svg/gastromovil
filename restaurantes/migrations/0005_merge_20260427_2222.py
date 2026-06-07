@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('restaurantes', '0004_alter_categoria_id_alter_producto_id_and_more'),
+        ('restaurantes', '0003_alter_categoria_id_alter_producto_id_and_more'),
         ('restaurantes', '0004_remove_restaurante_imagen_producto_restaurante_and_more'),
     ]
 
