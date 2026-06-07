@@ -26,7 +26,7 @@ def enviar_email_resend(to_email, subject, html):
     try:
         resend.api_key = settings.RESEND_API_KEY
         resend.Emails.send({
-            "from": "GastroWeb <noreply@mail.gastromovil.online>",
+            "from": "GastroWeb <onboarding@resend.dev>",
             "to": [to_email],
             "subject": subject,
             "html": html,
