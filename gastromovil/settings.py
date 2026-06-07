@@ -267,6 +267,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'https://*.onrender.com',
     'https://*.railway.app',
+    'https://gastromovil.online',
+    'https://www.gastromovil.online',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
