@@ -21,11 +21,7 @@ class Migration(migrations.Migration):
             name='id',
             field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
         ),
-        migrations.AlterField(
-            model_name='restaurante',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
-        ),
+      
         migrations.AlterField(
             model_name='restaurante',
             name='imagen',
