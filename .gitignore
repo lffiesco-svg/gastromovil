@@ -25,7 +25,7 @@ build/
 db.sqlite3
 *.log
 media/
-staticfiles/    # carpeta generada por collectstatic
+
 
 # ========================
 # VARIABLES DE ENTORNO Y CLAVES
