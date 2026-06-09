@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from PIL import Image as PilImage
+from cloudinary.models import CloudinaryField
 
 
 def validar_png(imagen):
@@ -18,14 +19,13 @@ def validar_dimensiones_restaurante(imagen):
 
 
 class Restaurante(models.Model):
-    # Usamos string 'usuarios.Usuario' para evitar circular import
     propietario = models.ForeignKey('usuarios.Usuario', on_delete=models.CASCADE, related_name='restaurantes')
     nombre      = models.CharField(max_length=200)
     direccion   = models.CharField(max_length=200)
     telefono    = models.CharField(max_length=15)
     activo      = models.BooleanField(default=True)
-    imagen      = models.ImageField(
-                    upload_to='restaurantes/',
+    imagen      = CloudinaryField(
+                    'image',
                     blank=True,
                     null=True,
                     validators=[validar_png, validar_dimensiones_restaurante],
@@ -50,7 +50,7 @@ class Producto(models.Model):
     descripcion = models.TextField(blank=True)
     precio      = models.DecimalField(max_digits=10, decimal_places=2)
     disponible  = models.BooleanField(default=True)
-    imagen      = models.ImageField(upload_to='productos/', blank=True, null=True)
+    imagen      = CloudinaryField('image', blank=True, null=True)
 
     def __str__(self):
         return self.nombre
