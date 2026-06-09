@@ -41,6 +41,8 @@ Este mensaje fue enviado desde gastromovil.online
 
         try:
             resend.api_key = settings.RESEND_API_KEY
+            print(f'[DEBUG] RESEND_API_KEY: {settings.RESEND_API_KEY[:10]}...')
+            print(f'[DEBUG] CONTACTO_EMAIL: {settings.CONTACTO_EMAIL}')
             resend.Emails.send({
                 "from": "GastroWeb <noreply@mail.gastromovil.online>",
                 "to": [settings.CONTACTO_EMAIL],
@@ -49,7 +51,9 @@ Este mensaje fue enviado desde gastromovil.online
             })
             messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
         except Exception as e:
+            import traceback
             print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
+            traceback.print_exc()
             messages.error(request, 'Hubo un error al enviar el mensaje. Intenta de nuevo.')
 
     return render(request, 'contacto/contacto.html')
