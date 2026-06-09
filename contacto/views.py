@@ -48,7 +48,7 @@ Este mensaje fue enviado desde gastromovil.online
                 "text": cuerpo,
             })
             messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
-        eexcept Exception as e:
+        except Exception as e:
             print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
             messages.error(request, 'Hubo un error al enviar el mensaje. Intenta de nuevo.')
 
