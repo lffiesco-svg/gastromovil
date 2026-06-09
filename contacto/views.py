@@ -1,10 +1,7 @@
 from django.shortcuts import render
-
-# Create your views here.
-from django.shortcuts import render
-from django.core.mail import send_mail
 from django.contrib import messages
 from django.conf import settings
+import resend
 
 
 def contacto(request):
@@ -16,20 +13,14 @@ def contacto(request):
         mensaje = request.POST.get('mensaje', '').strip()
         acepta = request.POST.get('acepta')
 
-        # Validación básica
         if not all([nombre, email, tipo, mensaje]):
             messages.error(request, 'Por favor completa todos los campos obligatorios.')
-            return render(request, 'contacto/contacto.html', {
-                'form_data': request.POST
-            })
+            return render(request, 'contacto/contacto.html', {'form_data': request.POST})
 
         if not acepta:
             messages.error(request, 'Debes aceptar la política de privacidad.')
-            return render(request, 'contacto/contacto.html', {
-                'form_data': request.POST
-            })
+            return render(request, 'contacto/contacto.html', {'form_data': request.POST})
 
-        # Armar el correo
         asunto = f'[GastroWeb] Consulta de {nombre} — {tipo}'
         cuerpo = f"""
 Nueva consulta desde el formulario de contacto de GastroWeb:
@@ -45,17 +36,17 @@ Nueva consulta desde el formulario de contacto de GastroWeb:
 {mensaje}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Este mensaje fue enviado desde gastroweb.com
+Este mensaje fue enviado desde gastromovil.online
         """.strip()
 
         try:
-            send_mail(
-                subject=asunto,
-                message=cuerpo,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.CONTACTO_EMAIL],
-                fail_silently=False,
-            )
+            resend.api_key = settings.RESEND_API_KEY
+            resend.Emails.send({
+                "from": "GastroWeb <noreply@mail.gastromovil.online>",
+                "to": [settings.CONTACTO_EMAIL],
+                "subject": asunto,
+                "text": cuerpo,
+            })
             messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
         except Exception as e:
             print(f'[ERROR email contacto]: {e}')
