@@ -3,3 +3,6 @@ buildCommand = "python manage.py tailwind build && python manage.py collectstati
 
 [deploy]
 startCommand = "python manage.py migrate && daphne -b 0.0.0.0 -p $PORT gastromovil.asgi:application"
+
+[build.railpackConfig]
+pythonVersion = "3.13.13"
