@@ -1,8 +1,10 @@
 import random
+import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import JSONParser
+from django.conf import settings as django_settings
 
 from .serializers import MensajeChatSerializer
 from .ai.chatbot import responder_chat
@@ -33,7 +35,6 @@ class ChatView(APIView):
             'categoria__restaurante__nombre',
         ))
 
-        # Si es modo sorpresa, elegir producto aleatorio y pedir solo la razón
         palabras_sorpresa = ['sorpréndeme', 'sorprendeme', 'recomiéndame', 'recomiendame', 'sorpresa']
         es_sorpresa = any(p in mensaje.lower() for p in palabras_sorpresa)
 
@@ -42,14 +43,14 @@ class ChatView(APIView):
             restaurante_id = producto['categoria__restaurante__id']
             categoria_id = producto['categoria__id']
             imagen = producto.get('imagen') or ''
-            imagen_url = f"http://localhost:8000/media/{imagen}" if imagen else ''
-            url = f"http://localhost:8000/restaurantes/restaurante/{restaurante_id}/#cat-{categoria_id}"
 
-            # Pedirle al LLM solo la razón
+            cloud_name = django_settings.CLOUDINARY_STORAGE['CLOUD_NAME']
+            imagen_url = f"https://res.cloudinary.com/{cloud_name}/image/upload/{imagen}" if imagen else ''
+            url = f"https://gastromovil.online/restaurantes/restaurante/{restaurante_id}/#cat-{categoria_id}"
+
             from .ai.chatbot import responder_razon
             razon = responder_razon(producto)
 
-            import json
             respuesta = json.dumps({
                 "modo": "sorpresa",
                 "producto_id": producto['id'],
@@ -64,7 +65,6 @@ class ChatView(APIView):
 
             return Response({'respuesta': respuesta}, status=status.HTTP_200_OK)
 
-        # Flujo normal del chatbot
         respuesta = responder_chat(
             mensaje_usuario=mensaje,
             productos=productos,
