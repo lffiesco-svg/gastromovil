@@ -1,4 +1,5 @@
 import os
+import cloudinary
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
@@ -6,7 +7,7 @@ from .prompts import SYSTEM_PROMPT
 
 load_dotenv()
 
-FRONTEND_BASE_URL = os.getenv("FRONTEND_URL", "http://localhost:8000")
+FRONTEND_BASE_URL = os.getenv("FRONTEND_URL", "https://gastromovil.online")
 
 llm = ChatGroq(
     model="llama-3.3-70b-versatile",
@@ -15,7 +16,6 @@ llm = ChatGroq(
 )
 
 def construir_contexto_productos(productos, categoria=None, restaurante=None):
-    """Filtra y formatea los productos para el prompt."""
     filtrados = productos
 
     if categoria:
@@ -32,6 +32,8 @@ def construir_contexto_productos(productos, categoria=None, restaurante=None):
     if not filtrados:
         return "No hay productos disponibles con ese filtro."
 
+    cloud_name = cloudinary.config().cloud_name
+
     lineas = []
     for p in filtrados:
         restaurante_id = p['categoria__restaurante__id']
@@ -39,7 +41,7 @@ def construir_contexto_productos(productos, categoria=None, restaurante=None):
         url = f"{FRONTEND_BASE_URL}/restaurantes/restaurante/{restaurante_id}/#cat-{categoria_id}"
         descripcion = f" | Descripcion: {p['descripcion']}" if p.get('descripcion') else ""
         imagen = p.get('imagen') or ''
-        imagen_url = f"http://localhost:8000/media/{imagen}" if imagen else ''
+        imagen_url = f"https://res.cloudinary.com/{cloud_name}/image/upload/{imagen}" if imagen else ''
         lineas.append(
             f"- ID:{p['id']} | {p['nombre']} | ${p['precio']}"
             f" | Categoria: {p['categoria__nombre'] or 'Sin categoria'}"
@@ -80,7 +82,6 @@ Pregunta del usuario: {mensaje_usuario}"""
 
 
 def responder_razon(producto):
-    """Le pide al LLM una frase corta y apetitosa sobre el producto."""
     nombre = producto['nombre']
     descripcion = producto.get('descripcion') or ''
     restaurante = producto['categoria__restaurante__nombre'] or ''
