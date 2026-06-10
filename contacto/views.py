@@ -1,18 +1,7 @@
 from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
-import resend
-from concurrent.futures import ThreadPoolExecutor
-
-
-def enviar_email_resend(asunto, cuerpo, contacto_email):
-    resend.api_key = settings.RESEND_API_KEY
-    resend.Emails.send({
-        "from": "GastroWeb <noreply@mail.gastromovil.online>",
-        "to": [contacto_email],
-        "subject": asunto,
-        "text": cuerpo,
-    })
+import httpx
 
 
 def contacto(request):
@@ -51,10 +40,26 @@ Este mensaje fue enviado desde gastromovil.online
         """.strip()
 
         try:
-            with ThreadPoolExecutor() as executor:
-                future = executor.submit(enviar_email_resend, asunto, cuerpo, settings.CONTACTO_EMAIL)
-                future.result(timeout=10)
-            messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
+            with httpx.Client(timeout=15) as client:
+                response = client.post(
+                    "https://api.resend.com/emails",
+                    headers={
+                        "Authorization": f"Bearer {settings.RESEND_API_KEY}",
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "from": "GastroWeb <noreply@mail.gastromovil.online>",
+                        "to": [settings.CONTACTO_EMAIL],
+                        "subject": asunto,
+                        "text": cuerpo,
+                    }
+                )
+                print(f'[DEBUG] Resend response: {response.status_code} {response.text}')
+                if response.status_code == 200 or response.status_code == 201:
+                    messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
+                else:
+                    print(f'[ERROR] Resend error: {response.text}')
+                    messages.error(request, 'Hubo un error al enviar el mensaje. Intenta de nuevo.')
         except Exception as e:
             import traceback
             print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
