@@ -1,10 +1,10 @@
 import random
 import json
+import cloudinary
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import JSONParser
-from django.conf import settings as django_settings
 
 from .serializers import MensajeChatSerializer
 from .ai.chatbot import responder_chat
@@ -44,7 +44,7 @@ class ChatView(APIView):
             categoria_id = producto['categoria__id']
             imagen = producto.get('imagen') or ''
 
-            cloud_name = django_settings.CLOUDINARY_STORAGE['CLOUD_NAME']
+            cloud_name = cloudinary.config().cloud_name
             imagen_url = f"https://res.cloudinary.com/{cloud_name}/image/upload/{imagen}" if imagen else ''
             url = f"https://gastromovil.online/restaurantes/restaurante/{restaurante_id}/#cat-{categoria_id}"
 
