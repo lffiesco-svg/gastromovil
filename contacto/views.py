@@ -2,6 +2,17 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
 import resend
+from concurrent.futures import ThreadPoolExecutor
+
+
+def enviar_email_resend(asunto, cuerpo, contacto_email):
+    resend.api_key = settings.RESEND_API_KEY
+    resend.Emails.send({
+        "from": "GastroWeb <noreply@mail.gastromovil.online>",
+        "to": [contacto_email],
+        "subject": asunto,
+        "text": cuerpo,
+    })
 
 
 def contacto(request):
@@ -40,15 +51,9 @@ Este mensaje fue enviado desde gastromovil.online
         """.strip()
 
         try:
-            resend.api_key = settings.RESEND_API_KEY
-            print(f'[DEBUG] RESEND_API_KEY: {settings.RESEND_API_KEY[:10]}...')
-            print(f'[DEBUG] CONTACTO_EMAIL: {settings.CONTACTO_EMAIL}')
-            resend.Emails.send({
-                "from": "GastroWeb <noreply@mail.gastromovil.online>",
-                "to": [settings.CONTACTO_EMAIL],
-                "subject": asunto,
-                "text": cuerpo,
-            })
+            with ThreadPoolExecutor() as executor:
+                future = executor.submit(enviar_email_resend, asunto, cuerpo, settings.CONTACTO_EMAIL)
+                future.result(timeout=10)
             messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
         except Exception as e:
             import traceback
