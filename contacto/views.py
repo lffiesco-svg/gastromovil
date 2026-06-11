@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
 import httpx
+from asgiref.sync import sync_to_async
 
 
-def contacto(request):
+async def contacto(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre', '').strip()
         email = request.POST.get('email', '').strip()
@@ -40,8 +41,8 @@ Este mensaje fue enviado desde gastromovil.online
         """.strip()
 
         try:
-            with httpx.Client(timeout=15) as client:
-                response = client.post(
+            async with httpx.AsyncClient(timeout=15) as client:
+                response = await client.post(
                     "https://api.resend.com/emails",
                     headers={
                         "Authorization": f"Bearer {settings.RESEND_API_KEY}",
@@ -55,7 +56,7 @@ Este mensaje fue enviado desde gastromovil.online
                     }
                 )
                 print(f'[DEBUG] Resend response: {response.status_code} {response.text}')
-                if response.status_code == 200 or response.status_code == 201:
+                if response.status_code in [200, 201]:
                     messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
                 else:
                     print(f'[ERROR] Resend error: {response.text}')
