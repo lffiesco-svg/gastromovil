@@ -272,7 +272,8 @@ const watchIdsPedido = {};
 const wakeLocks = {};
 
 async function iniciarCompartir(pedidoId) {
-    const wsUrl = `ws://${window.location.host}/ws/ubicacion/${repartidorId}/`;
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const wsUrl = `${protocol}://${window.location.host}/ws/ubicacion/${repartidorId}/`;
     const socket = new WebSocket(wsUrl);
     socketsPedido[pedidoId] = socket;
 
