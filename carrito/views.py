@@ -13,7 +13,7 @@ DOMICILIO = 3000
 
 BARRIOS_GARZON = {
     'centro', 'bello horizonte', 'villa del rio', 'la paz', 'el jardin',
-    'san jose', 'la esperanza', 'el recreo', 'las americas', 'el bosque',
+    'san jose obrero', 'la esperanza', 'el recreo', 'las americas', 'el bosque',
     'villa cafe', 'santa barbara', 'el porvenir', 'los angeles', 'la union',
     'villa lucia', 'el paraiso', 'la colombia', 'nuevo horizonte', 'villa del prado',
     'el progreso', 'la aurora', 'san martin', 'villa del carmen', 'la floresta',
@@ -21,7 +21,17 @@ BARRIOS_GARZON = {
     'la primavera', 'alto de la cruz', 'la independencia', 'villa hermosa',
     'el mirador', 'san francisco', 'la esmeralda', 'el triunfo', 'el refugio',
     'villa del sol', 'la trinidad', 'las palmas', 'el prado', 'la serena',
-    'villa alegre', 'santa cecilia', 'el retiro', 'la ceiba', 'nazaret'
+    'villa alegre', 'santa cecilia', 'el retiro', 'la ceiba', 'nazaret','bajo sartenejo',
+    'laureles', 'calima', 'villa laura', 'alto garzon', 'los comuneros', '20 de julio', 
+    'brisas del oriente', 'nueva esperanza', 'villa francia', 'los israelitas', 
+    'orquidea real', 'san sebastian', 'san lorenzo', 'torres de san felipe', 'bosque del caracoli',
+    'nueva holanda', 'lara bonilla', 'san cayetano', 'las palmas', 'las palmeras',
+    'villa garzon', 'los guaduales', 'san felipe', 'bosques del cafe', 'villa alejandra', 
+    'la nueva colombia', 'los samanes', 'santa tereza', 'juan pablo segundo', 'san vicente',
+    'santa clara', 'santana', 'los cerros', 'las colinas', 'bosques de cantabria', 'prado alto',
+    'espiritu santo', 'santa lucia', 'barrio universitario', 'agua azul', 'las americas',
+    'julio bahamon', 'la gaitana', 'barrios unidos', 'el limonar', 'la floresta', 'el seminario',
+    'casa loma', 'san isidro', 'las vegas', 'la granja', 'minuto de Dios', 'villa del prado', 'los fundadores'
 }
 
 def barrio_valido(barrio):
