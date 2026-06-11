@@ -404,7 +404,8 @@ async function iniciarMapa(pedidoId, calleDestino, barrioDestino, latGuardada, l
 }
 
 // ── WEBSOCKET REPARTIDOR ───────────────────────────────────────
-const wsUrl = `ws://127.0.0.1:8000/ws/repartidor/${repartidorId}/`;
+const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+const wsUrl = `${protocol}://${window.location.host}/ws/repartidor/${repartidorId}/`;
 const ws = new WebSocket(wsUrl);
 
 ws.onopen = () => {
@@ -506,8 +507,6 @@ async function marcarEntregado(pedidoId) {
 }
 
 // ── TABS ───────────────────────────────────────────────────────
-ws.onerror = (e) => console.error('❌ WebSocket error:', e);
-ws.onclose = () => setTimeout(() => window.location.reload(), 5000);
 
 function showTab(tab) {
     const tabs = ['pendientes', 'encamino', 'entregados'];
