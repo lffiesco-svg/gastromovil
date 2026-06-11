@@ -426,7 +426,7 @@ ws.onerror = (e) => {
 };
 
 ws.onclose = () => {
-    console.log('🔴 WebSocket desconectado — reintentando en 5s...');
+    console.log('🔴 WebSocket desconectado');
     setTimeout(() => window.location.reload(), 5000);
 };
 
