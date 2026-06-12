@@ -1,34 +1,22 @@
 from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
-from django.core.mail import EmailMessage
-from django.core.mail.backends.smtp import EmailBackend as SMTPEmailBackend
-import ssl
-import certifi
-import smtplib
 import threading
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 
-def enviar_email_contacto(asunto, cuerpo, destinatario):
+def enviar_email_sendgrid(asunto, cuerpo, destinatario):
     try:
-        backend = SMTPEmailBackend(
-            host='smtp.gmail.com',
-            port=587,
-            username=settings.EMAIL_HOST_USER,
-            password=settings.EMAIL_HOST_PASSWORD,
-            use_tls=True,
-            use_ssl=False,
-            fail_silently=False,
-        )
-        email = EmailMessage(
+        message = Mail(
+            from_email='noreply@gastromovil.online',
+            to_emails=destinatario,
             subject=asunto,
-            body=cuerpo,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[destinatario],
-            connection=backend,
+            plain_text_content=cuerpo,
         )
-        email.send()
-        print('[DEBUG] Email enviado correctamente')
+        sg = SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(f'[DEBUG] SendGrid response: {response.status_code}')
     except Exception as e:
         import traceback
         print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
@@ -71,7 +59,7 @@ Este mensaje fue enviado desde gastromovil.online
         """.strip()
 
         hilo = threading.Thread(
-            target=enviar_email_contacto,
+            target=enviar_email_sendgrid,
             args=(asunto, cuerpo, settings.CONTACTO_EMAIL),
             daemon=True
         )

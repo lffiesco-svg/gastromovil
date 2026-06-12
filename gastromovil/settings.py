@@ -292,6 +292,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 
 RESEND_API_KEY = config('RESEND_API_KEY')
 
+SENDGRID_API_KEY = config('SENDGRID_API_KEY')
+
 cloudinary.config(
     cloud_name=config('CLOUDINARY_CLOUD_NAME'),
     api_key=config('CLOUDINARY_API_KEY'),
