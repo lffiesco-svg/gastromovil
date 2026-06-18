@@ -1,26 +1,8 @@
 from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
-import threading
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-
-
-def enviar_email_sendgrid(asunto, cuerpo, destinatario):
-    try:
-        message = Mail(
-            from_email='noreply@gastromovil.online',
-            to_emails=destinatario,
-            subject=asunto,
-            plain_text_content=cuerpo,
-        )
-        sg = SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
-        response = sg.send(message)
-        print(f'[DEBUG] SendGrid response: {response.status_code}')
-    except Exception as e:
-        import traceback
-        print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
-        traceback.print_exc()
 
 
 def contacto(request):
@@ -58,13 +40,21 @@ Nueva consulta desde el formulario de contacto de GastroWeb:
 Este mensaje fue enviado desde gastromovil.online
         """.strip()
 
-        hilo = threading.Thread(
-            target=enviar_email_sendgrid,
-            args=(asunto, cuerpo, settings.CONTACTO_EMAIL),
-            daemon=True
-        )
-        hilo.start()
-
-        messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
+        try:
+            message = Mail(
+                from_email='noreply@gastromovil.online',
+                to_emails=settings.CONTACTO_EMAIL,
+                subject=asunto,
+                plain_text_content=cuerpo,
+            )
+            sg = SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
+            response = sg.send(message)
+            print(f'[DEBUG] SendGrid response: {response.status_code}')
+            messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
+        except Exception as e:
+            import traceback
+            print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
+            traceback.print_exc()
+            messages.error(request, 'Hubo un error al enviar el mensaje. Intenta de nuevo.')
 
     return render(request, 'contacto/contacto.html')
