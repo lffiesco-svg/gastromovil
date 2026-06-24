@@ -303,3 +303,7 @@ def contacto(request):
         return redirect('contacto')
 
     return render(request, 'informacion/contacto.html')
+
+# ── TÉRMINOS Y CONDICIONES ────────────────────────────────────
+def terminos_condiciones(request):
+    return render(request, 'informacion/terminos_condiciones.html')
