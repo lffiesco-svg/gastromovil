@@ -286,8 +286,10 @@ def contacto(request):
             messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
 
         except Exception as e:
-            print(f'[ERROR email contacto]: {e}')
-            messages.error(request, 'Hubo un error al enviar el mensaje. Intenta de nuevo.')
+            import traceback
+            traceback.print_exc()
+            messages.error(request, f'Error: {e}')
+            
 
         return redirect('contacto')
 

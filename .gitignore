@@ -67,3 +67,4 @@ desktop.ini
 .qodo/
 
 staticfiles/
+staticfiles_prod/
