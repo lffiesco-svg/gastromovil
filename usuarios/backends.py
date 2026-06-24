@@ -22,12 +22,9 @@ class SSLEmailBackend(SMTPEmailBackend):
         if self.connection:
             return False
         try:
-            self.connection = smtplib.SMTP(self.host, self.port, timeout=self.timeout)
+            ctx = ssl.create_default_context(cafile=certifi.where())
+            self.connection = smtplib.SMTP_SSL(self.host, self.port, context=ctx, timeout=self.timeout)
             self.connection.ehlo()
-            if self.use_tls:
-                ctx = ssl.create_default_context(cafile=certifi.where())
-                self.connection.starttls(context=ctx)
-                self.connection.ehlo()
             if self.username and self.password:
                 self.connection.login(self.username, self.password)
             return True

@@ -264,11 +264,13 @@ JAZZMIN_UI_TWEAKS = {
 EMAIL_BACKEND = 'usuarios.backends.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'johanapalacio763@gmail.com'
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = 'Gastroweb <ospinacadenaoscar@gmail.com>'
+DEFAULT_FROM_EMAIL = 'Gastroweb <johanapalacio763@gmail.com>'
+
+CONTACTO_EMAIL = 'ospinacadenaoscar@gmail.com'
 
 ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
 
