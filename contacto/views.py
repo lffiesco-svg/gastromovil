@@ -1,4 +1,4 @@
-import resend
+import httpx
 import threading
 from django.shortcuts import render
 from django.contrib import messages
@@ -22,33 +22,33 @@ def contacto(request):
             return render(request, 'contacto/contacto.html', {'form_data': request.POST})
 
         asunto = f'[GastroWeb] Consulta de {nombre} — {tipo}'
-        cuerpo = f"""
-Nueva consulta desde el formulario de contacto de GastroWeb:
+        cuerpo = f"""Nueva consulta desde GastroWeb:
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-👤 Nombre:     {nombre}
-📧 Correo:     {email}
-📞 Teléfono:   {telefono or 'No indicado'}
-📋 Tipo:       {tipo}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nombre: {nombre}
+Correo: {email}
+Teléfono: {telefono or 'No indicado'}
+Tipo: {tipo}
 
-💬 Mensaje:
-{mensaje}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Este mensaje fue enviado desde gastromovil.online
-        """.strip()
+Mensaje:
+{mensaje}"""
 
         def enviar_email():
             try:
-                resend.api_key = settings.RESEND_API_KEY
-                resend.Emails.send({
-                    "from": "GastroWeb <noreply@gastromovil.online>",
-                    "to": [settings.CONTACTO_EMAIL],
-                    "subject": asunto,
-                    "text": cuerpo,
-                })
-                print('[OK email contacto]: Enviado correctamente')
+                with httpx.Client(timeout=30) as client:
+                    response = client.post(
+                        'https://api.resend.com/emails',
+                        headers={
+                            'Authorization': f'Bearer {settings.RESEND_API_KEY}',
+                            'Content-Type': 'application/json',
+                        },
+                        json={
+                            'from': 'GastroWeb <noreply@gastromovil.online>',
+                            'to': [settings.CONTACTO_EMAIL],
+                            'subject': asunto,
+                            'text': cuerpo,
+                        }
+                    )
+                    print(f'[OK email contacto]: {response.status_code} {response.text}')
             except Exception as e:
                 print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
 
