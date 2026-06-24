@@ -219,11 +219,26 @@ def panel_restaurante(request):
     })
 
 # ── CONTACTO ─────────────────────────────────────────────────
+import threading
 
 PALABRAS_PROHIBIDAS = [
     "mierda","puta","hijueputa","gonorrea","malparido","idiota",
     "pendejo","cabron","puto","zorra","verga","fuck","shit","bitch"
 ]
+
+def enviar_email_contacto(html, nombre, email, tipo, mensaje):
+    try:
+        email_msg = EmailMultiAlternatives(
+            subject=f'[GastroWeb] Consulta de {nombre} — {tipo}',
+            body=f'Nueva consulta de {nombre} ({email}): {mensaje}',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[settings.CONTACTO_EMAIL],
+        )
+        email_msg.attach_alternative(html, "text/html")
+        email_msg.send(fail_silently=False)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
 
 def contacto(request):
     if request.method == 'POST':
@@ -274,29 +289,17 @@ def contacto(request):
                     nota('Este mensaje fue enviado desde el formulario de contacto de GastroWeb.')
             )
 
-            email_msg = EmailMultiAlternatives(
-                subject=f'[GastroWeb] Consulta de {nombre} — {tipo}',
-                body=f'Nueva consulta de {nombre} ({email}): {mensaje}',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[settings.CONTACTO_EMAIL],
-            )
-            email_msg.attach_alternative(html, "text/html")
-            email_msg.send(fail_silently=False)
+            hilo = threading.Thread(target=enviar_email_contacto, args=(html, nombre, email, tipo, mensaje))
+            hilo.daemon = True
+            hilo.start()
 
             messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
 
         except Exception as e:
             import traceback
             traceback.print_exc()
-            messages.error(request, f'Error: {e}')
-            
+            messages.error(request, 'Hubo un error al enviar el mensaje. Intenta de nuevo.')
 
         return redirect('contacto')
 
     return render(request, 'informacion/contacto.html')
-
-# ── TÉRMINOS Y CONDICIONES ────────────────────────────────────
-def terminos_condiciones(request):
-    return render(request, 'informacion/terminos_condiciones.html')
-
-
