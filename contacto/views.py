@@ -29,7 +29,7 @@ Tipo: {tipo}
 Mensaje: {mensaje}"""
 
         try:
-            async with httpx.AsyncClient(timeout=10) as client:
+            async with httpx.AsyncClient(timeout=10, verify=False) as client:
                 response = await client.post(
                     'https://api.resend.com/emails',
                     headers={
