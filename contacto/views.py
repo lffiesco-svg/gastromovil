@@ -1,4 +1,5 @@
 import httpx
+import asyncio
 from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
@@ -28,25 +29,27 @@ Teléfono: {telefono or 'No indicado'}
 Tipo: {tipo}
 Mensaje: {mensaje}"""
 
-        try:
-            async with httpx.AsyncClient(timeout=10, verify=False) as client:
-                response = await client.post(
-                    'https://api.resend.com/emails',
-                    headers={
-                        'Authorization': f'Bearer {settings.RESEND_API_KEY}',
-                        'Content-Type': 'application/json',
-                    },
-                    json={
-                        'from': 'GastroWeb <noreply@gastromovil.online>',
-                        'to': [settings.CONTACTO_EMAIL],
-                        'subject': asunto,
-                        'text': cuerpo,
-                    }
-                )
-            print(f'[OK email contacto]: {response.status_code} {response.text}')
-            messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
-        except Exception as e:
-            print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
-            messages.error(request, 'Hubo un error al enviar el mensaje.')
+        async def enviar_email():
+            try:
+                async with httpx.AsyncClient(timeout=30, verify=False) as client:
+                    response = await client.post(
+                        'https://api.resend.com/emails',
+                        headers={
+                            'Authorization': f'Bearer {settings.RESEND_API_KEY}',
+                            'Content-Type': 'application/json',
+                        },
+                        json={
+                            'from': 'GastroWeb <noreply@gastromovil.online>',
+                            'to': [settings.CONTACTO_EMAIL],
+                            'subject': asunto,
+                            'text': cuerpo,
+                        }
+                    )
+                print(f'[OK email contacto]: {response.status_code} {response.text}')
+            except Exception as e:
+                print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
+
+        asyncio.ensure_future(enviar_email())
+        messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
 
     return render(request, 'contacto/contacto.html')
