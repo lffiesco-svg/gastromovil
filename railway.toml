@@ -2,4 +2,4 @@
 buildCommand = "python manage.py tailwind build && python manage.py collectstatic --noinput"
 
 [deploy]
-startCommand = "python manage.py migrate && daphne -b 0.0.0.0 -p $PORT --timeout 300 gastromovil.asgi:application"
+startCommand = "python manage.py migrate && daphne -b 0.0.0.0 -p $PORT -t 300 gastromovil.asgi:application"
