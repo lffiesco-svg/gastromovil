@@ -1,4 +1,5 @@
 import resend
+import threading
 from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
@@ -38,21 +39,20 @@ Nueva consulta desde el formulario de contacto de GastroWeb:
 Este mensaje fue enviado desde gastromovil.online
         """.strip()
 
-        try:
-            resend.api_key = settings.RESEND_API_KEY
+        def enviar_email():
+            try:
+                resend.api_key = settings.RESEND_API_KEY
+                resend.Emails.send({
+                    "from": "GastroWeb <noreply@gastromovil.online>",
+                    "to": [settings.CONTACTO_EMAIL],
+                    "subject": asunto,
+                    "text": cuerpo,
+                })
+                print('[OK email contacto]: Enviado correctamente')
+            except Exception as e:
+                print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
 
-            params = {
-                "from": "GastroWeb <noreply@gastromovil.online>",
-                "to": [settings.CONTACTO_EMAIL],
-                "subject": asunto,
-                "text": cuerpo,
-            }
-            resend.Emails.send(params)
-            messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
-        except Exception as e:
-            import traceback
-            print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
-            traceback.print_exc()
-            messages.error(request, 'Hubo un error al enviar el mensaje. Intenta de nuevo.')
+        threading.Thread(target=enviar_email, daemon=True).start()
+        messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
 
     return render(request, 'contacto/contacto.html')
