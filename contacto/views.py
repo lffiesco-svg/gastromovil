@@ -1,9 +1,9 @@
-import requests
+import httpx
 from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
 
-def contacto(request):
+async def contacto(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre', '').strip()
         email = request.POST.get('email', '').strip()
@@ -29,20 +29,20 @@ Tipo: {tipo}
 Mensaje: {mensaje}"""
 
         try:
-            response = requests.post(
-                'https://api.resend.com/emails',
-                headers={
-                    'Authorization': f'Bearer {settings.RESEND_API_KEY}',
-                    'Content-Type': 'application/json',
-                },
-                json={
-                    'from': 'GastroWeb <noreply@gastromovil.online>',
-                    'to': [settings.CONTACTO_EMAIL],
-                    'subject': asunto,
-                    'text': cuerpo,
-                },
-                timeout=10
-            )
+            async with httpx.AsyncClient(timeout=8) as client:
+                response = await client.post(
+                    'https://api.resend.com/emails',
+                    headers={
+                        'Authorization': f'Bearer {settings.RESEND_API_KEY}',
+                        'Content-Type': 'application/json',
+                    },
+                    json={
+                        'from': 'GastroWeb <noreply@gastromovil.online>',
+                        'to': [settings.CONTACTO_EMAIL],
+                        'subject': asunto,
+                        'text': cuerpo,
+                    }
+                )
             print(f'[OK email contacto]: {response.status_code} {response.text}')
             messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
         except Exception as e:
