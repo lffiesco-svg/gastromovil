@@ -1,9 +1,9 @@
 import requests
+import asyncio
 from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
 from asgiref.sync import sync_to_async
-from django.views.decorators.csrf import csrf_exempt
 
 async def contacto(request):
     if request.method == 'POST':
@@ -50,7 +50,7 @@ Mensaje: {mensaje}"""
             except Exception as e:
                 print(f'[ERROR email contacto]: {type(e).__name__}: {e}')
 
-        await sync_to_async(enviar)()
+        asyncio.get_event_loop().run_in_executor(None, enviar)
         messages.success(request, '¡Mensaje enviado con éxito! Te responderemos pronto.')
 
     return render(request, 'contacto/contacto.html')
