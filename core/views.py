@@ -218,12 +218,13 @@ def panel_restaurante(request):
         'productos': productos,
     })
 
+
 # ── CONTACTO ─────────────────────────────────────────────────
 import threading
 
 PALABRAS_PROHIBIDAS = [
     "mierda","puta","hijueputa","gonorrea","malparido","idiota",
-    "pendejo","cabron","puto","zorra","verga","fuck","shit","bitch"
+    "pendejo","cabron","puto","zorra","verga","fuck","shit","bitch","culo", "estupido", "marica"
 ]
 
 def enviar_email_contacto(html, nombre, email, tipo, mensaje):
