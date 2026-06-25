@@ -218,12 +218,13 @@ def panel_restaurante(request):
         'productos': productos,
     })
 
+
 # ── CONTACTO ─────────────────────────────────────────────────
 import threading
 
 PALABRAS_PROHIBIDAS = [
     "mierda","puta","hijueputa","gonorrea","malparido","idiota",
-    "pendejo","cabron","puto","zorra","verga","fuck","shit","bitch"
+    "pendejo","cabron","puto","zorra","verga","fuck","shit","bitch","culo", "estupido", "marica"
 ]
 
 def enviar_email_contacto(html, nombre, email, tipo, mensaje):
@@ -303,3 +304,7 @@ def contacto(request):
         return redirect('contacto')
 
     return render(request, 'informacion/contacto.html')
+
+# ── TÉRMINOS Y CONDICIONES ────────────────────────────────────
+def terminos_condiciones(request):
+    return render(request, 'informacion/terminos_condiciones.html')
