@@ -32,6 +32,7 @@ BARRIOS_GARZON = {
     'espiritu santo', 'santa lucia', 'barrio universitario', 'agua azul', 'las americas',
     'julio bahamon', 'la gaitana', 'barrios unidos', 'el limonar', 'la floresta', 'el seminario',
     'casa loma', 'san isidro', 'las vegas', 'la granja', 'minuto de Dios', 'villa del prado', 'los fundadores'
+    'villa karol'
 }
 
 def barrio_valido(barrio):
