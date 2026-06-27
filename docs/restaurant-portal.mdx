@@ -1,0 +1,106 @@
+---
+title: "Portal del Restaurante"
+description: "Guía para administradores de restaurantes en GastroWeb."
+---
+
+# Portal del Restaurante
+
+El portal del restaurante permite a los administradores gestionar su menú, recibir pedidos, actualizar estados y consultar reportes de ventas.
+
+## Acceso al portal
+
+<Steps>
+  <Step title="Inicia sesión">
+    Accede a [gastromovil.online](https://gastromovil.online) con tu cuenta de **Administrador de Restaurante**.
+  </Step>
+  <Step title="Accede al panel">
+    Serás redirigido automáticamente al panel de administración de tu restaurante.
+  </Step>
+</Steps>
+
+## Gestión de pedidos
+
+### Ver pedidos entrantes
+
+Desde la sección **Pedidos** puedes ver todos los pedidos recibidos con:
+
+- Número de pedido
+- Productos solicitados y cantidades
+- Dirección de entrega del cliente
+- Método de pago
+- Estado actual del pedido
+
+### Actualizar estado del pedido
+
+<Steps>
+  <Step title="Revisa el pedido">
+    Lee los detalles completos del pedido entrante.
+  </Step>
+  <Step title="Acepta el pedido">
+    Haz clic en **Aceptar** para confirmar que atenderás el pedido.
+  </Step>
+  <Step title="Actualiza el estado">
+    A medida que avanza la preparación actualiza el estado:
+    - **Confirmado** → **En preparación** → **Listo para envío**
+  </Step>
+</Steps>
+
+<Note>
+  Al actualizar el estado del pedido, el cliente recibirá una notificación automática en tiempo real.
+</Note>
+
+## Gestión del menú
+
+### Agregar un nuevo producto
+
+<Steps>
+  <Step title="Ve a Menú / Productos">
+    En el panel selecciona **Menú** y haz clic en **Agregar producto**.
+  </Step>
+  <Step title="Completa el formulario">
+    Ingresa:
+    - Nombre del plato
+    - Descripción detallada
+    - Precio
+    - Categoría
+    - Imagen del producto (se almacena en **Cloudinary**)
+  </Step>
+  <Step title="Guarda el producto">
+    Haz clic en **Guardar**. El producto aparecerá inmediatamente en el catálogo.
+  </Step>
+</Steps>
+
+### Editar un producto
+
+<Steps>
+  <Step title="Busca el producto">
+    En la lista de productos haz clic en el ícono de edición.
+  </Step>
+  <Step title="Realiza los cambios">
+    Modifica los campos necesarios.
+  </Step>
+  <Step title="Guarda los cambios">
+    Haz clic en **Guardar cambios**.
+  </Step>
+</Steps>
+
+### Eliminar un producto
+
+<Warning>
+  Los productos eliminados no pueden recuperarse. Usa **Desactivar** si quieres ocultarlo temporalmente.
+</Warning>
+
+## Reportes y análisis
+
+Desde la sección **Reportes** puedes consultar:
+
+| Reporte | Descripción |
+|---|---|
+| Ventas del día | Total de ventas y pedidos del día actual |
+| Productos más pedidos | Ranking de platos más solicitados |
+| Historial de pedidos | Registro completo de todos los pedidos |
+| Tendencias | Análisis de ventas por período |
+
+## Panel Django Admin
+
+Los superadministradores tienen acceso al panel **Django Admin con Jazzmin** para gestión avanzada del sistema.
