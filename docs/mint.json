@@ -6,12 +6,42 @@
   },
   "favicon": "/favicon.png",
   "colors": {
-    "primary": "#E65C00"
+    "primary": "#E65C00",
+    "light": "#FF8C00",
+    "dark": "#CC4A00"
   },
+  "topbarLinks": [
+    {
+      "name": "gastromovil.online",
+      "url": "https://gastromovil.online"
+    }
+  ],
   "navigation": [
     {
-      "group": "Documentación",
-      "pages": ["introduccion", "instalacion", "manual-usuario"]
+      "group": "Guía de Usuario",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "account-setup"
+      ]
+    },
+    {
+      "group": "Usando GastroWeb",
+      "pages": [
+        "ordering-food",
+        "your-account",
+        "ai-assistant"
+      ]
+    },
+    {
+      "group": "Para Negocios",
+      "pages": [
+        "restaurant-portal",
+        "delivery-drivers"
+      ]
     }
-  ]
+  ],
+  "footerSocials": {
+    "github": "https://github.com/lffiesco-svg/gastromovil"
+  }
 }
