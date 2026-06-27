@@ -1,0 +1,81 @@
+---
+title: "Domiciliarios"
+description: "Guía para domiciliarios en GastroWeb."
+---
+
+# Módulo de Domiciliarios
+
+El módulo de domiciliarios permite gestionar la recepción y entrega de pedidos de manera organizada y eficiente, con seguimiento en tiempo real mediante **Django Channels** y **WebSockets**.
+
+## Acceso al módulo
+
+<Steps>
+  <Step title="Inicia sesión">
+    Accede a [gastromovil.online](https://gastromovil.online) con tu cuenta de **Domiciliario**.
+  </Step>
+  <Step title="Ve al panel de pedidos">
+    Serás redirigido al panel principal donde verás los pedidos asignados.
+  </Step>
+</Steps>
+
+## Gestión de entregas
+
+### Ver pedidos asignados
+
+Al iniciar sesión verás la lista de pedidos asignados con:
+
+- Número de pedido
+- Nombre del cliente
+- Dirección de entrega
+- Productos del pedido
+- Restaurante de recogida
+
+### Proceso de entrega
+
+<Steps>
+  <Step title="Acepta el pedido">
+    Haz clic en **Aceptar entrega** en el pedido que vas a realizar.
+  </Step>
+  <Step title="Dirígete al restaurante">
+    El mapa mostrará la ruta al restaurante para recoger el pedido.
+  </Step>
+  <Step title="Recoge el pedido">
+    Al recibir el pedido en el restaurante haz clic en **Pedido recogido**.
+  </Step>
+  <Step title="Inicia la entrega">
+    El sistema activará el seguimiento en tiempo real. Tu ubicación se actualiza automáticamente mediante **WebSockets**.
+  </Step>
+  <Step title="Confirma la entrega">
+    Al entregar el pedido al cliente haz clic en **Entrega realizada**. El pedido quedará cerrado en el sistema.
+  </Step>
+</Steps>
+
+## Seguimiento en tiempo real
+
+El sistema utiliza **Django Channels** y **WebSockets** para:
+
+- Transmitir tu ubicación al cliente en tiempo real
+- Actualizar el mapa de seguimiento sin recargar la página
+- Enviar notificaciones automáticas al cliente sobre el avance
+
+<Note>
+  El cliente puede ver tu ubicación en tiempo real desde la sección **Mis Pedidos** mientras el pedido está en camino.
+</Note>
+
+## Historial de entregas
+
+Desde la sección **Historial** puedes ver:
+
+- Todas las entregas realizadas
+- Fecha y hora de cada entrega
+- Calificación recibida del cliente
+- Total de entregas del mes
+
+## Tips para domiciliarios
+
+<Tip>
+  - Acepta solo los pedidos que puedas entregar en el tiempo estimado
+  - Mantén activa la ubicación del dispositivo para el seguimiento
+  - Confirma siempre la entrega al finalizar para cerrar el pedido correctamente
+  - Ante cualquier problema con la entrega, contacta al soporte de la plataforma
+</Tip>
