@@ -1,0 +1,17 @@
+{
+  "name": "GastroWeb",
+  "logo": {
+    "light": "/logo.png",
+    "dark": "/logo.png"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#E65C00"
+  },
+  "navigation": [
+    {
+      "group": "Documentación",
+      "pages": ["introduccion", "instalacion", "manual-usuario"]
+    }
+  ]
+}
