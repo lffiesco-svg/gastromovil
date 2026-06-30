@@ -1,0 +1,98 @@
+---
+title: "Realizar un Pedido"
+description: "Aprende a buscar restaurantes, agregar productos y realizar pedidos en GastroWeb."
+---
+
+# Realizar un Pedido
+
+## Buscar un restaurante
+
+Tienes dos formas de encontrar el restaurante de tu preferencia:
+
+<CardGroup cols={2}>
+  <Card title="Buscador" icon="magnifying-glass">
+    Usa el buscador de la plataforma para buscar restaurantes por nombre o tipo de comida.
+  </Card>
+  <Card title="Asistente de IA" icon="robot">
+    Escribe lo que quieres comer en lenguaje natural y el asistente te sugerirá restaurantes y platos.
+  </Card>
+</CardGroup>
+
+## Consultar el menú
+
+Al ingresar a un restaurante podrás ver:
+
+- Nombre del plato
+- Descripción e ingredientes
+- Precio unitario
+- Imágenes del producto (almacenadas en Cloudinary)
+- Categoría del plato
+
+## Agregar productos al carrito
+
+<Steps>
+  <Step title="Selecciona el producto">
+    Haz clic en el plato que deseas pedir.
+  </Step>
+  <Step title="Ajusta la cantidad">
+    Selecciona la cantidad que deseas del producto.
+  </Step>
+  <Step title="Agrega al carrito">
+    Haz clic en **Agregar al carrito**. Puedes seguir agregando más productos del mismo restaurante.
+  </Step>
+</Steps>
+
+## Revisar el carrito
+
+Haz clic en el ícono del carrito para ver:
+
+| Concepto | Descripción |
+|---|---|
+| Productos | Lista de platos seleccionados con cantidad y precio |
+| Subtotal | Suma de todos los productos |
+| Costo de envío | Tarifa de entrega según la distancia |
+| Total | Subtotal más costo de envío |
+
+## Confirmar el pedido
+
+<Steps>
+  <Step title="Verifica la dirección">
+    Confirma que la dirección de entrega sea correcta.
+  </Step>
+  <Step title="Selecciona el método de pago">
+    Elige entre tarjeta de crédito, débito o transferencia bancaria.
+  </Step>
+  <Step title="Confirma el pedido">
+    Haz clic en **Confirmar pedido**. Recibirás una notificación de confirmación.
+  </Step>
+</Steps>
+
+## Estados del pedido
+
+| Estado | Descripción |
+|---|---|
+| 🟡 Pendiente | El restaurante aún no ha confirmado el pedido |
+| 🔵 Confirmado | El restaurante aceptó el pedido |
+| 🟠 En preparación | El restaurante está elaborando tu pedido |
+| 🚀 En camino | El domiciliario va en camino con tu pedido |
+| ✅ Entregado | El pedido fue entregado exitosamente |
+
+## Seguimiento en tiempo real
+
+Una vez confirmado el pedido puedes:
+
+<Steps>
+  <Step title="Ve a Mis Pedidos">
+    En el menú principal selecciona **Mis Pedidos**.
+  </Step>
+  <Step title="Selecciona el pedido activo">
+    Haz clic en el pedido en curso para ver el mapa de seguimiento.
+  </Step>
+  <Step title="Sigue el mapa">
+    El mapa muestra en tiempo real la ubicación del domiciliario y el tiempo estimado de llegada gracias a **Django Channels** y **WebSockets**.
+  </Step>
+</Steps>
+
+<Note>
+  Recibirás notificaciones automáticas en cada cambio de estado de tu pedido.
+</Note>

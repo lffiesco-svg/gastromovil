@@ -1,0 +1,91 @@
+---
+title: "Configuración de Cuenta"
+description: "Aprende a registrarte, iniciar sesión y gestionar tu cuenta en GastroWeb."
+---
+
+# Configuración de Cuenta
+
+## Registro de nuevo usuario
+
+Para crear una cuenta en GastroWeb sigue estos pasos:
+
+<Steps>
+  <Step title="Accede al formulario de registro">
+    En la página de inicio haz clic en el botón **Registrarse**.
+  </Step>
+  <Step title="Completa tus datos">
+    Ingresa la siguiente información:
+    - Nombre completo
+    - Correo electrónico
+    - Número de teléfono
+    - Contraseña (mínimo 8 caracteres)
+  </Step>
+  <Step title="Selecciona tu rol">
+    Elige entre **Cliente**, **Domiciliario** o **Administrador de Restaurante**.
+  </Step>
+  <Step title="Confirma tu cuenta">
+    Revisa tu correo y haz clic en el enlace de activación enviado por GastroWeb mediante **Resend**.
+  </Step>
+</Steps>
+
+<Warning>
+  El enlace de confirmación tiene una vigencia de **24 horas**. Si no llega, revisa tu carpeta de spam.
+</Warning>
+
+## Inicio de sesión
+
+<Steps>
+  <Step title="Accede al formulario">
+    Haz clic en **Iniciar sesión** en la página de inicio.
+  </Step>
+  <Step title="Ingresa tus credenciales">
+    Escribe tu correo electrónico y contraseña registrados.
+  </Step>
+  <Step title="Accede al sistema">
+    Haz clic en **Entrar**. El sistema generará un token **JWT** para gestionar tu sesión de forma segura.
+  </Step>
+</Steps>
+
+## Recuperación de contraseña
+
+<Steps>
+  <Step title="Haz clic en ¿Olvidaste tu contraseña?">
+    En la pantalla de inicio de sesión haz clic en el enlace **¿Olvidaste tu contraseña?**
+  </Step>
+  <Step title="Ingresa tu correo">
+    Escribe el correo electrónico con el que te registraste.
+  </Step>
+  <Step title="Revisa tu correo">
+    Recibirás un enlace para restablecer tu contraseña. Vigencia: **30 minutos**.
+  </Step>
+  <Step title="Crea una nueva contraseña">
+    Haz clic en el enlace, ingresa tu nueva contraseña y confírmala.
+  </Step>
+</Steps>
+
+## Gestión del perfil
+
+Desde la sección **Perfil** puedes:
+
+- Actualizar tu nombre y teléfono
+- Cambiar tu dirección de entrega
+- Cambiar tu contraseña
+- Ver tu historial de pedidos
+
+## Cierre de sesión
+
+<Warning>
+  Siempre cierra tu sesión cuando uses un dispositivo compartido o público.
+</Warning>
+
+<Steps>
+  <Step title="Haz clic en tu nombre">
+    En la parte superior derecha haz clic en tu nombre o avatar.
+  </Step>
+  <Step title="Selecciona Cerrar sesión">
+    En el menú desplegable haz clic en **Cerrar sesión**.
+  </Step>
+  <Step title="Sesión cerrada">
+    Tu token JWT quedará invalidado y serás redirigido a la página de inicio.
+  </Step>
+</Steps>
