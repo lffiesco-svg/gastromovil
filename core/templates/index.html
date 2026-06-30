@@ -182,17 +182,17 @@
 
 <!-- Modal respuesta IA -->
 <div id="modal-sorprendeme" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4" onclick="if(event.target===this) cerrarModalSorprendeme()">
-    <div class="bg-[#1a0a0a] border border-[#DC2626]/30 rounded-3xl shadow-2xl p-5 max-w-sm w-full text-center relative">
-        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(to bottom right, #CC0000, #FFD60A);">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <div class="bg-[#1a0a0a] border border-[#DC2626]/30 rounded-2xl shadow-2xl p-4 max-w-xs w-full text-center relative max-h-[85vh] overflow-y-auto">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background: linear-gradient(to bottom right, #CC0000, #FFD60A);">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/>
             </svg>
         </div>
-        <h3 class="text-lg font-black text-white mb-3">✨ La IA recomienda...</h3>
-        <div id="modal-sorprendeme-texto" class="text-gray-300 text-sm leading-relaxed mb-4"></div>
+        <h3 class="text-base font-black text-white mb-2">✨ La IA recomienda...</h3>
+        <div id="modal-sorprendeme-texto" class="text-gray-300 text-xs leading-relaxed mb-3"></div>
         <div class="flex flex-col gap-2">
-            <button onclick="sorprendemeIA()" class="w-full text-white py-2.5 rounded-xl font-black text-sm hover:opacity-90 transition-opacity" style="background: linear-gradient(to right, #CC0000, #FF4500);">🎲 Otra recomendación</button>
-            <button onclick="cerrarModalSorprendeme()" class="w-full border border-gray-700 text-gray-400 py-3.5 rounded-xl font-bold text-base hover:bg-white/5 transition-colors">Cerrar</button>
+            <button onclick="sorprendemeIA()" class="w-full text-white py-2 rounded-lg font-black text-xs hover:opacity-90 transition-opacity" style="background: linear-gradient(to right, #CC0000, #FF4500);">🎲 Otra recomendación</button>
+            <button onclick="cerrarModalSorprendeme()" class="w-full border border-gray-700 text-gray-400 py-2.5 rounded-lg font-bold text-sm hover:bg-white/5 transition-colors">Cerrar</button>
         </div>
     </div>
 </div>
