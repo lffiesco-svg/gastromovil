@@ -182,7 +182,7 @@
 
 <!-- Modal respuesta IA -->
 <div id="modal-sorprendeme" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4" onclick="if(event.target===this) cerrarModalSorprendeme()">
-    <div class="bg-[#1a0a0a] border border-[#DC2626]/30 rounded-2xl shadow-2xl p-4 w-[280px] text-center relative">
+    <div class="bg-[#1a0a0a] border border-[#DC2626]/30 rounded-2xl shadow-2xl p-5 w-full max-w-md mx-auto text-center relative">
         <div class="w-9 h-9 rounded-lg flex items-center justify-center mx-auto mb-2" style="background: linear-gradient(to bottom right, #CC0000, #FFD60A);">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/>
@@ -190,8 +190,8 @@
         </div>
         <h3 class="text-sm font-black text-white mb-2">✨ La IA recomienda...</h3>
         <div id="modal-sorprendeme-texto" class="text-gray-300 text-xs leading-snug mb-2"></div>
-        <div class="flex flex-col gap-1.5">
-            <button onclick="sorprendemeIA()" class="w-full text-white py-1.5 rounded-lg font-black text-xs hover:opacity-90 transition-opacity" style="background: linear-gradient(to right, #CC0000, #FF4500);">🎲 Otra recomendación</button>
+        <div class="flex flex-col sm:flex-row gap-2">
+            <button onclick="sorprendemeIA()" class="w-full text-white py-2 rounded-lg font-black text-xs hover:opacity-90 transition-opacity" style="background: linear-gradient(to right, #CC0000, #FF4500);">🎲 Otra recomendación</button>
             <button onclick="cerrarModalSorprendeme()" class="w-full border border-gray-700 text-gray-400 py-2 rounded-lg font-bold text-xs hover:bg-white/5 transition-colors">Cerrar</button>
         </div>
     </div>
@@ -229,7 +229,7 @@ async function sorprendemeIA() {
             if (json.modo === 'sorpresa') {
                 contenido = `
                     <div class="text-left">
-                        ${json.imagen ? `<img src="${json.imagen}" alt="${json.nombre}" class="w-full h-20 object-cover rounded-lg mb-2">` : ''}
+                        ${json.imagen ? `<img src="${json.imagen}" alt="${json.nombre}" class="w-full h-32 object-cover rounded-lg mb-2">` : ''}
                         <p class="text-yellow-400 font-black text-sm mb-0.5">${json.nombre}</p>
                         <p class="text-gray-400 text-[11px] mb-1">📍 ${json.restaurante}</p>
                         <p class="text-gray-300 text-[11px] mb-1 leading-snug line-clamp-2">${json.descripcion || ''}</p>
