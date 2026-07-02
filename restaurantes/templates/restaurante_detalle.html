@@ -57,9 +57,9 @@
                 {% if producto.disponible %}
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden flex flex-col">
                     {% if producto.imagen and producto.imagen.public_id %}
-                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-40 object-cover">
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full aspect-[4/3] object-cover">
                     {% else %}
-                        <div class="w-full h-40 bg-gray-50 flex items-center justify-center">
+                        <div class="w-full aspect-[4/3] bg-gray-50 flex items-center justify-center">
                             <i class="fas fa-utensils text-3xl text-gray-200"></i>
                         </div>
                     {% endif %}

@@ -144,7 +144,7 @@ def cambiar_estado_pedido(request, pk):
 
                 if repartidor:
                     async_to_sync(channel_layer.group_send)(
-                        f'repartidor_{repartidor.id}',
+                        f'repartidor_{repartidor.usuario.id}',
                         {
                             'type': 'notificacion_pedido',
                             'data': {
@@ -225,6 +225,7 @@ def pedidos_repartidor(request):
         'pendientes': pendientes,
         'en_camino': en_camino,
         'entregados': entregados,
+        'repartidor_id': request.user.id,
     })
 
 @login_required
